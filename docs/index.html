@@ -1,0 +1,394 @@
+/storage/emulated/0/job-scout-pro/frontend/index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Job Scout Pro</title>
+<link rel="stylesheet" href="style.css" />
+<style>
+body {
+margin: 0;
+font-family: Arial, sans-serif;
+background: #f8fafc;
+color: #1f2937;
+}
+
+.site-header {
+position: sticky;
+top: 0;
+z-index: 1000;
+background: #ffffff;
+border-bottom: 1px solid #e5e7eb;
+box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+}
+
+.nav-wrap {
+max-width: 1100px;
+margin: 0 auto;
+padding: 14px 18px;
+display: flex;
+align-items: center;
+justify-content: space-between;
+gap: 16px;
+flex-wrap: wrap;
+}
+
+.brand {
+display: flex;
+align-items: center;
+gap: 12px;
+text-decoration: none;
+color: #111827;
+flex-shrink: 0;
+}
+
+.brand img {
+width: 48px;
+height: 48px;
+object-fit: cover;
+border-radius: 10px;
+}
+
+.brand-text h1 {
+margin: 0;
+font-size: 18px;
+}
+
+.brand-text p {
+margin: 0;
+font-size: 12px;
+color: #6b7280;
+}
+
+.nav-links {
+display: flex;
+gap: 10px;
+flex-wrap: wrap;
+justify-content: flex-end;
+width: 100%;
+}
+
+.nav-links a {
+text-decoration: none;
+color: #374151;
+font-weight: 600;
+padding: 10px 14px;
+border-radius: 8px;
+display: inline-block;
+line-height: 1.2;
+}
+
+.nav-links a:hover {
+background: #eff6ff;
+color: #2563eb;
+}
+
+.hero {
+max-width: 1100px;
+margin: 0 auto;
+padding: 70px 20px 40px;
+display: grid;
+grid-template-columns: 1.2fr 1fr;
+gap: 28px;
+align-items: center;
+}
+
+.hero-text h2 {
+font-size: 40px;
+line-height: 1.15;
+margin-bottom: 18px;
+color: #111827;
+}
+
+.hero-text p {
+font-size: 17px;
+line-height: 1.7;
+color: #4b5563;
+margin-bottom: 24px;
+}
+
+.hero-actions {
+display: flex;
+flex-wrap: wrap;
+gap: 14px;
+}
+
+.hero-image img {
+width: 100%;
+border-radius: 20px;
+box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+object-fit: cover;
+}
+
+.stats {
+max-width: 1100px;
+margin: 0 auto;
+padding: 10px 20px 50px;
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: 18px;
+}
+
+.stat-card {
+background: #ffffff;
+border-radius: 18px;
+padding: 24px;
+text-align: center;
+box-shadow: 0 10px 24px rgba(0, 0, 0, 0.05);
+}
+
+.stat-card h3 {
+margin: 0;
+font-size: 32px;
+color: #2563eb;
+}
+
+.stat-card p {
+margin-top: 10px;
+color: #6b7280;
+font-size: 15px;
+}
+
+.home-note {
+max-width: 1100px;
+margin: 0 auto;
+padding: 0 20px 60px;
+}
+
+.home-note-box {
+background: #ffffff;
+border-radius: 18px;
+padding: 28px;
+box-shadow: 0 10px 24px rgba(0, 0, 0, 0.05);
+text-align: center;
+}
+
+.home-note-box h3 {
+margin-top: 0;
+margin-bottom: 12px;
+color: #111827;
+}
+
+.home-note-box p {
+color: #4b5563;
+line-height: 1.7;
+margin-bottom: 18px;
+}
+
+.site-footer {
+background: #111827;
+color: #f9fafb;
+text-align: center;
+padding: 22px 16px;
+font-size: 14px;
+}
+
+.btn {
+display: inline-block;
+text-decoration: none;
+border: none;
+border-radius: 10px;
+padding: 12px 18px;
+font-weight: 700;
+cursor: pointer;
+transition: 0.2s ease;
+}
+
+.btn-primary {
+background: #2563eb;
+color: white;
+}
+
+.btn-primary:hover {
+background: #1d4ed8;
+}
+
+.btn-outline {
+background: white;
+color: #2563eb;
+border: 1px solid #2563eb;
+}
+
+.btn-outline:hover {
+background: #eff6ff;
+}
+
+@media (max-width: 900px) {
+.nav-wrap {
+flex-direction: column;
+align-items: flex-start;
+}
+
+.nav-links {
+width: 100%;
+justify-content: flex-start;
+gap: 8px;
+}
+
+.nav-links a {
+padding: 10px 12px;
+}
+
+.hero {
+grid-template-columns: 1fr;
+padding-top: 40px;
+}
+
+.stats {
+grid-template-columns: 1fr;
+}
+
+.hero-text h2 {
+font-size: 30px;
+}
+}
+
+@media (max-width: 520px) {
+.brand {
+align-items: flex-start;
+}
+
+.brand-text h1 {
+font-size: 17px;
+}
+
+.nav-links {
+display: grid;
+grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.nav-links a {
+text-align: center;
+background: #f8fafc;
+border: 1px solid #e5e7eb;
+}
+
+.hero {
+padding: 32px 16px 28px;
+}
+
+.stats {
+padding: 10px 16px 40px;
+}
+
+.home-note {
+padding: 0 16px 50px;
+}
+}
+</style>
+</head>
+<body>
+<header class="site-header">
+<div class="nav-wrap">
+<a href="index.html" class="brand">
+<img src="assets/logo.Jobscoutphoto.jpg" alt="Job Scout Pro Logo" />
+<div class="brand-text">
+<h1>Job Scout Pro</h1>
+<p>
+Find jobs. Grow faster. Hire smarter.
+</p>
+</div>
+</a>
+
+<nav class="nav-links">
+<a href="index.html">Home</a>
+<a href="jobs.html">Jobs</a>
+<a href="about.html">About</a>
+<a href="contact.html">Contact</a>
+<a href="help.html">Help</a>
+<a href="login.html">Login</a>
+<a href="signup.html">Register</a>
+</nav>
+</div>
+</header>
+
+<section class="hero">
+<div class="hero-text">
+<h2>Discover real job opportunities with confidence.</h2>
+<p>
+Job Scout Pro helps job seekers explore trusted openings, connect with employers,
+and track valuable opportunities through a simple and professional platform.
+</p>
+
+<div class="hero-actions">
+<a href="jobs.html" class="btn btn-primary">Browse Jobs</a>
+<a href="payment.html" class="btn btn-outline">Post / Promote</a>
+</div>
+</div>
+
+<div class="hero-image">
+<img src="assets/logo.Jobscoutphoto.jpg" alt="Job Scout Pro Banner" />
+</div>
+</section>
+
+<section class="stats">
+<div class="stat-card">
+<h3 id="statJobs">0</h3>
+<p>
+Total Jobs
+</p>
+</div>
+
+<div class="stat-card">
+<h3 id="statUsers">0</h3>
+<p>
+Registered Users
+</p>
+</div>
+
+<div class="stat-card">
+<h3 id="statFeatured">0</h3>
+<p>
+Featured Jobs
+</p>
+</div>
+</section>
+
+<section class="home-note">
+<div class="home-note-box">
+<h3>Simple, fast, and focused</h3>
+<p>
+This homepage is now a clean landing page. Use the navigation above to open
+Jobs, About, Contact, Help, Login, Register, Admin, and Payment pages separately.
+</p>
+<a href="jobs.html" class="btn btn-primary">Go to Jobs</a>
+</div>
+</section>
+
+<footer class="site-footer">
+© 2026 Job Scout Pro. All rights reserved.
+</footer>
+
+<script>
+const API_BASE = "http://127.0.0.1:5000/api";
+
+async function loadHomeStats() {
+const statJobs = document.getElementById("statJobs");
+const statUsers = document.getElementById("statUsers");
+const statFeatured = document.getElementById("statFeatured");
+
+try {
+const jobsResponse = await fetch(`${API_BASE}/jobs`);
+const jobsData = await jobsResponse.json();
+
+if (Array.isArray(jobsData)) {
+statJobs.textContent = jobsData.length;
+statFeatured.textContent = jobsData.filter(job => Number(job.is_featured) === 1).length;
+}
+
+const statsResponse = await fetch(`${API_BASE}/admin/stats`);
+const statsData = await statsResponse.json();
+
+if (statsData && statsData.success) {
+statUsers.textContent = statsData.totalUsers ?? 0;
+}
+} catch (error) {
+console.error("Failed to load homepage stats:", error);
+}
+}
+
+document.addEventListener("DOMContentLoaded", loadHomeStats);
+</script>
+</body>
+</html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Contact Us - Job Scout Pro</title>
+<link rel="stylesheet" href="style.css" />
+<style>
+.contact-page {
+max-width: 1100px;
+margin: 0 auto;
+padding: 40px 20px 60px;
+}
+
+.contact-hero {
+background: linear-gradient(135deg, #eff6ff, #ffffff);
+padding: 50px 30px;
+border-radius: 20px;
+margin-bottom: 30px;
+text-align: center;
+}
+
+.contact-hero h1 {
+font-size: 40px;
+color: #111827;
+margin-bottom: 12px;
+}
+
+.contact-hero p {
+max-width: 740px;
+margin: 0 auto;
+color: #6b7280;
+}
+
+.contact-grid {
+display: grid;
+grid-template-columns: 1.1fr 0.9fr;
+gap: 24px;
+margin-top: 20px;
+}
+
+.contact-card,
+.contact-info-card {
+background: #ffffff;
+padding: 28px;
+border-radius: 18px;
+box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+}
+
+.contact-card h2,
+.contact-info-card h2 {
+margin-bottom: 16px;
+color: #111827;
+}
+
+.form-group {
+margin-bottom: 18px;
+}
+
+.form-group label {
+display: block;
+margin-bottom: 8px;
+font-weight: 600;
+color: #374151;
+}
+
+.form-group input,
+.form-group textarea {
+width: 100%;
+padding: 12px 14px;
+border: 1px solid #d1d5db;
+border-radius: 10px;
+font-size: 15px;
+outline: none;
+}
+
+.form-group textarea {
+resize: vertical;
+}
+
+.info-item {
+margin-bottom: 16px;
+color: #4b5563;
+}
+
+.info-item strong {
+color: #111827;
+}
+
+.message-box {
+margin-top: 16px;
+padding: 12px;
+border-radius: 10px;
+display: none;
+font-size: 14px;
+}
+
+.message-success {
+background: #dcfce7;
+color: #166534;
+display: block;
+}
+
+@media (max-width: 900px) {
+.contact-grid {
+grid-template-columns: 1fr;
+}
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+<div class="logo-area">
+<img src="assets/logo.Jobscoutphoto.jpg" alt="Job Scout Pro Logo" class="logo" />
+<div>
+<h1>Job Scout Pro</h1>
+<p class="tagline">
+Find jobs. Grow faster. Hire smarter.
+</p>
+</div>
+</div>
+
+<nav class="nav-links">
+<a href="index.html">Home</a>
+<a href="jobs.html">Jobs</a>
+<a href="about.html">About</a>
+<a href="help.html">Help</a>
+<a href="login.html" class="btn btn-outline">Login</a>
+</nav>
+</header>
+
+<main class="contact-page">
+<section class="contact-hero">
+<h1>Contact Job Scout Pro</h1>
+<p>
+Reach out for support, partnership questions, payment clarification, or help with your account and job listings.
+</p>
+</section>
+
+<section class="contact-grid">
+<div class="contact-card">
+<h2>Send a Message</h2>
+
+<form id="contactForm">
+<div class="form-group">
+<label for="full_name">Full Name</label>
+<input type="text" id="full_name" required />
+</div>
+
+<div class="form-group">
+<label for="email">Email Address</label>
+<input type="email" id="email" required />
+</div>
+
+<div class="form-group">
+<label for="subject">Subject</label>
+<input type="text" id="subject" required />
+</div>
+
+<div class="form-group">
+<label for="message">Message</label>
+<textarea id="message" rows="6" required></textarea>
+</div>
+
+<button type="submit" class="btn btn-primary">Send Message</button>
+<div id="contactMessage" class="message-box"></div>
+</form>
+</div>
+
+<div class="contact-info-card">
+<h2>Contact Information</h2>
+
+<div class="info-item">
+<strong>Admin Email:</strong><br />
+peterlemreng1987@gmail.com
+</div>
+
+<div class="info-item">
+<strong>M-Pesa Number:</strong><br />
+0723479577
+</div>
+
+<div class="info-item">
+<strong>PayPal Email:</strong><br />
+peterlemreng1987@gmail.com
+</div>
+
+<div class="info-item">
+<strong>Support:</strong><br />
+Available for account, payment, and job listing assistance.
+</div>
+</div>
+</section>
+</main>
+
+<script>
+const contactForm = document.getElementById("contactForm");
+const contactMessage = document.getElementById("contactMessage");
+
+contactForm.addEventListener("submit", function (e) {
+e.preventDefault();
+contactMessage.className = "message-box message-success";
+contactMessage.textContent = "Your message has been recorded successfully.";
+contactForm.reset();
+});
+</script>
+</body>
+</html>
