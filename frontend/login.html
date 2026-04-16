@@ -2,178 +2,211 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Login - Job Scout Pro</title>
-<link rel="stylesheet" href="style.css" />
-<style>
-.auth-page {
-min-height: 100vh;
-display: flex;
-align-items: center;
-justify-content: center;
-background: linear-gradient(135deg, #eff6ff, #ffffff);
-padding: 20px;
-}
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - Job Scout Pro</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .auth-page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #eff6ff, #ffffff);
+      padding: 20px;
+    }
 
-.auth-card {
-width: 100%;
-max-width: 460px;
-background: #ffffff;
-padding: 32px;
-border-radius: 18px;
-box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
-}
+    .auth-card {
+      width: 100%;
+      max-width: 460px;
+      background: #ffffff;
+      padding: 32px;
+      border-radius: 18px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    }
 
-.auth-card h1 {
-margin-bottom: 10px;
-color: #111827;
-}
+    .auth-card h1 {
+      margin-bottom: 10px;
+      color: #111827;
+    }
 
-.auth-card p {
-color: #6b7280;
-margin-bottom: 24px;
-}
+    .auth-card p {
+      color: #6b7280;
+      margin-bottom: 24px;
+    }
 
-.form-group {
-margin-bottom: 18px;
-}
+    .form-group {
+      margin-bottom: 18px;
+    }
 
-.form-group label {
-display: block;
-margin-bottom: 8px;
-font-weight: 600;
-color: #374151;
-}
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #374151;
+    }
 
-.form-group input {
-width: 100%;
-padding: 12px 14px;
-border: 1px solid #d1d5db;
-border-radius: 10px;
-font-size: 15px;
-outline: none;
-}
+    .form-group input[type="email"],
+    .form-group input[type="password"],
+    .form-group input[type="text"] {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      font-size: 15px;
+      outline: none;
+      box-sizing: border-box;
+    }
 
-.form-group input:focus {
-border-color: #2563eb;
-}
+    .form-group input:focus {
+      border-color: #2563eb;
+    }
 
-.auth-actions {
-margin-top: 20px;
-}
+    .show-password-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+      font-size: 14px;
+      color: #374151;
+    }
 
-.auth-footer {
-margin-top: 18px;
-text-align: center;
-color: #6b7280;
-}
+    .show-password-row input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: #2563eb;
+      cursor: pointer;
+    }
 
-.auth-footer a {
-color: #2563eb;
-font-weight: 600;
-}
+    .show-password-row label {
+      margin: 0;
+      font-weight: 500;
+      cursor: pointer;
+    }
 
-.message-box {
-margin-top: 16px;
-padding: 12px;
-border-radius: 10px;
-display: none;
-font-size: 14px;
-}
+    .auth-actions {
+      margin-top: 20px;
+    }
 
-.message-success {
-background: #dcfce7;
-color: #166534;
-display: block;
-}
+    .auth-footer {
+      margin-top: 18px;
+      text-align: center;
+      color: #6b7280;
+    }
 
-.message-error {
-background: #fee2e2;
-color: #991b1b;
-display: block;
-}
-</style>
+    .auth-footer a {
+      color: #2563eb;
+      font-weight: 600;
+    }
+
+    .message-box {
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 10px;
+      display: none;
+      font-size: 14px;
+    }
+
+    .message-success {
+      background: #dcfce7;
+      color: #166534;
+      display: block;
+    }
+
+    .message-error {
+      background: #fee2e2;
+      color: #991b1b;
+      display: block;
+    }
+  </style>
 </head>
 <body>
-<div class="auth-page">
-<div class="auth-card">
-<h1>Welcome Back</h1>
-<p>
-Login to access your Job Scout Pro account.
-</p>
+  <div class="auth-page">
+    <div class="auth-card">
+      <h1>Welcome Back</h1>
+      <p>Login to access your Job Scout Pro account.</p>
 
-<form id="loginForm">
-<div class="form-group">
-<label for="email">Email Address</label>
-<input type="email" id="email" name="email" required />
-</div>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" required />
+        </div>
 
-<div class="form-group">
-<label for="password">Password</label>
-<input type="password" id="password" name="password" required />
-</div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required />
+          <div class="show-password-row">
+            <input type="checkbox" id="showLoginPassword" />
+            <label for="showLoginPassword">Show password</label>
+          </div>
+        </div>
 
-<div class="auth-actions">
-<button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
-</div>
+        <div class="auth-actions">
+          <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
+        </div>
 
-<div id="loginMessage" class="message-box"></div>
-</form>
+        <div id="loginMessage" class="message-box"></div>
+      </form>
 
-<div class="auth-footer">
-Don’t have an account? <a href="signup.html">Create one</a>
-</div>
-</div>
-</div>
+      <div class="auth-footer">
+        Don’t have an account? <a href="signup.html">Create one</a>
+      </div>
+    </div>
+  </div>
 
-<script>
-const API_BASE = "https://job-scout-pro-backend.onrender.com/api";
-const loginForm = document.getElementById("loginForm");
-const loginMessage = document.getElementById("loginMessage");
+  <script>
+    const API_BASE = "https://job-scout-pro-backend.onrender.com/api";
+    const loginForm = document.getElementById("loginForm");
+    const loginMessage = document.getElementById("loginMessage");
+    const loginPasswordInput = document.getElementById("password");
+    const showLoginPassword = document.getElementById("showLoginPassword");
 
-loginForm.addEventListener("submit", async (e) => {
-e.preventDefault();
+    showLoginPassword.addEventListener("change", () => {
+      loginPasswordInput.type = showLoginPassword.checked ? "text" : "password";
+    });
 
-const email = document.getElementById("email").value.trim();
-const password = document.getElementById("password").value.trim();
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-try {
-const response = await fetch(`${API_BASE}/auth/login`, {
-method: "POST",
-headers: {
-"Content-Type": "application/json"
-},
-body: JSON.stringify({
-email, password
-})
-});
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
 
-const data = await response.json();
+      try {
+        const response = await fetch(`${API_BASE}/auth/login`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            email,
+            password
+          })
+        });
 
-if (data.success) {
-loginMessage.className = "message-box message-success";
-loginMessage.textContent = "Login successful.";
+        const data = await response.json();
 
-localStorage.setItem("jobScoutToken", data.token || "");
-localStorage.setItem("jobScoutUser", JSON.stringify(data.user || {}));
+        if (data.success) {
+          loginMessage.className = "message-box message-success";
+          loginMessage.textContent = "Login successful.";
 
-setTimeout(() => {
-if (data.user && data.user.role === "admin") {
-window.location.href = "admin.html";
-} else {
-window.location.href = "index.html";
-}
-},
-1000);
-} else {
-loginMessage.className = "message-box message-error";
-loginMessage.textContent = data.message || "Invalid login details.";
-}
-} catch (error) {
-loginMessage.className = "message-box message-error";
-loginMessage.textContent = "Unable to connect to the server.";
-}
-});
-</script>
+          localStorage.setItem("jobScoutToken", data.token || "");
+          localStorage.setItem("jobScoutUser", JSON.stringify(data.user || {}));
+
+          setTimeout(() => {
+            if (data.user && data.user.role === "admin") {
+              window.location.href = "admin.html";
+            } else {
+              window.location.href = "index.html";
+            }
+          }, 1000);
+        } else {
+          loginMessage.className = "message-box message-error";
+          loginMessage.textContent = data.message || "Invalid login details.";
+        }
+      } catch (error) {
+        loginMessage.className = "message-box message-error";
+        loginMessage.textContent = "Unable to connect to the server.";
+      }
+    });
+  </script>
 </body>
 </html>
