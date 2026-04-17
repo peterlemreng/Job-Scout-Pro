@@ -83,6 +83,23 @@
       color: #555;
     }
 
+    .forgot-link-wrap {
+      text-align: right;
+      margin-top: -6px;
+      margin-bottom: 16px;
+    }
+
+    .forgot-link-wrap a {
+      color: #2563eb;
+      font-size: 14px;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .forgot-link-wrap a:hover {
+      text-decoration: underline;
+    }
+
     .auth-actions {
       margin-top: 20px;
     }
@@ -139,6 +156,10 @@
           </div>
         </div>
 
+        <div class="forgot-link-wrap">
+          <a href="forgot-password.html">Forgot Password?</a>
+        </div>
+
         <div class="auth-actions">
           <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
         </div>
@@ -147,69 +168,4 @@
       </form>
 
       <div class="auth-footer">
-        Don’t have an account? <a href="signup.html">Create one</a>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    const API_BASE = "https://job-scout-pro-backend.onrender.com/api";
-    const loginForm = document.getElementById("loginForm");
-    const loginMessage = document.getElementById("loginMessage");
-
-    const toggle = document.getElementById("togglePassword");
-    const password = document.getElementById("password");
-
-    toggle.addEventListener("click", function () {
-      const isPassword = password.type === "password";
-      password.type = isPassword ? "text" : "password";
-      this.classList.toggle("fa-eye");
-      this.classList.toggle("fa-eye-slash");
-    });
-
-    loginForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      const email = document.getElementById("email").value.trim();
-      const passwordValue = document.getElementById("password").value.trim();
-
-      try {
-        const response = await fetch(`${API_BASE}/auth/login`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            email,
-            password: passwordValue
-          })
-        });
-
-        const data = await response.json();
-
-        if (data.success) {
-          loginMessage.className = "message-box message-success";
-          loginMessage.textContent = "Login successful.";
-
-          localStorage.setItem("jobScoutToken", data.token || "");
-          localStorage.setItem("jobScoutUser", JSON.stringify(data.user || {}));
-
-          setTimeout(() => {
-            if (data.user && data.user.role === "admin") {
-              window.location.href = "admin.html";
-            } else {
-              window.location.href = "index.html";
-            }
-          }, 1000);
-        } else {
-          loginMessage.className = "message-box message-error";
-          loginMessage.textContent = data.message || "Invalid login details.";
-        }
-      } catch (error) {
-        loginMessage.className = "message-box message-error";
-        loginMessage.textContent = "Unable to connect to the server.";
-      }
-    });
-  </script>
-</body>
-</html>
+        
