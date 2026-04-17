@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Signup - Job Scout Pro</title>
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
     .auth-page {
       min-height: 100vh;
@@ -46,8 +47,7 @@
     }
 
     .form-group input[type="text"],
-    .form-group input[type="email"],
-    .form-group input[type="password"] {
+    .form-group input[type="email"] {
       width: 100%;
       padding: 12px 14px;
       border: 1px solid #d1d5db;
@@ -61,26 +61,27 @@
       border-color: #2563eb;
     }
 
-    .show-password-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 10px;
-      font-size: 14px;
-      color: #374151;
+    .input-group {
+      position: relative;
     }
 
-    .show-password-row input[type="checkbox"] {
-      width: 16px;
-      height: 16px;
-      accent-color: #2563eb;
-      cursor: pointer;
+    .input-group input {
+      width: 100%;
+      padding: 12px 44px 12px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      font-size: 15px;
+      outline: none;
+      box-sizing: border-box;
     }
 
-    .show-password-row label {
-      margin: 0;
-      font-weight: 500;
+    .toggle-icon {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
       cursor: pointer;
+      color: #555;
     }
 
     .auth-actions {
@@ -143,10 +144,9 @@
 
         <div class="form-group">
           <label for="password">Password</label>
-          <input type="password" id="password" name="password" required />
-          <div class="show-password-row">
-            <input type="checkbox" id="showSignupPassword" />
-            <label for="showSignupPassword">Show password</label>
+          <div class="input-group">
+            <input type="password" id="password" name="password" required />
+            <i class="fa-solid fa-eye toggle-icon" id="togglePassword"></i>
           </div>
         </div>
 
@@ -167,11 +167,15 @@
     const API_BASE = "https://job-scout-pro-backend.onrender.com/api";
     const signupForm = document.getElementById("signupForm");
     const signupMessage = document.getElementById("signupMessage");
-    const signupPasswordInput = document.getElementById("password");
-    const showSignupPassword = document.getElementById("showSignupPassword");
 
-    showSignupPassword.addEventListener("change", () => {
-      signupPasswordInput.type = showSignupPassword.checked ? "text" : "password";
+    const toggle = document.getElementById("togglePassword");
+    const password = document.getElementById("password");
+
+    toggle.addEventListener("click", function () {
+      const isPassword = password.type === "password";
+      password.type = isPassword ? "text" : "password";
+      this.classList.toggle("fa-eye");
+      this.classList.toggle("fa-eye-slash");
     });
 
     signupForm.addEventListener("submit", async (e) => {
@@ -180,7 +184,7 @@
       const full_name = document.getElementById("full_name").value.trim();
       const email = document.getElementById("email").value.trim();
       const phone = document.getElementById("phone").value.trim();
-      const password = document.getElementById("password").value.trim();
+      const passwordValue = document.getElementById("password").value.trim();
 
       try {
         const response = await fetch(`${API_BASE}/auth/signup`, {
@@ -192,7 +196,7 @@
             full_name,
             email,
             phone,
-            password
+            password: passwordValue
           })
         });
 
@@ -202,8 +206,9 @@
           signupMessage.className = "message-box message-success";
           signupMessage.textContent = "Account created successfully. You can now log in.";
           signupForm.reset();
-          showSignupPassword.checked = false;
-          signupPasswordInput.type = "password";
+          password.type = "password";
+          toggle.classList.remove("fa-eye-slash");
+          toggle.classList.add("fa-eye");
         } else {
           signupMessage.className = "message-box message-error";
           signupMessage.textContent = data.message || "Signup failed";

@@ -2,189 +2,222 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Signup - Job Scout Pro</title>
-<link rel="stylesheet" href="style.css" />
-<style>
-.auth-page {
-min-height: 100vh;
-display: flex;
-align-items: center;
-justify-content: center;
-background: linear-gradient(135deg, #eff6ff, #ffffff);
-padding: 20px;
-}
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Signup - Job Scout Pro</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    .auth-page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #eff6ff, #ffffff);
+      padding: 20px;
+    }
 
-.auth-card {
-width: 100%;
-max-width: 460px;
-background: #ffffff;
-padding: 32px;
-border-radius: 18px;
-box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
-}
+    .auth-card {
+      width: 100%;
+      max-width: 500px;
+      background: #ffffff;
+      padding: 32px;
+      border-radius: 18px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    }
 
-.auth-card h1 {
-margin-bottom: 10px;
-color: #111827;
-}
+    .auth-card h1 {
+      margin-bottom: 10px;
+      color: #111827;
+    }
 
-.auth-card p {
-color: #6b7280;
-margin-bottom: 24px;
-}
+    .auth-card p {
+      color: #6b7280;
+      margin-bottom: 24px;
+    }
 
-.form-group {
-margin-bottom: 18px;
-}
+    .form-group {
+      margin-bottom: 18px;
+    }
 
-.form-group label {
-display: block;
-margin-bottom: 8px;
-font-weight: 600;
-color: #374151;
-}
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #374151;
+    }
 
-.form-group input {
-width: 100%;
-padding: 12px 14px;
-border: 1px solid #d1d5db;
-border-radius: 10px;
-font-size: 15px;
-outline: none;
-box-sizing: border-box;
-}
+    .form-group input[type="text"],
+    .form-group input[type="email"] {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      font-size: 15px;
+      outline: none;
+      box-sizing: border-box;
+    }
 
-.form-group input:focus {
-border-color: #2563eb;
-}
+    .form-group input:focus {
+      border-color: #2563eb;
+    }
 
-.auth-actions {
-margin-top: 20px;
-}
+    .input-group {
+      position: relative;
+    }
 
-.auth-footer {
-margin-top: 18px;
-text-align: center;
-color: #6b7280;
-}
+    .input-group input {
+      width: 100%;
+      padding: 12px 44px 12px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      font-size: 15px;
+      outline: none;
+      box-sizing: border-box;
+    }
 
-.auth-footer a {
-color: #2563eb;
-font-weight: 600;
-text-decoration: none;
-}
+    .toggle-icon {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #555;
+    }
 
-.message-box {
-margin-top: 16px;
-padding: 12px;
-border-radius: 10px;
-display: none;
-font-size: 14px;
-}
+    .auth-actions {
+      margin-top: 20px;
+    }
 
-.message-success {
-background: #dcfce7;
-color: #166534;
-display: block;
-}
+    .auth-footer {
+      margin-top: 18px;
+      text-align: center;
+      color: #6b7280;
+    }
 
-.message-error {
-background: #fee2e2;
-color: #991b1b;
-display: block;
-}
-</style>
+    .auth-footer a {
+      color: #2563eb;
+      font-weight: 600;
+    }
+
+    .message-box {
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 10px;
+      display: none;
+      font-size: 14px;
+    }
+
+    .message-success {
+      background: #dcfce7;
+      color: #166534;
+      display: block;
+    }
+
+    .message-error {
+      background: #fee2e2;
+      color: #991b1b;
+      display: block;
+    }
+  </style>
 </head>
 <body>
-<div class="auth-page">
-<div class="auth-card">
-<h1>Create Your Account</h1>
-<p>
-Register on Job Scout Pro to discover jobs and opportunities.
-</p>
+  <div class="auth-page">
+    <div class="auth-card">
+      <h1>Create Your Account</h1>
+      <p>Register on Job Scout Pro to discover jobs and opportunities.</p>
 
-<form id="signupForm">
-<div class="form-group">
-<label for="full_name">Full Name</label>
-<input type="text" id="full_name" name="full_name" required />
-</div>
+      <form id="signupForm">
+        <div class="form-group">
+          <label for="full_name">Full Name</label>
+          <input type="text" id="full_name" name="full_name" required />
+        </div>
 
-<div class="form-group">
-<label for="email">Email Address</label>
-<input type="email" id="email" name="email" required />
-</div>
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" required />
+        </div>
 
-<div class="form-group">
-<label for="phone">Phone Number</label>
-<input type="text" id="phone" name="phone" required />
-</div>
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="text" id="phone" name="phone" required />
+        </div>
 
-<div class="form-group">
-<label for="password">Password</label>
-<input type="password" id="password" name="password" required />
-</div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="input-group">
+            <input type="password" id="password" name="password" required />
+            <i class="fa-solid fa-eye toggle-icon" id="togglePassword"></i>
+          </div>
+        </div>
 
-<div class="auth-actions">
-<button type="submit" class="btn btn-primary" style="width: 100%;">Create Account</button>
-</div>
+        <div class="auth-actions">
+          <button type="submit" class="btn btn-primary" style="width: 100%;">Create Account</button>
+        </div>
 
-<div id="signupMessage" class="message-box"></div>
-</form>
+        <div id="signupMessage" class="message-box"></div>
+      </form>
 
-<div class="auth-footer">
-Already have an account? <a href="login.html">Login</a>
-</div>
-</div>
-</div>
+      <div class="auth-footer">
+        Already have an account? <a href="login.html">Login</a>
+      </div>
+    </div>
+  </div>
 
-<script>
-const API_BASE = "https://job-scout-pro-backend.onrender.com/api";
-const signupForm = document.getElementById("signupForm");
-const signupMessage = document.getElementById("signupMessage");
+  <script>
+    const API_BASE = "https://job-scout-pro-backend.onrender.com/api";
+    const signupForm = document.getElementById("signupForm");
+    const signupMessage = document.getElementById("signupMessage");
 
-signupForm.addEventListener("submit", async (e) => {
-e.preventDefault();
+    const toggle = document.getElementById("togglePassword");
+    const password = document.getElementById("password");
 
-const full_name = document.getElementById("full_name").value.trim();
-const email = document.getElementById("email").value.trim();
-const phone = document.getElementById("phone").value.trim();
-const password = document.getElementById("password").value.trim();
+    toggle.addEventListener("click", function () {
+      const isPassword = password.type === "password";
+      password.type = isPassword ? "text" : "password";
+      this.classList.toggle("fa-eye");
+      this.classList.toggle("fa-eye-slash");
+    });
 
-try {
-const response = await fetch(`${API_BASE}/auth/signup`, {
-method: "POST",
-headers: {
-"Content-Type": "application/json"
-},
-body: JSON.stringify({
-full_name,
-email,
-phone,
-password
-})
-});
+    signupForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-const data = await response.json();
+      const full_name = document.getElementById("full_name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const passwordValue = document.getElementById("password").value.trim();
 
-if (data.success) {
-signupMessage.className = "message-box message-success";
-signupMessage.textContent = data.message || "Account created successfully.";
+      try {
+        const response = await fetch(`${API_BASE}/auth/signup`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            full_name,
+            email,
+            phone,
+            password: passwordValue
+          })
+        });
 
-signupForm.reset();
+        const data = await response.json();
 
-setTimeout(() => {
-window.location.href = "login.html";
-}, 1200);
-} else {
-signupMessage.className = "message-box message-error";
-signupMessage.textContent = data.message || "Signup failed.";
-}
-} catch (error) {
-signupMessage.className = "message-box message-error";
-signupMessage.textContent = "Unable to connect to the server.";
-}
-});
-</script>
+        if (data.success) {
+          signupMessage.className = "message-box message-success";
+          signupMessage.textContent = "Account created successfully. You can now log in.";
+          signupForm.reset();
+          password.type = "password";
+          toggle.classList.remove("fa-eye-slash");
+          toggle.classList.add("fa-eye");
+        } else {
+          signupMessage.className = "message-box message-error";
+          signupMessage.textContent = data.message || "Signup failed";
+        }
+      } catch (error) {
+        signupMessage.className = "message-box message-error";
+        signupMessage.textContent = "Unable to connect to the server.";
+      }
+    });
+  </script>
 </body>
 </html>
