@@ -6,17 +6,15 @@
   <title>Login - Job Scout Pro</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <style>
-    .auth-page {
+  <style>•{      box-sizing: border-box;
+    }    .auth-page {
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
       background: linear-gradient(135deg, #eff6ff, #ffffff);
       padding: 20px;
-    }
-
-    .auth-card {
+    }    .auth-card {
       width: 100%;
       max-width: 430px;
       background: #ffffff;
@@ -24,67 +22,65 @@
       border-radius: 16px;
       padding: 28px;
       box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
-    }
-
-    .auth-card h1 {
+    }    .auth-card h1 {
       margin-bottom: 10px;
       color: #111827;
       text-align: center;
-    }
-
-    .auth-card p {
+    }    .auth-card p {
       text-align: center;
       color: #6b7280;
       margin-bottom: 22px;
-    }
-
-    .form-group {
+    }    .form-group {
       margin-bottom: 18px;
-    }
-
-    .form-group label {
+    }    .form-group label {
       display: block;
       font-weight: 600;
       margin-bottom: 8px;
       color: #374151;
-    }
-
-    .form-group input {
+    }    .form-group input {
       width: 100%;
+      max-width: 100%;
       padding: 12px 14px;
       border: 1px solid #d1d5db;
       border-radius: 10px;
       font-size: 14px;
       outline: none;
-    }
-
-    .form-group input:focus {
+    }    .form-group input:focus {
       border-color: #2563eb;
       box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
-    }
-
-    .input-group {
-      position: relative;
-    }
-
-    .input-group input {
-      padding-right: 42px;
-    }
-
-    .toggle-icon {
-      position: absolute;
-      right: 14px;
-      top: 50%;
-      transform: translateY(-50%);
+    }    .password-wrap {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      background: #ffffff;
+      overflow: hidden;
+    }    .password-wrap input {
+      flex: 1;
+      width: 100%;
+      max-width: 100%;
+      border: none;
+      outline: none;
+      padding: 12px 14px;
+      font-size: 14px;
+      box-shadow: none;
+    }    .password-wrap input:focus {
+      border: none;
+      box-shadow: none;
+    }    .toggle-btn {
+      border: none;
+      background: transparent;
+      padding: 0 14px;
       cursor: pointer;
       color: #6b7280;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }    .toggle-btn i {
       font-size: 16px;
-      width: 20px;
-      text-align: center;
       line-height: 1;
-    }
-
-    .btn {
+    }    .btn {
       width: 100%;
       padding: 12px 16px;
       border: none;
@@ -94,39 +90,27 @@
       font-size: 15px;
       font-weight: 700;
       cursor: pointer;
-    }
-
-    .btn:hover {
+    }    .btn:hover {
       background: #1d4ed8;
-    }
-
-    .auth-links {
+    }    .auth-links {
       margin-top: 14px;
       text-align: center;
       font-size: 14px;
-    }
-
-    .auth-links a {
+    }    .auth-links a {
       color: #2563eb;
       text-decoration: none;
       font-weight: 600;
-    }
-
-    .message-box {
+    }    .message-box {
       margin-top: 16px;
       padding: 12px 14px;
       border-radius: 10px;
       display: none;
       font-size: 14px;
-    }
-
-    .message-success {
+    }    .message-success {
       display: block;
       background: #dcfce7;
       color: #166534;
-    }
-
-    .message-error {
+    }    .message-error {
       display: block;
       background: #fee2e2;
       color: #991b1b;
@@ -137,80 +121,51 @@
   <div class="auth-page">
     <div class="auth-card">
       <h1>Login</h1>
-      <p>Sign in to continue to Job Scout Pro</p>
-
-      <form id="loginForm">
+      <p>Sign in to continue to Job Scout Pro</p>      <form id="loginForm">
         <div class="form-group">
           <label for="email">Email Address</label>
           <input type="email" id="email" name="email" required />
-        </div>
-
-        <div class="form-group">
+        </div>        <div class="form-group">
           <label for="password">Password</label>
-          <div class="input-group">
+          <div class="password-wrap">
             <input type="password" id="password" name="password" required />
-            <i class="fa-solid fa-eye toggle-icon" id="togglePassword"></i>
+            <button type="button" class="toggle-btn" id="togglePassword">
+              <i class="fa-solid fa-eye" id="toggleIcon"></i>
+            </button>
           </div>
-        </div>
-
-        <button type="submit" class="btn">Login</button>
-
-        <div id="loginMessage" class="message-box"></div>
-
-        <div class="auth-links" style="margin-top: 16px;">
+        </div>        <button type="submit" class="btn">Login</button>        <div id="loginMessage" class="message-box"></div>        <div class="auth-links" style="margin-top: 16px;">
           <a href="forgot-password.html">Forgot Password?</a>
-        </div>
-
-        <div class="auth-links" style="margin-top: 10px;">
+        </div>        <div class="auth-links" style="margin-top: 10px;">
           Don’t have an account? <a href="signup.html">Register</a>
         </div>
       </form>
     </div>
-  </div>
-
-  <script>
-    const API_BASE = "https://job-scout-pro-backend.onrender.com/api";
-
-    const loginForm = document.getElementById("loginForm");
+  </div>  <script>
+    const API_BASE = "https://job-scout-pro-backend.onrender.com/api";    const loginForm = document.getElementById("loginForm");
     const loginMessage = document.getElementById("loginMessage");
     const togglePassword = document.getElementById("togglePassword");
-    const passwordInput = document.getElementById("password");
-
-    togglePassword.addEventListener("click", function () {
+    const toggleIcon = document.getElementById("toggleIcon");
+    const passwordInput = document.getElementById("password");    togglePassword.addEventListener("click", function () {
       const isPassword = passwordInput.type === "password";
       passwordInput.type = isPassword ? "text" : "password";
-      this.classList.toggle("fa-eye");
-      this.classList.toggle("fa-eye-slash");
-    });
-
-    loginForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      const payload = {
+      toggleIcon.classList.toggle("fa-eye");
+      toggleIcon.classList.toggle("fa-eye-slash");
+    });    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();      const payload = {
         email: document.getElementById("email").value.trim(),
         password: passwordInput.value.trim()
-      };
-
-      loginMessage.className = "message-box";
-      loginMessage.textContent = "";
-
-      try {
+      };      loginMessage.className = "message-box";
+      loginMessage.textContent = "";      try {
         const response = await fetch(API_BASE + "/auth/login", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
           },
           body: JSON.stringify(payload)
-        });
-
-        const data = await response.json();
-
-        if (data.success) {
+        });        const data = await response.json();        if (data.success) {
           loginMessage.className = "message-box message-success";
           loginMessage.textContent = data.message || "Login successful.";
-
           localStorage.setItem("user", JSON.stringify(data.user || {}));
-
           setTimeout(() => {
             window.location.href = "jobs.html";
           }, 1000);
