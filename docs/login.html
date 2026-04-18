@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login - Job Scout Pro</title>
   <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     .auth-page {
       min-height: 100vh;
@@ -18,21 +18,24 @@
 
     .auth-card {
       width: 100%;
-      max-width: 460px;
+      max-width: 430px;
       background: #ffffff;
-      padding: 32px;
-      border-radius: 18px;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
     }
 
     .auth-card h1 {
       margin-bottom: 10px;
       color: #111827;
+      text-align: center;
     }
 
     .auth-card p {
+      text-align: center;
       color: #6b7280;
-      margin-bottom: 24px;
+      margin-bottom: 22px;
     }
 
     .form-group {
@@ -41,23 +44,23 @@
 
     .form-group label {
       display: block;
-      margin-bottom: 8px;
       font-weight: 600;
+      margin-bottom: 8px;
       color: #374151;
     }
 
-    .form-group input[type="email"] {
+    .form-group input {
       width: 100%;
       padding: 12px 14px;
       border: 1px solid #d1d5db;
       border-radius: 10px;
-      font-size: 15px;
+      font-size: 14px;
       outline: none;
-      box-sizing: border-box;
     }
 
     .form-group input:focus {
       border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
     }
 
     .input-group {
@@ -65,13 +68,7 @@
     }
 
     .input-group input {
-      width: 100%;
-      padding: 12px 44px 12px 14px;
-      border: 1px solid #d1d5db;
-      border-radius: 10px;
-      font-size: 15px;
-      outline: none;
-      box-sizing: border-box;
+      padding-right: 42px;
     }
 
     .toggle-icon {
@@ -80,67 +77,64 @@
       top: 50%;
       transform: translateY(-50%);
       cursor: pointer;
-      color: #555;
-    }
-
-    .forgot-link-wrap {
-      text-align: right;
-      margin-top: -6px;
-      margin-bottom: 16px;
-    }
-
-    .forgot-link-wrap a {
-      color: #2563eb;
-      font-size: 14px;
-      text-decoration: none;
-      font-weight: 600;
-    }
-
-    .forgot-link-wrap a:hover {
-      text-decoration: underline;
-    }
-
-    .auth-actions {
-      margin-top: 20px;
-    }
-
-    .auth-footer {
-      margin-top: 18px;
-      text-align: center;
       color: #6b7280;
+      font-size: 16px;
     }
 
-    .auth-footer a {
+    .btn {
+      width: 100%;
+      padding: 12px 16px;
+      border: none;
+      border-radius: 10px;
+      background: #2563eb;
+      color: #ffffff;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background: #1d4ed8;
+    }
+
+    .auth-links {
+      margin-top: 14px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .auth-links a {
       color: #2563eb;
+      text-decoration: none;
       font-weight: 600;
     }
 
     .message-box {
       margin-top: 16px;
-      padding: 12px;
+      padding: 12px 14px;
       border-radius: 10px;
       display: none;
       font-size: 14px;
     }
 
     .message-success {
+      display: block;
       background: #dcfce7;
       color: #166534;
-      display: block;
     }
 
     .message-error {
+      display: block;
       background: #fee2e2;
       color: #991b1b;
-      display: block;
     }
   </style>
 </head>
 <body>
   <div class="auth-page">
     <div class="auth-card">
-      <h1>Welcome Back</h1>
-      <p>Login to access your Job Scout Pro account.</p>
+      <h1>Login</h1>
+      <p>Sign in to continue to Job Scout Pro</p>
 
       <form id="loginForm">
         <div class="form-group">
@@ -156,16 +150,76 @@
           </div>
         </div>
 
-        <div class="forgot-link-wrap">
+        <button type="submit" class="btn">Login</button>
+
+        <div id="loginMessage" class="message-box"></div>
+
+        <div class="auth-links" style="margin-top: 16px;">
           <a href="forgot-password.html">Forgot Password?</a>
         </div>
 
-        <div class="auth-actions">
-          <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
+        <div class="auth-links" style="margin-top: 10px;">
+          Don’t have an account? <a href="signup.html">Register</a>
         </div>
-
-        <div id="loginMessage" class="message-box"></div>
       </form>
+    </div>
+  </div>
 
-      <div class="auth-footer">
-        
+  <script>
+    const API_BASE = "https://job-scout-pro-backend.onrender.com/api";
+
+    const loginForm = document.getElementById("loginForm");
+    const loginMessage = document.getElementById("loginMessage");
+    const togglePassword = document.getElementById("togglePassword");
+    const passwordInput = document.getElementById("password");
+
+    togglePassword.addEventListener("click", function () {
+      const isPassword = passwordInput.type === "password";
+      passwordInput.type = isPassword ? "text" : "password";
+      this.classList.toggle("fa-eye");
+      this.classList.toggle("fa-eye-slash");
+    });
+
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const payload = {
+        email: document.getElementById("email").value.trim(),
+        password: passwordInput.value.trim()
+      };
+
+      loginMessage.className = "message-box";
+      loginMessage.textContent = "";
+
+      try {
+        const response = await fetch(API_BASE + "/auth/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          loginMessage.className = "message-box message-success";
+          loginMessage.textContent = data.message || "Login successful.";
+
+          localStorage.setItem("user", JSON.stringify(data.user || {}));
+
+          setTimeout(() => {
+            window.location.href = "jobs.html";
+          }, 1000);
+        } else {
+          loginMessage.className = "message-box message-error";
+          loginMessage.textContent = data.message || "Invalid login details.";
+        }
+      } catch (error) {
+        loginMessage.className = "message-box message-error";
+        loginMessage.textContent = "Unable to connect to the server.";
+      }
+    });
+  </script>
+</body>
+</html>
