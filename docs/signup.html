@@ -3,10 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Signup - Job Scout Pro</title>
+  <title>Sign Up - Job Scout Pro</title>
   <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     .auth-page {
       min-height: 100vh;
       display: flex;
@@ -18,21 +22,24 @@
 
     .auth-card {
       width: 100%;
-      max-width: 500px;
+      max-width: 460px;
       background: #ffffff;
-      padding: 32px;
-      border-radius: 18px;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
     }
 
     .auth-card h1 {
       margin-bottom: 10px;
       color: #111827;
+      text-align: center;
     }
 
     .auth-card p {
+      text-align: center;
       color: #6b7280;
-      margin-bottom: 24px;
+      margin-bottom: 22px;
     }
 
     .form-group {
@@ -41,95 +48,127 @@
 
     .form-group label {
       display: block;
-      margin-bottom: 8px;
       font-weight: 600;
+      margin-bottom: 8px;
       color: #374151;
     }
 
-    .form-group input[type="text"],
-    .form-group input[type="email"] {
+    .form-group input {
       width: 100%;
+      max-width: 100%;
       padding: 12px 14px;
       border: 1px solid #d1d5db;
       border-radius: 10px;
-      font-size: 15px;
+      font-size: 14px;
       outline: none;
-      box-sizing: border-box;
     }
 
     .form-group input:focus {
       border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
     }
 
-    .input-group {
-      position: relative;
-    }
-
-    .input-group input {
+    .password-wrap {
+      display: flex;
+      align-items: center;
       width: 100%;
-      padding: 12px 44px 12px 14px;
       border: 1px solid #d1d5db;
       border-radius: 10px;
-      font-size: 15px;
+      background: #ffffff;
+      overflow: hidden;
+    }
+
+    .password-wrap input {
+      flex: 1;
+      width: 100%;
+      max-width: 100%;
+      border: none;
       outline: none;
-      box-sizing: border-box;
+      padding: 12px 14px;
+      font-size: 14px;
+      box-shadow: none;
     }
 
-    .toggle-icon {
-      position: absolute;
-      right: 14px;
-      top: 50%;
-      transform: translateY(-50%);
+    .password-wrap input:focus {
+      border: none;
+      box-shadow: none;
+    }
+
+    .toggle-btn {
+      border: none;
+      background: transparent;
+      padding: 0 14px;
       cursor: pointer;
-      color: #555;
-    }
-
-    .auth-actions {
-      margin-top: 20px;
-    }
-
-    .auth-footer {
-      margin-top: 18px;
-      text-align: center;
       color: #6b7280;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .auth-footer a {
+    .toggle-btn i {
+      font-size: 16px;
+      line-height: 1;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px 16px;
+      border: none;
+      border-radius: 10px;
+      background: #2563eb;
+      color: #ffffff;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background: #1d4ed8;
+    }
+
+    .auth-links {
+      margin-top: 14px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .auth-links a {
       color: #2563eb;
+      text-decoration: none;
       font-weight: 600;
     }
 
     .message-box {
       margin-top: 16px;
-      padding: 12px;
+      padding: 12px 14px;
       border-radius: 10px;
       display: none;
       font-size: 14px;
     }
 
     .message-success {
+      display: block;
       background: #dcfce7;
       color: #166534;
-      display: block;
     }
 
     .message-error {
+      display: block;
       background: #fee2e2;
       color: #991b1b;
-      display: block;
     }
   </style>
 </head>
 <body>
   <div class="auth-page">
     <div class="auth-card">
-      <h1>Create Your Account</h1>
-      <p>Register on Job Scout Pro to discover jobs and opportunities.</p>
+      <h1>Create Account</h1>
+      <p>Join Job Scout Pro and start exploring opportunities</p>
 
       <form id="signupForm">
         <div class="form-group">
-          <label for="full_name">Full Name</label>
-          <input type="text" id="full_name" name="full_name" required />
+          <label for="name">Full Name</label>
+          <input type="text" id="name" name="name" required />
         </div>
 
         <div class="form-group">
@@ -139,79 +178,85 @@
 
         <div class="form-group">
           <label for="phone">Phone Number</label>
-          <input type="text" id="phone" name="phone" required />
+          <input type="tel" id="phone" name="phone" required />
         </div>
 
         <div class="form-group">
           <label for="password">Password</label>
-          <div class="input-group">
+          <div class="password-wrap">
             <input type="password" id="password" name="password" required />
-            <i class="fa-solid fa-eye toggle-icon" id="togglePassword"></i>
+            <button type="button" class="toggle-btn" id="togglePassword">
+              <i class="fa-solid fa-eye" id="toggleIcon"></i>
+            </button>
           </div>
         </div>
 
-        <div class="auth-actions">
-          <button type="submit" class="btn btn-primary" style="width: 100%;">Create Account</button>
-        </div>
+        <button type="submit" class="btn">Create Account</button>
 
         <div id="signupMessage" class="message-box"></div>
-      </form>
 
-      <div class="auth-footer">
-        Already have an account? <a href="login.html">Login</a>
-      </div>
+        <div class="auth-links" style="margin-top: 16px;">
+          Already have an account? <a href="login.html">Login</a>
+        </div>
+      </form>
     </div>
   </div>
 
   <script>
     const API_BASE = "https://job-scout-pro-backend.onrender.com/api";
+
     const signupForm = document.getElementById("signupForm");
     const signupMessage = document.getElementById("signupMessage");
+    const togglePassword = document.getElementById("togglePassword");
+    const toggleIcon = document.getElementById("toggleIcon");
+    const passwordInput = document.getElementById("password");
 
-    const toggle = document.getElementById("togglePassword");
-    const password = document.getElementById("password");
-
-    toggle.addEventListener("click", function () {
-      const isPassword = password.type === "password";
-      password.type = isPassword ? "text" : "password";
-      this.classList.toggle("fa-eye");
-      this.classList.toggle("fa-eye-slash");
+    togglePassword.addEventListener("click", function () {
+      const isPassword = passwordInput.type === "password";
+      passwordInput.type = isPassword ? "text" : "password";
+      toggleIcon.classList.toggle("fa-eye");
+      toggleIcon.classList.toggle("fa-eye-slash");
     });
 
     signupForm.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      const full_name = document.getElementById("full_name").value.trim();
-      const email = document.getElementById("email").value.trim();
-      const phone = document.getElementById("phone").value.trim();
-      const passwordValue = document.getElementById("password").value.trim();
+      const payload = {
+        name: document.getElementById("name").value.trim(),
+        email: document.getElementById("email").value.trim(),
+        phone: document.getElementById("phone").value.trim(),
+        password: passwordInput.value.trim()
+      };
+
+      signupMessage.className = "message-box";
+      signupMessage.textContent = "";
 
       try {
-        const response = await fetch(`${API_BASE}/auth/signup`, {
+        const response = await fetch(API_BASE + "/auth/signup", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
           },
-          body: JSON.stringify({
-            full_name,
-            email,
-            phone,
-            password: passwordValue
-          })
+          body: JSON.stringify(payload)
         });
 
         const data = await response.json();
 
         if (data.success) {
           signupMessage.className = "message-box message-success";
-          signupMessage.textContent = "Account created successfully. You can now log in.";
+          signupMessage.textContent = data.message || "Account created successfully.";
+
           signupForm.reset();
-          password.type = "password";
-          toggle.classList.remove("fa-eye-slash");
-          toggle.classList.add("fa-eye");
+          passwordInput.type = "password";
+          toggleIcon.classList.remove("fa-eye-slash");
+          toggleIcon.classList.add("fa-eye");
+
+          setTimeout(() => {
+            window.location.href = "login.html";
+          }, 1200);
         } else {
           signupMessage.className = "message-box message-error";
-          signupMessage.textContent = data.message || "Signup failed";
+          signupMessage.textContent = data.message || "Signup failed.";
         }
       } catch (error) {
         signupMessage.className = "message-box message-error";
