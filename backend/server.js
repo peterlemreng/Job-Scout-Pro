@@ -1,9 +1,3 @@
-app.get("/", (req, res) => {
-  res.json({
-    success: true,
-    message: "Job Scout Pro API is running"
-  });
-});
 require("dotenv").config();
 const express = require("express");
 const path = require("path");
@@ -20,12 +14,6 @@ app.use(cors());
 app.use(express.static(path.join(__dirname, "../frontend")));
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.json({
-    success: true,
-    message: "Job Scout Pro API is running"
-  });
-});
 
 app.use("/api/auth", authRoutes);
 app.use("/api/jobs", jobsRoutes);
