@@ -11,9 +11,12 @@ const adminRoutes = require("./routes/admin");
 const app = express();
 
 app.use(cors());
-app.use(express.static(path.join(__dirname, "../frontend")));
 app.use(express.json());
+app.use(express.static(path.join(__dirname, "../frontend")));
 
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/login.html"));
+});
 
 app.use("/api/auth", authRoutes);
 app.use("/api/jobs", jobsRoutes);
@@ -23,5 +26,5 @@ app.use("/api/admin", adminRoutes);
 const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log("Server running on port " + PORT);
 });
