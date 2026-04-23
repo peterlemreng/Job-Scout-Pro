@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../db");
+const fraudCheck = require("../middleware/fraudCheck");
 
 router.get("/", async (req, res) => {
   try {
@@ -165,6 +166,36 @@ router.post("/:id/click", async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Failed to track click",
+      error: error.message
+    });
+  }
+});
+
+router.post("/", fraudCheck, async (req, res) => {
+  try {
+    const { title, company, location, job_type, description } = req.body;
+
+    if (!title || !company || !location || !job_type || !description) {
+      return res.status(400).json({
+        success: false,
+        message: "All job fields are required"
+      });
+    }
+
+    const [result] = await pool.query(
+      "INSERT INTO jobs (title, company, location, job_type, description, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, 'active', NOW(), NOW())",
+      [title, company, location, job_type, description]
+    );
+
+    res.json({
+      success: true,
+      message: "Job created successfully",
+      jobId: result.insertId
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to create job",
       error: error.message
     });
   }
