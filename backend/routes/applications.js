@@ -77,4 +77,41 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+router.put("/:id/status", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    if (!status) {
+      return res.status(400).json({
+        success: false,
+        message: "status is required"
+      });
+    }
+
+    const [result] = await pool.query(
+      "UPDATE applications SET status = ? WHERE id = ?",
+      [status, id]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Application not found"
+      });
+    }
+
+    res.json({
+      success: true,
+      message: "Application status updated successfully"
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to update application status",
+      error: error.message
+    });
+  }
+});
+
 module.exports = router;
