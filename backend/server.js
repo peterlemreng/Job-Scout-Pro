@@ -7,6 +7,7 @@ const authRoutes = require("./routes/auth");
 const jobsRoutes = require("./routes/jobs");
 const paymentsRoutes = require("./routes/payments");
 const adminRoutes = require("./routes/admin");
+const applicationsRoutes = require("./routes/applications");
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/jobs", jobsRoutes);
 app.use("/api/payments", paymentsRoutes);
+app.use("/api/applications", applicationsRoutes);
 app.use("/api/admin", adminRoutes);
 
 const PORT = process.env.PORT || 8080;
