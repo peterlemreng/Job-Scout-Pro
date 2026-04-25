@@ -108,6 +108,23 @@ color: #4b5563;
 margin-bottom: 24px;
 }
 
+.hero-search {
+display: flex;
+flex-wrap: wrap;
+gap: 12px;
+margin-bottom: 18px;
+}
+
+.hero-search input {
+flex: 1;
+min-width: 180px;
+padding: 12px 14px;
+border: 1px solid #d1d5db;
+border-radius: 10px;
+font-size: 14px;
+background: #ffffff;
+}
+
 .hero-actions {
 display: flex;
 flex-wrap: wrap;
@@ -305,11 +322,17 @@ Find jobs. Grow faster. Hire smarter.
 
 <section class="hero">
 <div class="hero-text">
-<h2>Discover real job opportunities with confidence.</h2>
+<h2>Find better job opportunities faster and with more confidence.</h2>
 <p>
-Job Scout Pro helps job seekers explore trusted openings, connect with employers,
+Job Scout Pro helps job seekers discover trusted openings, connect with employers,
 and track valuable opportunities through a simple and professional platform.
 </p>
+
+<div class="hero-search">
+<input type="text" placeholder="Job title or keyword">
+<input type="text" placeholder="Location">
+<a href="jobs.html" class="btn btn-primary">Search Jobs</a>
+</div>
 
 <div class="hero-actions">
 <a href="jobs.html" class="btn btn-primary">Browse Jobs</a>
@@ -357,7 +380,7 @@ Jobs, About, Contact, Help, Login, Register, Admin, and Payment pages separately
 </section>
 
 <footer class="site-footer">
-© 2026 Job Scout Pro. All rights reserved.
+© 2026 Job Scout Pro. Built to make job search simpler and smarter.
 </footer>
 
 <script>
