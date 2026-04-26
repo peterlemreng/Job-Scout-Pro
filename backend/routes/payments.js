@@ -64,4 +64,17 @@ router.post("/", async (req, res) => {
   }
 });
 
+router.get("/", async (req, res) => {
+  try {
+    const [rows] = await pool.query("SELECT * FROM payments ORDER BY created_at DESC");
+    res.json(rows);
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to load payments",
+      error: error.message
+    });
+  }
+});
+
 module.exports = router;
