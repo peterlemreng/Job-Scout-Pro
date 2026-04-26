@@ -288,7 +288,7 @@
         notes: notesInput.value.trim()
       };      paymentMessage.className = "message-box";
       paymentMessage.textContent = "";      try {
-        const response = await fetch(API_BASE + "/payments/create", {
+        const response = await fetch(API_BASE + "/payments", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
