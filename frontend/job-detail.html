@@ -113,7 +113,7 @@ Loading job details...
 </main>
 
 <script>
-const API_BASE = "https://job-scout-pro-backend.onrender.com/api";
+const API_BASE = "https://job-scout-pro-production.up.railway.app/api";
 const jobDetail = document.getElementById("jobDetail");
 
 function getJobId() {
@@ -130,11 +130,10 @@ return;
 }
 
 try {
-const response = await fetch(`${API_BASE}/jobs`);
-const jobs = await response.json();
+const response = await fetch(API_BASE + "/jobs/" + jobId);
+const data = await response.json();
 
-const job = Array.isArray(jobs)
-? jobs.find(item => String(item.id) === String(jobId)): null;
+const job = data.job || null;
 
 if (!job) {
 jobDetail.innerHTML = `<p>Job not found.</p>`;
@@ -151,15 +150,15 @@ jobDetail.innerHTML = `
 
 <div class="counter-boxes">
 <div class="counter-card">
-<h3>${job.views || 0}</h3>
+<h3>${job.views_count || 0}</h3>
 <p>Views</p>
 </div>
 <div class="counter-card">
-<h3>${job.likes || 0}</h3>
+<h3>${job.likes_count || 0}</h3>
 <p>Likes</p>
 </div>
 <div class="counter-card">
-<h3>${job.clicks || 0}</h3>
+<h3>${job.clicks_count || 0}</h3>
 <p>Clicks</p>
 </div>
 </div>
@@ -195,11 +194,26 @@ jobDetail.innerHTML = `<p>Failed to load job details.</p>`;
 }
 
 async function likeJob(jobId) {
-alert("Like feature will connect to backend route.");
+async function likeJob(jobId) {
+  try {
+    const response = await fetch(API_BASE + "/jobs/" + jobId + "/like", { method: "POST" });
+    const data = await response.json();
+    alert(data.message || "Job liked successfully.");
+    loadJobDetail();
+  } catch (error) {
+    alert("Unable to like this job right now.");
+  }
 }
 
 async function trackClick(jobId) {
-alert("Click tracking will connect to backend route.");
+  try {
+    const response = await fetch(API_BASE + "/jobs/" + jobId + "/click", { method: "POST" });
+    const data = await response.json();
+    alert(data.message || "Job click tracked successfully.");
+    loadJobDetail();
+  } catch (error) {
+    alert("Unable to track this click right now.");
+  }
 }
 
 document.addEventListener("DOMContentLoaded", loadJobDetail);
