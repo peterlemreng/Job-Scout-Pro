@@ -17,11 +17,11 @@
 
     .auth-card {
       width: 100%;
-      max-width: 460px;
+      max-width: 430px;
       background: #ffffff;
       padding: 32px;
       border-radius: 18px;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.10);
     }
 
     .auth-card h1 {
@@ -82,6 +82,10 @@
       text-decoration: none;
     }
 
+    .btn-primary {
+      box-shadow: 0 10px 20px rgba(37, 99, 235, 0.18);
+    }
+
     .message-box {
       margin-top: 16px;
       padding: 12px;
@@ -115,7 +119,7 @@
     <div class="auth-card">
       <h1>Verify OTP</h1>
       <p>
-        Enter the 6-digit OTP sent to your selected reset method. The code expires in 2 minutes and can only be used once.
+        Enter the 6-digit OTP sent to your selected reset method to continue securely. The code expires in 2 minutes and can only be used once.
       </p>
 
       <form id="verifyOtpForm">
@@ -145,7 +149,7 @@
   </div>
 
   <script>
-    const API_BASE = "https://job-scout-pro-backend.onrender.com/api";
+    const API_BASE = "https://job-scout-pro-production.up.railway.app/api";
     const verifyOtpForm = document.getElementById("verifyOtpForm");
     const verifyMessage = document.getElementById("verifyMessage");
     const resendOtpBtn = document.getElementById("resendOtpBtn");
