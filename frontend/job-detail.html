@@ -179,7 +179,7 @@ jobDetail.innerHTML = `
 </div>
 
 <div class="action-row">
-<a href="${job.apply_url || "#"}" target="_blank" class="btn btn-primary">Apply Now</a>
+<a href="apply.html?id=${job.id || ""}" class="btn btn-primary">Apply Now</a>
 <button class="btn btn-secondary" onclick="likeJob('${job.id || ""}')">Like Job</button>
 <button class="btn btn-outline" onclick="trackClick('${job.id || ""}')">Track Click</button>
 </div>

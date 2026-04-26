@@ -1,0 +1,158 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apply - Job Scout Pro</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #eff6ff, #ffffff);
+      color: #111827;
+    }    .apply-page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }    .apply-card {
+      width: 100%;
+      max-width: 560px;
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 18px;
+      padding: 28px;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.10);
+    }    .apply-card h1 {
+      margin: 0 0 10px;
+      text-align: center;
+    }    .apply-card p {
+      text-align: center;
+      color: #6b7280;
+      margin: 0 0 22px;
+      line-height: 1.6;
+    }    .form-group {
+      margin-bottom: 18px;
+    }    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #374151;
+    }    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 12px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      font-size: 14px;
+      outline: none;
+      background: #ffffff;
+    }    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }    .form-group textarea {
+      min-height: 120px;
+      resize: vertical;
+    }    .btn {
+      width: 100%;
+      padding: 12px 16px;
+      border: none;
+      border-radius: 10px;
+      background: #2563eb;
+      color: #ffffff;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 10px 20px rgba(37, 99, 235, 0.18);
+    }    .btn:hover {
+      background: #1d4ed8;
+    }    .message-box {
+      margin-top: 16px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      display: none;
+      font-size: 14px;
+    }    .message-success {
+      display: block;
+      background: #dcfce7;
+      color: #166534;
+    }    .message-error {
+      display: block;
+      background: #fee2e2;
+      color: #991b1b;
+    }    .back-link {
+      display: inline-block;
+      margin-top: 16px;
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="apply-page">
+    <div class="apply-card">
+      <h1>Apply for Job</h1>
+      <p>Complete the form below to submit your application.</p>      <form id="applyForm">
+        <div class="form-group">
+          <label for="full_name">Full Name</label>
+          <input type="text" id="full_name" required />
+        </div>        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" required />
+        </div>        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" />
+        </div>        <div class="form-group">
+          <label for="cv_url">CV Link</label>
+          <input type="url" id="cv_url" placeholder="https://example.com/your-cv.pdf" />
+        </div>        <div class="form-group">
+          <label for="cover_letter">Cover Letter</label>
+          <textarea id="cover_letter" placeholder="Write a short cover letter"></textarea>
+        </div>        <button type="submit" class="btn">Submit Application</button>
+        <div id="applyMessage" class="message-box"></div>
+      </form>      <a href="jobs.html" class="back-link">Back to Jobs</a>
+    </div>
+  </div>  <script>
+    const API_BASE = "https://job-scout-pro-production.up.railway.app/api";
+    const applyForm = document.getElementById("applyForm");
+    const applyMessage = document.getElementById("applyMessage");    function getJobId() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get("id");
+    }    applyForm.addEventListener("submit", async (e) => {
+        applyMessage.className = "message-box message-error";
+        applyMessage.textContent = "Missing job ID.";
+        return;
+      }      const payload = {
+        job_id: Number(jobId),
+        full_name: document.getElementById("full_name").value.trim(),
+        email: document.getElementById("email").value.trim(),
+        phone: document.getElementById("phone").value.trim(),
+        cv_url: document.getElementById("cv_url").value.trim(),
+        cover_letter: document.getElementById("cover_letter").value.trim()
+      };      try {
+        const response = await fetch(API_BASE + "/applications", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });        const data = await response.json();        if (data.success) {
+          applyMessage.className = "message-box message-success";
+          applyMessage.textContent = data.message || "Application submitted successfully.";
+          applyForm.reset();
+        } else {
+          applyMessage.className = "message-box message-error";
+          applyMessage.textContent = data.message || "Failed to submit application.";
+        }
+      } catch (error) {
+        applyMessage.className = "message-box message-error";
+        applyMessage.textContent = "Unable to connect to the server.";
+      }
+    });
+  </script>
+</body>
+</html>
