@@ -182,7 +182,39 @@
       background: #eff6ff;
     }
 
-    .admin-table {
+.admin-table th {
+      background: #f9fafb;
+      color: #374151;
+      font-weight: 700;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .status-completed,
+    .status-reviewed {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .status-failed,
+    .status-rejected {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .empty-row {
+      text-align: center;
+      color: #6b7280;
+      padding: 20px 12px;
+    }    .admin-table {
       width: 100%;
       border-collapse: collapse;
       min-width: 700px;
