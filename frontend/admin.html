@@ -197,6 +197,28 @@
       vertical-align: top;
     }
 
+    .status-badge {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .status-completed,
+    .status-reviewed {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .status-failed,
+    .status-rejected {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+sed -n '200,230p' ~/job-scout-pro/frontend/admin.html
     .admin-table th {
       background: #f9fafb;
       color: #374151;
@@ -380,7 +402,6 @@
         }
       } catch (error) {
         console.error("Failed to load admin stats:", error);
-      }
     }
 
     async function loadRecentPayments() {
@@ -400,12 +421,11 @@ recentPaymentsTable.innerHTML = payments.slice(0, 8).map(payment => `
             <td>${payment.amount || "0"}</td>
             <td>${payment.payment_method || "N/A"}</td>
             <td><button onclick="updatePaymentStatus('${payment.id || ""}', 'completed')">Complete</button> <button onclick="updatePaymentStatus('${payment.id || ""}', 'failed')">Fail</button></td>
-            <td>${payment.status || "pending"}</td>
+                                      <td><span class="status-badge ${String(payment.status || "pending").toLowerCase() === "completed" ? "status-completed" : String(payment.status || "pending").toLowerCase() === "failed" ? "status-failed" : ""}">${payment.status || "pending"}</span></td>
           </tr>
         `).join("");
       } catch (error) {
         recentPaymentsTable.innerHTML = '<tr><td colspan="7" class="empty-row">Failed to load payments.</td></tr>';
-      }
     }
 
 async function loadRecentApplications() {
@@ -425,7 +445,7 @@ async function loadRecentApplications() {
             <td>${application.email || "N/A"}</td>
             <td>${application.job_id || "N/A"}</td>
             <td><button onclick="updateApplicationStatus('${application.id || ""}', 'reviewed')">Review</button> <button onclick="updateApplicationStatus('${application.id || ""}', 'rejected')">Reject</button></td>
-            <td>${application.status || "submitted"}</td>
+                                      <td><span class="status-badge ${String(application.status || "submitted").toLowerCase() === "reviewed" ? "status-reviewed" : String(application.status || "submitted").toLowerCase() === "rejected" ? "status-rejected" : ""}">${application.status || "submitted"}</span></td>
           </tr>
         `).join("");
       } catch (error) {
