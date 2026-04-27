@@ -467,6 +467,7 @@ async function updatePaymentStatus(id, status) {
     const data = await response.json();
     alert(data.message || "Payment status updated.");
     loadRecentPayments();
+    loadStats();
   } catch (error) {
     alert("Failed to update payment status.");
   }
@@ -482,6 +483,7 @@ async function updatePaymentStatus(id, status) {
 
         const data = await response.json();
         alert(data.message || "Application status updated.");
+        loadStats();
         loadRecentApplications();
       } catch (error) {
         alert("Failed to update application status.");
