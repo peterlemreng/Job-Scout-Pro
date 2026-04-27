@@ -407,38 +407,30 @@
       }
     }
 
-    async function loadRecentApplications() {
+async function loadRecentApplications() {
       try {
         const response = await fetch(API_BASE + "/applications");
         const applications = await response.json();
 
         if (!Array.isArray(applications) || applications.length === 0) {
-          recentApplicationsTable.innerHTML = '<tr><td colspan="5" class="empty-row">No applications found.</td></tr>';
+          recentApplicationsTable.innerHTML = '<tr><td colspan="6" class="empty-row">No applications found.</td></tr>';
           return;
         }
-recentApplicationsTable.innerHTML = applications.slice(0, 8).map(application => `
+
+        recentApplicationsTable.innerHTML = applications.slice(0, 8).map(application => `
           <tr>
             <td>${application.id || ""}</td>
             <td>${application.full_name || "N/A"}</td>
             <td>${application.email || "N/A"}</td>
             <td>${application.job_id || "N/A"}</td>
-                                          <td><button onclick="updateApplicationStatus('${application.id || ""}', 'reviewed')">Review</button> <button onclick="updateApplicationStatus('${application.id || ""}', 'rejected')">Reject</button></td>
-                                          <td>${application.status || "submitted"}</td>
-          </tr>
-        `).join("");
-        recentApplicationsTable.innerHTML = applications.slice(0, 8).map(application => `
-          <tr>
-            <td>${application.id || ""}</td>
-            <td>${application.full_name || "N/A"}</td>
-            <td>${application.job_id || "N/A"}</td>
+            <td><button onclick="updateApplicationStatus('${application.id || ""}', 'reviewed')">Review</button> <button onclick="updateApplicationStatus('${application.id || ""}', 'rejected')">Reject</button></td>
             <td>${application.status || "submitted"}</td>
           </tr>
         `).join("");
       } catch (error) {
-        recentApplicationsTable.innerHTML = '<tr><td colspan="5" class="empty-row">Failed to load applications.</td></tr>';
+        recentApplicationsTable.innerHTML = '<tr><td colspan="6" class="empty-row">Failed to load applications.</td></tr>';
       }
     }
-
     async function loadRecentJobs() {
       try {
         const response = await fetch(API_BASE + "/jobs");
