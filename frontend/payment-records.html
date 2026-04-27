@@ -173,9 +173,13 @@
       font-weight: 700;
       background: #fef3c7;
       color: #92400e;
-    }
-
-    .empty-row {
+    }    .status-completed {
+      background: #dcfce7;
+      color: #166534;
+    }    .status-failed {
+      background: #fee2e2;
+      color: #991b1b;
+    }    .empty-row {
       text-align: center;
       color: #6b7280;
       padding: 20px 12px;
@@ -304,7 +308,7 @@
             <td>${payment.payment_method || "N/A"}</td>
             <td>${payment.payment_for || "N/A"}</td>
             <td>${payment.transaction_code || "-"}</td>
-            <td><span class="status-badge">${payment.status || "pending"}</span></td>
+            <td><span class="status-badge ${String(payment.status || "pending").toLowerCase() === "completed" ? "status-completed" : String(payment.status || "pending").toLowerCase() === "failed" ? "status-failed" : ""}">${payment.status || "pending"}</span></td>
           </tr>
         `).join("");
       } catch (error) {
