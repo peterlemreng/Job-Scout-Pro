@@ -76,5 +76,41 @@ router.get("/", async (req, res) => {
     });
   }
 });
+router.put("/:id/status", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    if (!status) {
+      return res.status(400).json({
+        success: false,
+        message: "status is required"
+      });
+    }
+
+    const [result] = await pool.query(
+      "UPDATE payments SET status = ? WHERE id = ?",
+      [status, id]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Payment not found"
+      });
+    }
+
+    res.json({
+      success: true,
+      message: "Payment status updated successfully"
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to update payment status",
+      error: error.message
+    });
+  }
+});
 
 module.exports = router;

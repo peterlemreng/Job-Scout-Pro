@@ -296,6 +296,7 @@
               <th>Email</th>
               <th>Amount</th>
               <th>Method</th>
+                                      <th>Action</th>
               <th>Status</th>
             </tr>
           </thead>
@@ -391,12 +392,24 @@
           recentPaymentsTable.innerHTML = '<tr><td colspan="6" class="empty-row">No payments found.</td></tr>';
           return;
         }
+recentPaymentsTable.innerHTML = payments.slice(0, 8).map(payment => `
+          <tr>
+            <td>${payment.id || ""}</td>
+            <td>${payment.full_name || "N/A"}</td>
+            <td>${payment.email || "N/A"}</td>
+            <td>${payment.amount || "0"}</td>
+            <td>${payment.payment_method || "N/A"}</td>
+            <td><button onclick="updatePaymentStatus('${payment.id || ""}', 'completed')">Complete</button> <button onclick="updatePaymentStatus('${payment.id || ""}', 'failed')">Fail</button></td>
+            <td>${payment.status || "pending"}</td>
+          </tr>
+        `).join("");
 
         recentPaymentsTable.innerHTML = payments.slice(0, 8).map(payment => `
           <tr>
             <td>${payment.id || ""}</td>
             <td>${payment.full_name || "N/A"}</td>
             <td>${payment.email || "N/A"}</td>
+                                      <td><button onclick="updatePaymentStatus('${payment.id || ""}', 'completed')">Complete</button> <button onclick="updatePaymentStatus('${payment.id || ""}', 'failed')">Fail</button></td>
             <td>${payment.amount || "0"}</td>
             <td>${payment.payment_method || "N/A"}</td>
             <td>${payment.status || "pending"}</td>
@@ -455,6 +468,21 @@ async function loadRecentApplications() {
       }
     }
 
+async function updatePaymentStatus(id, status) {
+  try {
+    const response = await fetch(API_BASE + "/payments/" + id + "/status", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status: status })
+    });
+
+    const data = await response.json();
+    alert(data.message || "Payment status updated.");
+    loadRecentPayments();
+  } catch (error) {
+    alert("Failed to update payment status.");
+  }
+}
     async function updateApplicationStatus(id, status) {
       try {
         const response = await fetch(API_BASE + "/applications/" + id + "/status", {
@@ -462,6 +490,7 @@ async function loadRecentApplications() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ status: status })
         });
+
 
         const data = await response.json();
         alert(data.message || "Application status updated.");
@@ -475,7 +504,3 @@ document.addEventListener("DOMContentLoaded", () => {
       loadRecentPayments();
       loadRecentApplications();
       loadRecentJobs();
-    });
-  </script>
-</body>
-</html>
