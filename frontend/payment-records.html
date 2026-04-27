@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Payment Records - Job Scout Pro</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f7fb;
+      color: #111827;
+    }
+
+    .topbar {
+      background: #ffffff;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 16px 20px;
+    }
+
+    .topbar-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo {
+      width: 52px;
+      height: 52px;
+      object-fit: cover;
+      border-radius: 12px;
+    }
+
+    .logo-area h1 {
+      margin: 0;
+      font-size: 20px;
+      color: #111827;
+    }
+
+    .logo-area p {
+      margin: 4px 0 0;
+      color: #6b7280;
+      font-size: 13px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: #374151;
+      font-weight: 600;
+      padding: 10px 14px;
+      border-radius: 10px;
+    }
+
+    .nav-links a:hover {
+      background: #eff6ff;
+      color: #2563eb;
+    }
+
+    .page-wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px 20px 60px;
+    }
+
+    .page-header {
+      margin-bottom: 24px;
+    }
+
+    .page-header h2 {
+      margin: 0 0 10px;
+      font-size: 32px;
+      color: #111827;
+    }
+
+    .page-header p {
+      margin: 0;
+      color: #6b7280;
+      line-height: 1.6;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    .summary-box {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+      border: 1px solid #e5e7eb;
+    }
+
+    .summary-box h3 {
+      margin: 0 0 8px;
+      font-size: 30px;
+      color: #2563eb;
+    }
+
+    .summary-box p {
+      margin: 0;
+      color: #6b7280;
+      font-size: 14px;
+    }
+
+    .records-card {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+      border: 1px solid #e5e7eb;
+    }
+
+    .records-card h3 {
+      margin: 0 0 16px;
+      font-size: 22px;
+      color: #111827;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    .records-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 900px;
+    }
+
+    .records-table th,
+    .records-table td {
+      text-align: left;
+      padding: 14px 12px;
+      border-bottom: 1px solid #e5e7eb;
+      font-size: 14px;
+      vertical-align: top;
+    }
+
+    .records-table th {
+      background: #f9fafb;
+      color: #374151;
+      font-weight: 700;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .empty-row {
+      text-align: center;
+      color: #6b7280;
+      padding: 20px 12px;
+    }
+
+    @media (max-width: 900px) {
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .page-header h2 {
+        font-size: 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="logo-area">
+        <img src="assets/logo.Jobscoutphoto.jpg" alt="Job Scout Pro Logo" class="logo" />
+        <div>
+          <h1>Job Scout Pro</h1>
+          <p>Payment Records</p>
+        </div>
+      </div>
+
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="jobs.html">Jobs</a>
+        <a href="payment.html">Make Payment</a>
+        <a href="admin.html">Admin</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page-wrap">
+    <div class="page-header">
+      <h2>Payment Records</h2>
+      <p>Review saved payment requests, track recent activity, and monitor pending payments.</p>
+    </div>
+
+    <div class="summary-grid">
+      <div class="summary-box">
+        <h3 id="totalPayments">0</h3>
+        <p>Total Payment Records</p>
+      </div>
+
+      <div class="summary-box">
+        <h3 id="pendingCount">0</h3>
+        <p>Pending Payments</p>
+      </div>
+
+      <div class="summary-box">
+        <h3 id="totalAmount">KES 0</h3>
+        <p>Total Recorded Amount</p>
+      </div>
+    </div>
+
+    <section class="records-card">
+      <h3>Recent Payment Requests</h3>
+      <div class="table-wrap">
+        <table class="records-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Amount</th>
+              <th>Method</th>
+              <th>For</th>
+              <th>Reference</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="paymentsTable">
+            <tr>
+              <td colspan="9" class="empty-row">Loading payment records...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const API_BASE = "https://job-scout-pro-production.up.railway.app/api";
+
+    const totalPayments = document.getElementById("totalPayments");
+    const pendingCount = document.getElementById("pendingCount");
+    const totalAmount = document.getElementById("totalAmount");
+    const paymentsTable = document.getElementById("paymentsTable");
+
+    async function loadPayments() {
+      try {
+        const response = await fetch(API_BASE + "/payments");
+        const payments = await response.json();
+
+        if (!Array.isArray(payments) || payments.length === 0) {
+          totalPayments.textContent = "0";
+          pendingCount.textContent = "0";
+          totalAmount.textContent = "KES 0";
+          paymentsTable.innerHTML = '<tr><td colspan="9" class="empty-row">No payment records found.</td></tr>';
+          return;
+        }
+
+        totalPayments.textContent = payments.length;
+
+        const pending = payments.filter(payment => String(payment.status || "").toLowerCase() === "pending");
+        pendingCount.textContent = pending.length;
+
+        const amountTotal = payments.reduce((sum, payment) => {
+          return sum + Number(payment.amount || 0);
+        }, 0);
+
+        totalAmount.textContent = "KES " + amountTotal.toFixed(2);
+
+        paymentsTable.innerHTML = payments.map(payment => `
+          <tr>
+            <td>${payment.id || ""}</td>
+            <td>${payment.full_name || "N/A"}</td>
+            <td>${payment.email || "N/A"}</td>
+            <td>${payment.phone || "N/A"}</td>
+            <td>${payment.currency || "KES"} ${payment.amount || "0"}</td>
+            <td>${payment.payment_method || "N/A"}</td>
+            <td>${payment.payment_for || "N/A"}</td>
+            <td>${payment.transaction_code || "-"}</td>
+            <td><span class="status-badge">${payment.status || "pending"}</span></td>
+          </tr>
+        `).join("");
+      } catch (error) {
+        paymentsTable.innerHTML = '<tr><td colspan="9" class="empty-row">Failed to load payment records.</td></tr>';
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", loadPayments);
+  </script>
+</body>
+</html>
