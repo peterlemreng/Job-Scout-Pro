@@ -422,8 +422,8 @@ recentApplicationsTable.innerHTML = applications.slice(0, 8).map(application => 
             <td>${application.full_name || "N/A"}</td>
             <td>${application.email || "N/A"}</td>
             <td>${application.job_id || "N/A"}</td>
-            <td>${application.status || "submitted"}</td>
-            <td><button onclick="updateApplicationStatus('${application.id || ""}', 'reviewed')">Review</button> <button onclick="updateApplicationStatus('${application.id || ""}', 'rejected')">Reject</button></td>
+                                          <td><button onclick="updateApplicationStatus('${application.id || ""}', 'reviewed')">Review</button> <button onclick="updateApplicationStatus('${application.id || ""}', 'rejected')">Reject</button></td>
+                                          <td>${application.status || "submitted"}</td>
           </tr>
         `).join("");
         recentApplicationsTable.innerHTML = applications.slice(0, 8).map(application => `
