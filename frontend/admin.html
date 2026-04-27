@@ -318,6 +318,7 @@
               <th>Name</th>
               <th>Email</th>
               <th>Job ID</th>
+                                      <th>Action</th>
               <th>Status</th>
             </tr>
           </thead>
@@ -415,12 +416,20 @@
           recentApplicationsTable.innerHTML = '<tr><td colspan="5" class="empty-row">No applications found.</td></tr>';
           return;
         }
-
-        recentApplicationsTable.innerHTML = applications.slice(0, 8).map(application => `
+recentApplicationsTable.innerHTML = applications.slice(0, 8).map(application => `
           <tr>
             <td>${application.id || ""}</td>
             <td>${application.full_name || "N/A"}</td>
             <td>${application.email || "N/A"}</td>
+            <td>${application.job_id || "N/A"}</td>
+            <td>${application.status || "submitted"}</td>
+            <td><button onclick="updateApplicationStatus('${application.id || ""}', 'reviewed')">Review</button> <button onclick="updateApplicationStatus('${application.id || ""}', 'rejected')">Reject</button></td>
+          </tr>
+        `).join("");
+        recentApplicationsTable.innerHTML = applications.slice(0, 8).map(application => `
+          <tr>
+            <td>${application.id || ""}</td>
+            <td>${application.full_name || "N/A"}</td>
             <td>${application.job_id || "N/A"}</td>
             <td>${application.status || "submitted"}</td>
           </tr>
@@ -454,7 +463,22 @@
       }
     }
 
-    document.addEventListener("DOMContentLoaded", () => {
+    async function updateApplicationStatus(id, status) {
+      try {
+        const response = await fetch(API_BASE + "/applications/" + id + "/status", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status: status })
+        });
+
+        const data = await response.json();
+        alert(data.message || "Application status updated.");
+        loadRecentApplications();
+      } catch (error) {
+        alert("Failed to update application status.");
+      }
+    }
+document.addEventListener("DOMContentLoaded", () => {
       loadStats();
       loadRecentPayments();
       loadRecentApplications();
