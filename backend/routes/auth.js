@@ -1,4 +1,5 @@
 const express = require("express");
+const bcrypt = require("bcryptjs");
 const router = express.Router();
 const pool = require("../db");
 
@@ -25,9 +26,11 @@ router.post("/signup", async (req, res) => {
       });
     }
 
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     await pool.query(
       "INSERT INTO users (full_name, email, phone, password, role) VALUES (?, ?, ?, ?, 'user')",
-      [full_name, email, phone, password]
+      [full_name, email, phone, hashedPassword]
     );
 
     res.json({
@@ -55,8 +58,8 @@ router.post("/login", async (req, res) => {
     }
 
     const [users] = await pool.query(
-      "SELECT * FROM users WHERE email = ? AND password = ? LIMIT 1",
-      [email, password]
+      "SELECT * FROM users WHERE email = ? LIMIT 1",
+      [email]
     );
 
     if (users.length === 0) {
@@ -67,6 +70,14 @@ router.post("/login", async (req, res) => {
     }
 
     const user = users[0];
+    const passwordMatch = await bcrypt.compare(password, user.password);
+
+    if (!passwordMatch) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid email or password"
+      });
+    }
 
     res.json({
       success: true,
