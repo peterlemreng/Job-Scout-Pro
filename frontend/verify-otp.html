@@ -181,6 +181,7 @@
           verifyMessage.className = "message-box message-success";
           verifyMessage.textContent = data.message || "OTP verified successfully.";
 
+          localStorage.setItem("resetOtp", otp);
           localStorage.setItem("resetOtpVerified", "true");
 
           setTimeout(() => {
