@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../db");
+const requireAdmin = require("../middleware/requireAdmin");
 
 router.post("/", async (req, res) => {
   try {
@@ -76,7 +77,7 @@ router.get("/", async (req, res) => {
     });
   }
 });
-router.put("/:id/status", async (req, res) => {
+router.put("/:id/status", requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
     const { status } = req.body;

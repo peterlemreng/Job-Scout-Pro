@@ -376,7 +376,7 @@ const currentUser = JSON.parse(localStorage.getItem("user") || "null");
 
     async function loadStats() {
       try {
-        const response = await fetch(API_BASE + "/admin/stats");
+        const response = await fetch(API_BASE + "/admin/stats", { headers: { "x-admin-email": currentUser.email } });
         const data = await response.json();
 
         if (data.success) {
@@ -467,7 +467,7 @@ async function updatePaymentStatus(id, status) {
   try {
     const response = await fetch(API_BASE + "/payments/" + id + "/status", {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "x-admin-email": currentUser.email },
       body: JSON.stringify({ status: status })
     });
 
@@ -483,7 +483,7 @@ async function updatePaymentStatus(id, status) {
       try {
         const response = await fetch(API_BASE + "/applications/" + id + "/status", {
           method: "PUT",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json", "x-admin-email": currentUser.email },
           body: JSON.stringify({ status: status })
         });
 

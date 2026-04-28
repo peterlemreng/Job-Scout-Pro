@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../db");
+const requireAdmin = require("../middleware/requireAdmin");
 
-router.get("/stats", async (req, res) => {
+router.get("/stats", requireAdmin, async (req, res) => {
   try {
     const [jobsResult] = await pool.query("SELECT COUNT(*) AS totalJobs FROM jobs");
     const [usersResult] = await pool.query("SELECT COUNT(*) AS totalUsers FROM users");
