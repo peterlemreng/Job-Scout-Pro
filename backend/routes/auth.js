@@ -145,6 +145,14 @@ router.post("/forgot-password", async (req, res) => {
 
     console.log("OTP for", email, "is", otp);
 
+    await mailTransport.sendMail({
+      from: process.env.SMTP_EMAIL,
+      to: email,
+      subject: "Job Scout Pro Password Reset OTP",
+      text: `Your Job Scout Pro OTP is ${otp}. It expires in 2 minutes.`,
+      html: `<p>Your Job Scout Pro OTP is <b>${otp}</b>.</p><p>It expires in 2 minutes.</p>`
+    });
+
     res.json({
       success: true,
       message: "OTP generated successfully."
