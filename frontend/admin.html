@@ -353,7 +353,46 @@
         </table>
       </div>
     </section>
-  </main>
+  
+    <section class="admin-section">
+      <h2>Create Paid Job Draft</h2>
+      <div class="form-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+        <div class="form-group">
+          <label for="draftTitle">Job Title</label>
+          <input type="text" id="draftTitle" />
+        </div>
+        <div class="form-group">
+          <label for="draftCompany">Company</label>
+          <input type="text" id="draftCompany" />
+        </div>
+        <div class="form-group">
+          <label for="draftLocation">Location</label>
+          <input type="text" id="draftLocation" />
+        </div>
+        <div class="form-group">
+          <label for="draftJobType">Job Type</label>
+          <input type="text" id="draftJobType" placeholder="Full-time" />
+        </div>
+        <div class="form-group">
+          <label for="draftCategory">Category</label>
+          <input type="text" id="draftCategory" placeholder="General" />
+        </div>
+        <div class="form-group">
+          <label for="draftApplyUrl">Apply URL</label>
+          <input type="text" id="draftApplyUrl" placeholder="https://..." />
+        </div>
+        <div class="form-group" style="grid-column: 1 / -1;">
+          <label for="draftDescription">Description</label>
+          <textarea id="draftDescription" style="padding:12px 14px; border:1px solid #d1d5db; border-radius:10px; min-height:110px;"></textarea>
+        </div>
+      </div>
+      <div style="margin-top:16px;">
+        <button class="btn btn-primary" onclick="createPaidJobDraft()">Create Draft and Continue to Payment</button>
+      </div>
+      <div id="draftJobMessage" class="message-box" style="margin-top:14px;"></div>
+    </section>
+
+</main>
 
   <script>
     const API_BASE = "https://job-scout-pro-production.up.railway.app/api";
@@ -496,6 +535,56 @@ async function updatePaymentStatus(id, status) {
         alert("Failed to update application status.");
       }
     }
+
+    async function createPaidJobDraft() {
+      const draftJobMessage = document.getElementById("draftJobMessage");
+      const payload = {
+        title: document.getElementById("draftTitle").value.trim(),
+        company: document.getElementById("draftCompany").value.trim(),
+        location: document.getElementById("draftLocation").value.trim(),
+        job_type: document.getElementById("draftJobType").value.trim(),
+        category: document.getElementById("draftCategory").value.trim(),
+        apply_url: document.getElementById("draftApplyUrl").value.trim(),
+        description: document.getElementById("draftDescription").value.trim(),
+        posted_by: currentUser.id
+      };
+
+      if (!payload.title || !payload.company || !payload.location || !payload.job_type || !payload.description) {
+        draftJobMessage.className = "message-box message-error";
+        draftJobMessage.textContent = "Please fill all required job fields.";
+        return;
+      }
+
+      draftJobMessage.className = "message-box";
+      draftJobMessage.textContent = "";
+
+      try {
+        const response = await fetch(API_BASE + "/jobs", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (data.success && data.jobId) {
+          draftJobMessage.className = "message-box message-success";
+          draftJobMessage.textContent = "Draft job created. Redirecting to payment...";
+          setTimeout(() => {
+            window.location.href = "payment.html?jobId=" + data.jobId;
+          }, 800);
+        } else {
+          draftJobMessage.className = "message-box message-error";
+          draftJobMessage.textContent = data.message || "Failed to create job draft.";
+        }
+      } catch (error) {
+        draftJobMessage.className = "message-box message-error";
+        draftJobMessage.textContent = "Unable to connect to the server.";
+      }
+    }
+
 document.addEventListener("DOMContentLoaded", () => {
       loadStats();
       loadRecentPayments();
