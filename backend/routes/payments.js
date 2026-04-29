@@ -6,6 +6,7 @@ const requireAdmin = require("../middleware/requireAdmin");
 router.post("/", async (req, res) => {
   try {
     const {
+      job_db_id,
       full_name,
       email,
       phone,
@@ -13,18 +14,19 @@ router.post("/", async (req, res) => {
       currency,
       payment_method,
       payment_for,
-      transaction_code,
-      status
+      transaction_code
     } = req.body;
 
     if (
+      !job_db_id ||
       !full_name ||
       !email ||
       !phone ||
       !amount ||
       !currency ||
       !payment_method ||
-      !payment_for
+      !payment_for ||
+      !transaction_code
     ) {
       return res.status(400).json({
         success: false,
@@ -32,13 +34,12 @@ router.post("/", async (req, res) => {
       });
     }
 
-    const finalStatus = status || "pending";
-
     const [result] = await pool.query(
       `INSERT INTO payments
-      (full_name, email, phone, amount, currency, payment_method, payment_for, transaction_code, status)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      (job_db_id, full_name, email, phone, amount, currency, payment_method, payment_for, transaction_code, status)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')`,
       [
+        job_db_id,
         full_name,
         email,
         phone,
@@ -46,14 +47,21 @@ router.post("/", async (req, res) => {
         currency,
         payment_method,
         payment_for,
-        transaction_code || null,
-        finalStatus
+        transaction_code
       ]
+    );
+
+    await pool.query(
+      `UPDATE jobs
+       SET payment_reference = ?, payer_name = ?, payer_phone = ?, amount_paid = ?,
+           payment_status = 'pending', post_status = 'pending_review', updated_at = NOW()
+       WHERE id = ?`,
+      [transaction_code, full_name, phone, amount, job_db_id]
     );
 
     res.json({
       success: true,
-      message: "Payment saved successfully",
+      message: "Payment submitted successfully. Your post is now pending admin review.",
       paymentId: result.insertId
     });
   } catch (error) {
@@ -77,10 +85,11 @@ router.get("/", async (req, res) => {
     });
   }
 });
+
 router.put("/:id/status", requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
-    const { status } = req.body;
+    const { status, admin_id } = req.body;
 
     if (!status) {
       return res.status(400).json({
@@ -89,16 +98,51 @@ router.put("/:id/status", requireAdmin, async (req, res) => {
       });
     }
 
-    const [result] = await pool.query(
-      "UPDATE payments SET status = ? WHERE id = ?",
-      [status, id]
+    const [payments] = await pool.query(
+      "SELECT * FROM payments WHERE id = ? LIMIT 1",
+      [id]
     );
 
-    if (result.affectedRows === 0) {
+    if (payments.length === 0) {
       return res.status(404).json({
         success: false,
         message: "Payment not found"
       });
+    }
+
+    const payment = payments[0];
+
+    await pool.query(
+      "UPDATE payments SET status = ?, reviewed_at = NOW(), reviewed_by = ? WHERE id = ?",
+      [status, admin_id || null, id]
+    );
+
+    if (payment.job_db_id) {
+      if (status === "completed") {
+        await pool.query(
+          `UPDATE jobs
+           SET payment_status = 'paid',
+               post_status = 'published',
+               status = 'active',
+               paid_at = NOW(),
+               approved_at = NOW(),
+               approved_by = ?,
+               expires_at = DATE_ADD(NOW(), INTERVAL plan_duration_days DAY),
+               updated_at = NOW()
+           WHERE id = ?`,
+          [admin_id || null, payment.job_db_id]
+        );
+      } else if (status === "failed" || status === "rejected") {
+        await pool.query(
+          `UPDATE jobs
+           SET payment_status = 'rejected',
+               post_status = 'pending_review',
+               status = 'inactive',
+               updated_at = NOW()
+           WHERE id = ?`,
+          [payment.job_db_id]
+        );
+      }
     }
 
     res.json({

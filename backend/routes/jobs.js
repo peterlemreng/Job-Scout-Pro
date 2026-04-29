@@ -17,6 +17,12 @@ router.get("/", async (req, res) => {
         description,
         apply_url,
         status,
+        post_status,
+        payment_status,
+        plan_type,
+        plan_price,
+        plan_duration_days,
+        expires_at,
         views_count,
         clicks_count,
         likes_count,
@@ -55,6 +61,12 @@ router.get("/:id", async (req, res) => {
         description,
         apply_url,
         status,
+        post_status,
+        payment_status,
+        plan_type,
+        plan_price,
+        plan_duration_days,
+        expires_at,
         views_count,
         clicks_count,
         likes_count,
@@ -173,7 +185,16 @@ router.post("/:id/click", async (req, res) => {
 
 router.post("/", fraudCheck, async (req, res) => {
   try {
-    const { title, company, location, job_type, description } = req.body;
+    const {
+      title,
+      company,
+      location,
+      job_type,
+      description,
+      category,
+      apply_url,
+      posted_by
+    } = req.body;
 
     if (!title || !company || !location || !job_type || !description) {
       return res.status(400).json({
@@ -183,13 +204,26 @@ router.post("/", fraudCheck, async (req, res) => {
     }
 
     const [result] = await pool.query(
-      "INSERT INTO jobs (title, company, location, job_type, description, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, 'active', NOW(), NOW())",
-      [title, company, location, job_type, description]
+      `INSERT INTO jobs (
+        title, company, location, job_type, description, category, apply_url, posted_by,
+        status, plan_type, plan_price, plan_duration_days, payment_status, post_status,
+        created_at, updated_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'inactive', 'basic', 799.00, 30, 'pending', 'draft', NOW(), NOW())`,
+      [
+        title,
+        company,
+        location,
+        job_type,
+        description,
+        category || null,
+        apply_url || null,
+        posted_by || null
+      ]
     );
 
     res.json({
       success: true,
-      message: "Job created successfully",
+      message: "Job draft created. Proceed to payment.",
       jobId: result.insertId
     });
   } catch (error) {
