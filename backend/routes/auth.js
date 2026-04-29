@@ -1,7 +1,16 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
+const nodemailer = require("nodemailer");
 const router = express.Router();
 const pool = require("../db");
+
+const mailTransport = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.SMTP_EMAIL,
+    pass: process.env.SMTP_PASSWORD
+  }
+});
 
 router.post("/signup", async (req, res) => {
   try {
