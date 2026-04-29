@@ -163,7 +163,7 @@
       const otp = document.getElementById("otp").value.trim();
 
       try {
-        const response = await fetch(`${API_BASE}/auth/verify-reset-otp`, {
+        const response = await fetch(`${API_BASE}/auth/verify-otp`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
