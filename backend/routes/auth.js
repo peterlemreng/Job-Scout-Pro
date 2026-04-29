@@ -14,7 +14,14 @@ router.post("/signup", async (req, res) => {
       });
     }
 
-    const [existingUsers] = await pool.query(
+    const [existingUsers] =   "INSERT INTO users (full_name, email, phone, password, role) VALUES (?, ?, ?, ?, 'user')",
+  [full_name, email, phone, hashedPassword]
+);
+
+res.json({
+  success: true,
+  message: "Account created successfully"
+});await pool.query(
       "SELECT id FROM users WHERE email = ? LIMIT 1",
       [email]
     );
@@ -131,8 +138,7 @@ router.post("/forgot-password", async (req, res) => {
 
     res.json({
       success: true,
-      message: "OTP generated successfully. For now, check server logs.",
-      dev_otp: otp
+      message: "OTP generated successfully."
     });
   } catch (error) {
     res.status(500).json({ success: false, message: "Failed to process forgot password", error: error.message });
