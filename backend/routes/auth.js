@@ -1,18 +1,10 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
-const nodemailer = require("nodemailer");
+const { Resend } = require("resend");
 const router = express.Router();
 const pool = require("../db");
 
-const mailTransport = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
-  auth: {
-    user: process.env.SMTP_EMAIL,
-    pass: process.env.SMTP_PASSWORD
-  }
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 router.post("/signup", async (req, res) => {
   try {
@@ -147,11 +139,10 @@ router.post("/forgot-password", async (req, res) => {
 
     console.log("OTP for", email, "is", otp);
 
-    await mailTransport.sendMail({
-      from: process.env.SMTP_EMAIL,
+    await resend.emails.send({
+      from: "onboarding@resend.dev",
       to: email,
       subject: "Job Scout Pro Password Reset OTP",
-      text: `Your Job Scout Pro OTP is ${otp}. It expires in 2 minutes.`,
       html: `<p>Your Job Scout Pro OTP is <b>${otp}</b>.</p><p>It expires in 2 minutes.</p>`
     });
 
