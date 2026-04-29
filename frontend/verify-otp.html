@@ -154,6 +154,27 @@
     const verifyMessage = document.getElementById("verifyMessage");
     const resendOtpBtn = document.getElementById("resendOtpBtn");
 
+    let resendSeconds = 120;
+    let resendInterval;
+
+    function startResendCountdown() {
+      clearInterval(resendInterval);
+      resendSeconds = 120;
+      resendOtpBtn.disabled = true;
+      resendOtpBtn.textContent = `Resend OTP (${resendSeconds}s)`;
+
+      resendInterval = setInterval(() => {
+        resendSeconds -= 1;
+        if (resendSeconds <= 0) {
+          clearInterval(resendInterval);
+          resendOtpBtn.disabled = false;
+          resendOtpBtn.textContent = "Resend OTP";
+          return;
+        }
+        resendOtpBtn.textContent = `Resend OTP (${resendSeconds}s)`;
+      }, 1000);
+    }
+
     const resetEmail = localStorage.getItem("resetEmail") || "";
     const resetMethod = localStorage.getItem("resetMethod") || "email";
 
@@ -177,7 +198,7 @@
 
         const data = await response.json();
 
-        if (data.success) {
+        if (data.success) {startResendCountdown();
           verifyMessage.className = "message-box message-success";
           verifyMessage.textContent = data.message || "OTP verified successfully.";
 
@@ -224,6 +245,7 @@
         verifyMessage.textContent = "Unable to connect to the server.";
       }
     });
+startResendCountdown();
   </script>
 </body>
 </html>
