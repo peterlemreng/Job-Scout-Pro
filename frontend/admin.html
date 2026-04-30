@@ -527,16 +527,31 @@ async function loadRecentJobs() {
 
 async function updatePaymentStatus(id, status) {
   try {
+    let failureReason = null;
+
+    if (status === "failed") {
+      failureReason = prompt("Why are you failing this payment?", "Wrong transaction code");
+      if (failureReason === null) return;
+    }
+
     const response = await fetch(API_BASE + "/payments/" + id + "/status", {
       method: "PUT",
       headers: { "Content-Type": "application/json", "x-admin-email": currentUser.email },
-      body: JSON.stringify({ status: status })
+      body: JSON.stringify({
+        status: status,
+        admin_id: currentUser.id,
+        failure_reason: failureReason
+      })
     });
 
     const data = await response.json();
     alert(data.message || "Payment status updated.");
     loadRecentPayments();
     loadStats();
+  } catch (error) {
+    alert("Failed to update payment status.");
+  }
+}
   } catch (error) {
     alert("Failed to update payment status.");
   }
