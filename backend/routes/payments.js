@@ -89,7 +89,7 @@ router.get("/", async (req, res) => {
 router.put("/:id/status", requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
-    const { status, admin_id } = req.body;
+    const { status, admin_id, failure_reason } = req.body;
 
     if (!status) {
       return res.status(400).json({
@@ -113,8 +113,8 @@ router.put("/:id/status", requireAdmin, async (req, res) => {
     const payment = payments[0];
 
     await pool.query(
-      "UPDATE payments SET status = ?, reviewed_at = NOW(), reviewed_by = ? WHERE id = ?",
-      [status, admin_id || null, id]
+      "UPDATE payments SET status = ?, reviewed_at = NOW(), reviewed_by = ?, failure_reason = ? WHERE id = ?",
+      [status, admin_id || null, (status === "failed" || status === "rejected") ? (failure_reason || "No reason provided") : null, id]
     );
 
     if (payment.job_db_id) {
