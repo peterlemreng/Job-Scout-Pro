@@ -251,14 +251,14 @@
               <th>Phone</th>
               <th>Amount</th>
               <th>Method</th>
-              <th>For</th>
+              <th>For</th><th>Job ID</th>
               <th>Reference</th>
               <th>Status</th>
             </tr>
           </thead>
           <tbody id="paymentsTable">
             <tr>
-              <td colspan="9" class="empty-row">Loading payment records...</td>
+              <td colspan="10" class="empty-row">Loading payment records...</td>
             </tr>
           </tbody>
         </table>
@@ -283,7 +283,7 @@
           totalPayments.textContent = "0";
           pendingCount.textContent = "0";
           totalAmount.textContent = "KES 0";
-          paymentsTable.innerHTML = '<tr><td colspan="9" class="empty-row">No payment records found.</td></tr>';
+          paymentsTable.innerHTML = '<tr><td colspan="10" class="empty-row">No payment records found.</td></tr>';
           return;
         }
 
@@ -307,12 +307,13 @@
             <td>${payment.currency || "KES"} ${payment.amount || "0"}</td>
             <td>${payment.payment_method || "N/A"}</td>
             <td>${payment.payment_for || "N/A"}</td>
+            <td>${payment.job_db_id || "-"}</td>
             <td>${payment.transaction_code || "-"}</td>
             <td><span class="status-badge ${String(payment.status || "pending").toLowerCase() === "completed" ? "status-completed" : String(payment.status || "pending").toLowerCase() === "failed" ? "status-failed" : ""}">${payment.status || "pending"}</span></td>
           </tr>
         `).join("");
       } catch (error) {
-        paymentsTable.innerHTML = '<tr><td colspan="9" class="empty-row">Failed to load payment records.</td></tr>';
+        paymentsTable.innerHTML = '<tr><td colspan="10" class="empty-row">Failed to load payment records.</td></tr>';
       }
     }
 
