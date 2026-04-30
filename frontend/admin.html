@@ -338,19 +338,14 @@
         <table class="admin-table">
           <thead>
             <tr>
-              <th>Company</th>
-<th>Title</th>
-<th>Company</th>
-<th>Location</th>
-<th>Category</th>
-<th>Featured</th><th>Paid At</th><th>Expires At</th><th>Remaining Days</th>
-<th>Paid At</th>
-<th>Expires At</th>
-<th>Remaining Days</th>>
+              <th>Title</th>
               <th>Company</th>
               <th>Location</th>
               <th>Category</th>
               <th>Featured</th>
+              <th>Paid At</th>
+              <th>Expires At</th>
+              <th>Remaining Days</th>
             </tr>
           </thead>
           <tbody id="recentJobsTable">
@@ -514,14 +509,17 @@ async function loadRecentJobs() {
         }
 
         recentJobsTable.innerHTML = jobs.slice(0, 8).map(job => `
-          <tr>
-            <td>${job.title || "Untitled"}</td>
-            <td>${job.company || "N/A"}</td>
-            <td>${job.location || "N/A"}</td>
-            <td>${job.category || "General"}</td>
-            <td>${Number(job.is_featured) === 1 ? "Yes" : "No"}</td>
-          </tr>
-        `).join("");
+  <tr>
+    <td>${job.title || "Untitled"}</td>
+    <td>${job.company || "N/A"}</td>
+    <td>${job.location || "N/A"}</td>
+    <td>${job.category || "General"}</td>
+    <td>${Number(job.is_featured) === 1 ? "Yes" : "No"}</td>
+    <td>${formatDate(job.paid_at)}</td>
+    <td>${formatDate(job.expires_at)}</td>
+    <td>${getRemainingDays(job.expires_at)}</td>
+  </tr>
+`).join("");
       } catch (error) {
         recentJobsTable.innerHTML = '<tr><td colspan="8" class="empty-row">Failed to load jobs.</td></tr>';
       }
