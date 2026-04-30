@@ -32,7 +32,7 @@ router.get("/", async (req, res) => {
         created_at,
         updated_at
       FROM jobs
-      WHERE status = 'active'
+      WHERE status = 'active'          AND (expires_at IS NULL OR expires_at >= NOW())
       ORDER BY created_at DESC
     `);
 
