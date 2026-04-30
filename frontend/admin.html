@@ -338,7 +338,15 @@
         <table class="admin-table">
           <thead>
             <tr>
-              <th>Title</th>
+              <th>Company</th>
+<th>Title</th>
+<th>Company</th>
+<th>Location</th>
+<th>Category</th>
+<th>Featured</th><th>Paid At</th><th>Expires At</th><th>Remaining Days</th>
+<th>Paid At</th>
+<th>Expires At</th>
+<th>Remaining Days</th>>
               <th>Company</th>
               <th>Location</th>
               <th>Category</th>
@@ -347,7 +355,7 @@
           </thead>
           <tbody id="recentJobsTable">
             <tr>
-              <td colspan="5" class="empty-row">Loading jobs...</td>
+              <td colspan="8" class="empty-row">Loading jobs...</td>
             </tr>
           </tbody>
         </table>
@@ -478,14 +486,31 @@ async function loadRecentApplications() {
         recentApplicationsTable.innerHTML = '<tr><td colspan="6" class="empty-row">Failed to load applications.</td></tr>';
       }
     }
-    async function loadRecentJobs() {
+    
+function formatDate(value) {
+  if (!value) return "—";
+  const d = new Date(value);
+  if (isNaN(d.getTime())) return "—";
+  return d.toLocaleDateString();
+}
+
+function getRemainingDays(expiresAt) {
+  if (!expiresAt) return "—";
+  const now = new Date();
+  const expiry = new Date(expiresAt);
+  if (isNaN(expiry.getTime())) return "—";
+  const diff = expiry - now;
+  const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+  return days > 0 ? days : 0;
+}
+
+async function loadRecentJobs() {
       try {
         const response = await fetch(API_BASE + "/jobs");
         const jobs = await response.json();
 
         if (!Array.isArray(jobs) || jobs.length === 0) {
-          recentJobsTable.innerHTML = '<tr><td colspan="5" class="empty-row">No jobs found.</td></tr>';
-          return;
+         recentJobsTable.innerHTML = '<tr><td colspan="8" class="empty-row">No jobs found.</td></tr>';
         }
 
         recentJobsTable.innerHTML = jobs.slice(0, 8).map(job => `
@@ -498,7 +523,7 @@ async function loadRecentApplications() {
           </tr>
         `).join("");
       } catch (error) {
-        recentJobsTable.innerHTML = '<tr><td colspan="5" class="empty-row">Failed to load jobs.</td></tr>';
+        recentJobsTable.innerHTML = '<tr><td colspan="8" class="empty-row">Failed to load jobs.</td></tr>';
       }
     }
 
