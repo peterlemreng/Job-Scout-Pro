@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Employer Dashboard - Job Scout Pro</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f7fb;
+      color: #111827;
+    }
+    .topbar {
+      background: #ffffff;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 16px 20px;
+    }
+    .topbar-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo {
+      width: 52px;
+      height: 52px;
+      object-fit: cover;
+      border-radius: 12px;
+    }
+    .logo-area h1 {
+      margin: 0;
+      font-size: 20px;
+      color: #111827;
+    }
+    .logo-area p {
+      margin: 4px 0 0;
+      color: #6b7280;
+      font-size: 13px;
+    }
+    .nav-links {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: #374151;
+      font-weight: 600;
+      padding: 10px 14px;
+      border-radius: 10px;
+    }
+    .nav-links a:hover {
+      background: #eff6ff;
+      color: #2563eb;
+    }
+    .page-wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px 20px 60px;
+    }
+    .page-header {
+      margin-bottom: 24px;
+    }
+    .page-header h2 {
+      margin: 0 0 10px;
+      font-size: 32px;
+      color: #111827;
+    }
+    .page-header p {
+      margin: 0;
+      color: #6b7280;
+      line-height: 1.6;
+    }
+    .search-card, .records-card, .summary-box {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+      border: 1px solid #e5e7eb;
+    }
+    .search-card {
+      margin-bottom: 24px;
+    }
+    .search-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      align-items: end;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+    .form-group label {
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 8px;
+    }
+    .form-group input {
+      padding: 12px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      font-size: 14px;
+      outline: none;
+    }
+    .form-group input:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+    .btn {
+      display: inline-block;
+      text-decoration: none;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 18px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+    .btn-primary {
+      background: #2563eb;
+      color: #ffffff;
+    }
+    .btn-primary:hover {
+      background: #1d4ed8;
+    }
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+    .summary-box h3 {
+      margin: 0 0 8px;
+      font-size: 30px;
+      color: #2563eb;
+    }
+    .summary-box p {
+      margin: 0;
+      color: #6b7280;
+      font-size: 14px;
+    }
+    .records-card h3 {
+      margin: 0 0 16px;
+      font-size: 22px;
+      color: #111827;
+    }
+    .table-wrap {
+      overflow-x: auto;
+    }
+    .records-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 1100px;
+    }
+    .records-table th,
+    .records-table td {
+      text-align: left;
+      padding: 14px 12px;
+      border-bottom: 1px solid #e5e7eb;
+      font-size: 14px;
+      vertical-align: top;
+    }
+    .records-table th {
+      background: #f9fafb;
+      color: #374151;
+      font-weight: 700;
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      background: #fef3c7;
+      color: #92400e;
+    }
+    .status-paid, .status-published {
+      background: #dcfce7;
+      color: #166534;
+    }
+    .status-failed, .status-rejected {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+    .empty-row {
+      text-align: center;
+      color: #6b7280;
+      padding: 20px 12px;
+    }
+    .message-box {
+      margin-top: 14px;
+      padding: 12px;
+      border-radius: 10px;
+      display: none;
+      font-size: 14px;
+    }
+    .message-error {
+      background: #fee2e2;
+      color: #991b1b;
+      display: block;
+    }
+    @media (max-width: 900px) {
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+      .search-row {
+        grid-template-columns: 1fr;
+      }
+      .page-header h2 {
+        font-size: 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="logo-area">
+        <img src="assets/logo.Jobscoutphoto.jpg" alt="Job Scout Pro Logo" class="logo" />
+        <div>
+          <h1>Job Scout Pro</h1>
+          <p>Employer Dashboard</p>
+        </div>
+      </div>
+
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="jobs.html">Jobs</a>
+        <a href="payment.html">Make Payment</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page-wrap">
+    <div class="page-header">
+      <h2>Employer Dashboard</h2>
+      <p>View your submitted job posts, payment progress, approval status, and expiry details using your employer email address.</p>
+    </div>
+
+    <section class="search-card">
+      <div class="search-row">
+        <div class="form-group">
+          <label for="employerEmail">Employer Email</label>
+          <input type="email" id="employerEmail" placeholder="Enter your employer email" />
+        </div>
+        <button class="btn btn-primary" id="loadPostsBtn">View My Posts</button>
+      </div>
+      <div id="dashboardMessage" class="message-box"></div>
+    </section>
+
+    <div class="summary-grid">
+      <div class="summary-box">
+        <h3 id="totalPosts">0</h3>
+        <p>Total Posts</p>
+      </div>
+      <div class="summary-box">
+        <h3 id="publishedPosts">0</h3>
+        <p>Published Posts</p>
+      </div>
+      <div class="summary-box">
+        <h3 id="pendingPosts">0</h3>
+        <p>Pending / Review</p>
+      </div>
+    </div>
+
+    <section class="records-card">
+      <h3>My Job Posts</h3>
+      <div class="table-wrap">
+        <table class="records-table">
+          <thead>
+            <tr>
+              <th>Job Title</th>
+              <th>Company</th>
+              <th>Payment Status</th>
+              <th>Post Status</th>
+              <th>Paid At</th>
+              <th>Expires At</th>
+              <th>Remaining Days</th>
+              <th>Transaction Code</th>
+              <th>Failure Reason</th>
+            </tr>
+          </thead>
+          <tbody id="postsTable">
+            <tr>
+              <td colspan="9" class="empty-row">Enter your email to view your posts.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const API_BASE = "https://job-scout-pro-production.up.railway.app/api";
+
+    const employerEmail = document.getElementById("employerEmail");
+    const loadPostsBtn = document.getElementById("loadPostsBtn");
+    const dashboardMessage = document.getElementById("dashboardMessage");
+    const totalPosts = document.getElementById("totalPosts");
+    const publishedPosts = document.getElementById("publishedPosts");
+    const pendingPosts = document.getElementById("pendingPosts");
+    const postsTable = document.getElementById("postsTable");
+
+    function formatDate(value) {
+      if (!value) return "—";
+      const d = new Date(value);
+      if (Number.isNaN(d.getTime())) return "—";
+      return d.toLocaleDateString("en-GB");
+    }
+
+    function getRemainingDays(expiresAt) {
+      if (!expiresAt) return "—";
+      const now = new Date();
+      const end = new Date(expiresAt);
+      const diff = end.getTime() - now.getTime();
+      const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+      return days > 0 ? String(days) : "0";
+    }
+
+    function statusClass(value) {
+      const v = String(value || "").toLowerCase();
+      if (v === "paid") return "status-paid";
+      if (v === "published") return "status-published";
+      if (v === "failed" || v === "rejected") return "status-failed";
+      return "";
+    }
+
+    async function loadEmployerPosts() {
+      const email = employerEmail.value.trim().toLowerCase();
+
+      if (!email) {
+        dashboardMessage.className = "message-box message-error";
+        dashboardMessage.textContent = "Please enter your employer email.";
+        return;
+      }
+
+      dashboardMessage.className = "message-box";
+      dashboardMessage.textContent = "";
+      postsTable.innerHTML = '<tr><td colspan="9" class="empty-row">Loading employer posts...</td></tr>';
+
+      try {
+        const response = await fetch(API_BASE + "/employer/posts?email=" + encodeURIComponent(email));
+        const data = await response.json();
+
+        if (!data.success || !Array.isArray(data.posts) || data.posts.length === 0) {
+          totalPosts.textContent = "0";
+          publishedPosts.textContent = "0";
+          pendingPosts.textContent = "0";
+          postsTable.innerHTML = '<tr><td colspan="9" class="empty-row">No posts found for this email.</td></tr>';
+          return;
+        }
+
+        totalPosts.textContent = data.posts.length;
+        publishedPosts.textContent = data.posts.filter(post => String(post.post_status || "").toLowerCase() === "published").length;
+        pendingPosts.textContent = data.posts.filter(post => {
+          const status = String(post.post_status || "").toLowerCase();
+          return status === "pending_review" || status === "draft";
+        }).length;
+
+        postsTable.innerHTML = data.posts.map(post => `
+          <tr>
+            <td>${post.title || "Untitled Job"}</td>
+            <td>${post.company || "N/A"}</td>
+            <td><span class="status-badge ${statusClass(post.payment_status || post.payment_record_status)}">${post.payment_status || post.payment_record_status || "N/A"}</span></td>
+            <td><span class="status-badge ${statusClass(post.post_status)}">${post.post_status || "N/A"}</span></td>
+            <td>${formatDate(post.paid_at)}</td>
+            <td>${formatDate(post.expires_at)}</td>
+            <td>${getRemainingDays(post.expires_at)}</td>
+            <td>${post.transaction_code || "-"}</td>
+            <td>${post.failure_reason || "-"}</td>
+          </tr>
+        `).join("");
+      } catch (error) {
+        postsTable.innerHTML = '<tr><td colspan="9" class="empty-row">Failed to load employer posts.</td></tr>';
+      }
+    }
+
+    loadPostsBtn.addEventListener("click", loadEmployerPosts);
+  </script>
+</body>
+</html>
