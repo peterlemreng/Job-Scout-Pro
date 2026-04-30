@@ -237,4 +237,49 @@ router.post("/", fraudCheck, async (req, res) => {
   }
 });
 
+
+router.delete("/:id", require("../middleware/requireAdmin"), async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const [jobs] = await pool.query(
+      "SELECT * FROM jobs WHERE id = ? LIMIT 1",
+      [id]
+    );
+
+    if (jobs.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Job not found"
+      });
+    }
+
+    const job = jobs[0];
+    const postStatus = String(job.post_status || "").toLowerCase();
+    const paymentStatus = String(job.payment_status || "").toLowerCase();
+
+    if (
+      !["draft", "pending_review"].includes(postStatus) &&
+      !["pending", "failed", "rejected"].includes(paymentStatus)
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Only draft, pending review, failed, or rejected jobs can be deleted"
+      });
+    }
+
+    await pool.query("DELETE FROM jobs WHERE id = ?", [id]);
+
+    res.json({
+      success: true,
+      message: "Job deleted successfully"
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to delete job",
+      error: error.message
+    });
+  }
+});
 module.exports = router;

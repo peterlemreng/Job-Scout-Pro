@@ -158,4 +158,65 @@ router.put("/:id/status", requireAdmin, async (req, res) => {
   }
 });
 
+
+router.delete("/:id", requireAdmin, async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const [payments] = await pool.query(
+      "SELECT * FROM payments WHERE id = ? LIMIT 1",
+      [id]
+    );
+
+    if (payments.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Payment not found"
+      });
+    }
+
+    const payment = payments[0];
+    const paymentStatus = String(payment.status || "").toLowerCase();
+
+    if (!["pending", "failed", "rejected"].includes(paymentStatus)) {
+      return res.status(400).json({
+        success: false,
+        message: "Only pending, failed, or rejected payments can be deleted"
+      });
+    }
+
+    await pool.query("DELETE FROM payments WHERE id = ?", [id]);
+
+    if (payment.job_db_id) {
+      await pool.query(
+        `UPDATE jobs
+         SET payment_status = 'pending',
+             post_status = 'draft',
+             status = 'inactive',
+             payment_reference = NULL,
+             payer_name = NULL,
+             payer_phone = NULL,
+             amount_paid = NULL,
+             paid_at = NULL,
+             approved_at = NULL,
+             approved_by = NULL,
+             expires_at = NULL,
+             updated_at = NOW()
+         WHERE id = ?`,
+        [payment.job_db_id]
+      );
+    }
+
+    res.json({
+      success: true,
+      message: "Payment deleted successfully"
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to delete payment",
+      error: error.message
+    });
+  }
+});
 module.exports = router;

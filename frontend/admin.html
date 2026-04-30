@@ -345,7 +345,7 @@
               <th>Featured</th>
               <th>Paid At</th>
               <th>Expires At</th>
-              <th>Remaining Days</th>
+              <th>Remaining Days</th><th>Action</th>
             </tr>
           </thead>
           <tbody id="recentJobsTable">
@@ -468,7 +468,7 @@
           <td>${payment.email || "N/A"}</td>
           <td>${payment.amount || "0"}</td>
           <td>${payment.payment_method || "N/A"}</td>
-          <td><button onclick="updatePaymentStatus('${payment.id || ""}', 'completed')">Complete</button> <button onclick="updatePaymentStatus('${payment.id || ""}', 'failed')">Fail</button></td>
+          <td><button onclick="updatePaymentStatus('${payment.id || ""}', 'completed')">Complete</button> <button onclick="updatePaymentStatus('${payment.id || ""}', 'failed')">Fail</button> <button onclick="deletePayment('${payment.id || ""}')">Delete</button></td>
           <td>${payment.status || "pending"}</td>
         </tr>
       `).join("");
@@ -508,7 +508,7 @@
       const jobs = await response.json();
 
       if (!Array.isArray(jobs) || jobs.length === 0) {
-        recentJobsTable.innerHTML = '<tr><td colspan="8" class="empty-row">No jobs found.</td></tr>';
+        recentJobsTable.innerHTML = '<tr><td colspan="9" class="empty-row">No jobs found.</td></tr>';
         return;
       }
 
@@ -522,10 +522,11 @@
           <td>${formatDate(job.paid_at)}</td>
           <td>${formatDate(job.expires_at)}</td>
           <td>${getRemainingDays(job.expires_at)}</td>
+          <td><button onclick="deleteJob('${job.id || ""}')">Delete</button></td>
         </tr>
       `).join("");
     } catch (error) {
-      recentJobsTable.innerHTML = '<tr><td colspan="8" class="empty-row">Failed to load jobs.</td></tr>';
+      recentJobsTable.innerHTML = '<tr><td colspan="9" class="empty-row">Failed to load jobs.</td></tr>';
     }
   }
 
@@ -558,6 +559,51 @@
       loadStats();
     } catch (error) {
       alert("Failed to update payment status.");
+    }
+  }
+
+
+  async function deletePayment(id) {
+    try {
+      const confirmed = confirm("Delete this payment record?");
+      if (!confirmed) return;
+
+      const response = await fetch(API_BASE + "/payments/" + id, {
+        method: "DELETE",
+        headers: {
+          "x-admin-email": currentUser.email
+        }
+      });
+
+      const data = await response.json();
+      alert(data.message || "Payment deleted.");
+      loadRecentPayments();
+      loadRecentJobs();
+      loadStats();
+    } catch (error) {
+      alert("Failed to delete payment.");
+    }
+  }
+
+
+  async function deleteJob(id) {
+    try {
+      const confirmed = confirm("Delete this job?");
+      if (!confirmed) return;
+
+      const response = await fetch(API_BASE + "/jobs/" + id, {
+        method: "DELETE",
+        headers: {
+          "x-admin-email": currentUser.email
+        }
+      });
+
+      const data = await response.json();
+      alert(data.message || "Job deleted.");
+      loadRecentJobs();
+      loadStats();
+    } catch (error) {
+      alert("Failed to delete job.");
     }
   }
 
