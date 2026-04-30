@@ -355,7 +355,9 @@
         const response = await fetch(API_BASE + "/employer/posts?email=" + encodeURIComponent(email));
         const data = await response.json();
 
-        if (!data.success || !Array.isArray(data.posts) || data.posts.length === 0) {
+        const realPosts = (Array.isArray(data.posts) ? data.posts : []).filter(post => post.job_id && post.title);
+
+        if (!data.success || realPosts.length === 0) {
           totalPosts.textContent = "0";
           publishedPosts.textContent = "0";
           pendingPosts.textContent = "0";
@@ -363,14 +365,14 @@
           return;
         }
 
-        totalPosts.textContent = data.posts.length;
-        publishedPosts.textContent = data.posts.filter(post => String(post.post_status || "").toLowerCase() === "published").length;
-        pendingPosts.textContent = data.posts.filter(post => {
+        totalPosts.textContent = realPosts.length;
+        publishedPosts.textContent = realPosts.filter(post => String(post.post_status || "").toLowerCase() === "published").length;
+        pendingPosts.textContent = realPosts.filter(post => {
           const status = String(post.post_status || "").toLowerCase();
           return status === "pending_review" || status === "draft";
         }).length;
 
-        postsTable.innerHTML = data.posts.map(post => `
+        postsTable.innerHTML = realPosts.map(post => `
           <tr>
             <td>${post.title || "Untitled Job"}</td>
             <td>${post.company || "N/A"}</td>
