@@ -182,6 +182,39 @@
       background: #eff6ff;
     }
 
+    .action-btn {
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-right: 6px;
+      margin-bottom: 4px;
+    }
+
+    .action-complete {
+      background: #dcfce7;
+      color: #166534;
+      border: 1px solid #86efac;
+    }
+
+    .action-fail {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fca5a5;
+    }
+
+    .action-delete {
+      background: #ffffff;
+      color: #b91c1c;
+      border: 1px solid #ef4444;
+    }
+
+    .action-unpublish {
+      background: #ffffff;
+      color: #374151;
+      border: 1px solid #9ca3af;
+    }
+
     .admin-table {
       width: 100%;
       border-collapse: collapse;
@@ -478,7 +511,7 @@
           <td>${payment.email || "N/A"}</td>
           <td>${payment.amount || "0"}</td>
           <td>${payment.payment_method || "N/A"}</td>
-          <td><button onclick="updatePaymentStatus('${payment.id || ""}', 'completed')">Complete</button> <button onclick="updatePaymentStatus('${payment.id || ""}', 'failed')">Fail</button> ${["pending", "failed", "rejected"].includes(String(payment.status || "").toLowerCase()) ? `<button onclick="deletePayment('${payment.id || ""}')">Delete</button>` : ""}</td>
+          <td><button class="action-btn action-complete" onclick="updatePaymentStatus('${payment.id || ""}', 'completed')">Complete</button> <button class="action-btn action-fail" onclick="updatePaymentStatus('${payment.id || ""}', 'failed')">Fail</button> ${["pending", "failed", "rejected"].includes(String(payment.status || "").toLowerCase()) ? `<button class="action-btn action-delete" onclick="deletePayment('${payment.id || ""}')">Delete</button>` : ""}</td>
           <td>${payment.status || "pending"}</td>
         </tr>
       `).join("");
@@ -532,7 +565,7 @@
           <td>${formatDate(job.paid_at)}</td>
           <td>${formatDate(job.expires_at)}</td>
           <td>${getRemainingDays(job.expires_at)}</td>
-          <td>${(["draft", "pending_review"].includes(String(job.post_status || "").toLowerCase()) || ["pending", "failed", "rejected"].includes(String(job.payment_status || "").toLowerCase())) ? `<button onclick="deleteJob('${job.id || ""}')">Delete</button>` : (String(job.post_status || "").toLowerCase() === "published" && String(job.payment_status || "").toLowerCase() === "paid") ? `<button onclick="unpublishJob('${job.id || ""}')">Unpublish</button>` : ""}</td>
+          <td>${(["draft", "pending_review"].includes(String(job.post_status || "").toLowerCase()) || ["pending", "failed", "rejected"].includes(String(job.payment_status || "").toLowerCase())) ? `<button class="action-btn action-delete" onclick="deleteJob('${job.id || ""}')">Delete</button>` : (String(job.post_status || "").toLowerCase() === "published" && String(job.payment_status || "").toLowerCase() === "paid") ? `<button class="action-btn action-unpublish" onclick="unpublishJob('${job.id || ""}')">Unpublish</button>` : ""}</td>
         </tr>
       `).join("");
     } catch (error) {
