@@ -468,7 +468,7 @@
           <td>${payment.email || "N/A"}</td>
           <td>${payment.amount || "0"}</td>
           <td>${payment.payment_method || "N/A"}</td>
-          <td><button onclick="updatePaymentStatus('${payment.id || ""}', 'completed')">Complete</button> <button onclick="updatePaymentStatus('${payment.id || ""}', 'failed')">Fail</button> <button onclick="deletePayment('${payment.id || ""}')">Delete</button></td>
+          <td><button onclick="updatePaymentStatus('${payment.id || ""}', 'completed')">Complete</button> <button onclick="updatePaymentStatus('${payment.id || ""}', 'failed')">Fail</button> ${["pending", "failed", "rejected"].includes(String(payment.status || "").toLowerCase()) ? `<button onclick="deletePayment('${payment.id || ""}')">Delete</button>` : ""}</td>
           <td>${payment.status || "pending"}</td>
         </tr>
       `).join("");
@@ -522,7 +522,7 @@
           <td>${formatDate(job.paid_at)}</td>
           <td>${formatDate(job.expires_at)}</td>
           <td>${getRemainingDays(job.expires_at)}</td>
-          <td><button onclick="deleteJob('${job.id || ""}')">Delete</button></td>
+          <td>${(["draft", "pending_review"].includes(String(job.post_status || "").toLowerCase()) || ["pending", "failed", "rejected"].includes(String(job.payment_status || "").toLowerCase())) ? `<button onclick="deleteJob('${job.id || ""}')">Delete</button>` : ""}</td>
         </tr>
       `).join("");
     } catch (error) {
