@@ -194,7 +194,6 @@ jobDetail.innerHTML = `<p>Failed to load job details.</p>`;
 }
 
 async function likeJob(jobId) {
-async function likeJob(jobId) {
   try {
     const response = await fetch(API_BASE + "/jobs/" + jobId + "/like", { method: "POST" });
     const data = await response.json();
