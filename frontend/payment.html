@@ -312,7 +312,7 @@
         ) {
           paymentMessage.className = "message-box message-success";
           paymentMessage.textContent = "Payment already completed for this job. No new payment is needed.";
-          paymentForm.style.display = "none";
+          document.querySelector(".payment-actions").style.display = "none";
         }
       } catch (error) {
         paymentMessage.className = "message-box message-error";
