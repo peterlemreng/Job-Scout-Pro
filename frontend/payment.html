@@ -292,6 +292,34 @@
       paymentReference.textContent = "JOB-" + jobId;
     }
 
+    async function checkJobPaymentStatus() {
+      if (!jobId) return;
+
+      try {
+        const response = await fetch(API_BASE + "/jobs/" + jobId);
+        const data = await response.json();
+        const job = data.job || null;
+
+        if (!job) {
+          paymentMessage.className = "message-box message-error";
+          paymentMessage.textContent = "Job not found.";
+          return;
+        }
+
+        if (
+          String(job.payment_status || "").toLowerCase() === "paid" ||
+          String(job.post_status || "").toLowerCase() === "published"
+        ) {
+          paymentMessage.className = "message-box message-success";
+          paymentMessage.textContent = "Payment already completed for this job. No new payment is needed.";
+          paymentForm.style.display = "none";
+        }
+      } catch (error) {
+        paymentMessage.className = "message-box message-error";
+        paymentMessage.textContent = "Unable to verify job payment status.";
+      }
+    }
+
     paymentForm.addEventListener("submit", async (e) => {
       e.preventDefault();
 
@@ -341,6 +369,7 @@
         paymentMessage.textContent = "Unable to connect to the server.";
       }
     });
+    checkJobPaymentStatus();
   </script>
 </body>
 </html>
