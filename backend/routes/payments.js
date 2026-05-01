@@ -34,6 +34,30 @@ router.post("/", async (req, res) => {
       });
     }
 
+    const [jobRows] = await pool.query(
+      `SELECT id, payment_status, post_status FROM jobs WHERE id = ? LIMIT 1`,
+      [job_db_id]
+    );
+
+    const job = jobRows[0] || null;
+
+    if (!job) {
+      return res.status(404).json({
+        success: false,
+        message: "Job not found"
+      });
+    }
+
+    if (
+      String(job.payment_status || "").toLowerCase() === "paid" ||
+      String(job.post_status || "").toLowerCase() === "published"
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Payment already completed for this job"
+      });
+    }
+
     const [result] = await pool.query(
       `INSERT INTO payments
       (job_db_id, full_name, email, phone, amount, currency, payment_method, payment_for, transaction_code, status)
