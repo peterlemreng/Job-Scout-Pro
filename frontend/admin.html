@@ -522,7 +522,7 @@
           <td>${formatDate(job.paid_at)}</td>
           <td>${formatDate(job.expires_at)}</td>
           <td>${getRemainingDays(job.expires_at)}</td>
-          <td>${(["draft", "pending_review"].includes(String(job.post_status || "").toLowerCase()) || ["pending", "failed", "rejected"].includes(String(job.payment_status || "").toLowerCase())) ? `<button onclick="deleteJob('${job.id || ""}')">Delete</button>` : ""}</td>
+          <td>${(["draft", "pending_review"].includes(String(job.post_status || "").toLowerCase()) || ["pending", "failed", "rejected"].includes(String(job.payment_status || "").toLowerCase())) ? `<button onclick="deleteJob('${job.id || ""}')">Delete</button>` : (String(job.post_status || "").toLowerCase() === "published" && String(job.payment_status || "").toLowerCase() === "paid") ? `<button onclick="unpublishJob('${job.id || ""}')">Unpublish</button>` : ""}</td>
         </tr>
       `).join("");
     } catch (error) {
@@ -604,6 +604,28 @@
       loadStats();
     } catch (error) {
       alert("Failed to delete job.");
+    }
+  }
+
+
+  async function unpublishJob(id) {
+    try {
+      const confirmed = confirm("Unpublish this job from the public jobs page?");
+      if (!confirmed) return;
+
+      const response = await fetch(API_BASE + "/jobs/" + id + "/unpublish", {
+        method: "PUT",
+        headers: {
+          "x-admin-email": currentUser.email
+        }
+      });
+
+      const data = await response.json();
+      alert(data.message || "Job unpublished.");
+      loadRecentJobs();
+      loadStats();
+    } catch (error) {
+      alert("Failed to unpublish job.");
     }
   }
 

@@ -282,4 +282,53 @@ router.delete("/:id", require("../middleware/requireAdmin"), async (req, res) =>
     });
   }
 });
+
+router.put("/:id/unpublish", require("../middleware/requireAdmin"), async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const [jobs] = await pool.query(
+      "SELECT * FROM jobs WHERE id = ? LIMIT 1",
+      [id]
+    );
+
+    if (jobs.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Job not found"
+      });
+    }
+
+    const job = jobs[0];
+    const postStatus = String(job.post_status || "").toLowerCase();
+    const paymentStatus = String(job.payment_status || "").toLowerCase();
+
+    if (postStatus !== "published" || paymentStatus !== "paid") {
+      return res.status(400).json({
+        success: false,
+        message: "Only published paid jobs can be unpublished"
+      });
+    }
+
+    await pool.query(
+      `UPDATE jobs
+       SET status = 'inactive',
+           post_status = 'archived',
+           updated_at = NOW()
+       WHERE id = ?`,
+      [id]
+    );
+
+    res.json({
+      success: true,
+      message: "Job unpublished successfully"
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to unpublish job",
+      error: error.message
+    });
+  }
+});
 module.exports = router;
