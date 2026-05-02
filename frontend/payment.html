@@ -313,6 +313,7 @@
           paymentMessage.className = "message-box message-success";
           paymentMessage.textContent = "Payment already completed for this job. No new payment is needed.";
           document.querySelector(".payment-actions").style.display = "none";
+          document.querySelectorAll("#paymentForm input, #paymentForm button, #paymentForm textarea, #paymentForm select").forEach(el => el.disabled = true);
         }
       } catch (error) {
         paymentMessage.className = "message-box message-error";
