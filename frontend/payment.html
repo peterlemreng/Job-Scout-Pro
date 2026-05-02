@@ -311,7 +311,7 @@
           String(job.post_status || "").toLowerCase() === "published"
         ) {
           paymentMessage.className = "message-box message-success";
-          paymentMessage.textContent = "Payment already completed for this job. No new payment is needed.";
+          paymentMessage.textContent = "";
           document.querySelector(".payment-card h1").textContent = "Payment Status";
           document.querySelector(".payment-card > p").textContent = "This job has already been paid for. No further payment is required.";
           document.querySelector(".payment-actions").style.display = "none";
