@@ -312,6 +312,8 @@
         ) {
           paymentMessage.className = "message-box message-success";
           paymentMessage.textContent = "Payment already completed for this job. No new payment is needed.";
+          document.querySelector(".payment-card h1").textContent = "Payment Status";
+          document.querySelector(".payment-card > p").textContent = "This job has already been paid for. No further payment is required.";
           document.querySelector(".payment-actions").style.display = "none";
           document.querySelectorAll("#paymentForm input, #paymentForm button, #paymentForm textarea, #paymentForm select").forEach(el => el.disabled = true);
           document.querySelectorAll("#paymentForm .form-group, #paymentForm .payment-actions").forEach(el => el.style.display = "none");
