@@ -314,6 +314,7 @@
           paymentMessage.textContent = "Payment already completed for this job. No new payment is needed.";
           document.querySelector(".payment-actions").style.display = "none";
           document.querySelectorAll("#paymentForm input, #paymentForm button, #paymentForm textarea, #paymentForm select").forEach(el => el.disabled = true);
+          document.querySelectorAll("#paymentForm .form-group, #paymentForm .payment-actions").forEach(el => el.style.display = "none");
         }
       } catch (error) {
         paymentMessage.className = "message-box message-error";
