@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Post Job - Job Scout Pro</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .payment-page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #eff6ff, #ffffff);
+      padding: 20px;
+    }
+
+    .payment-card {
+      width: 100%;
+      max-width: 760px;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 18px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    .payment-card h1 {
+      margin-bottom: 10px;
+      color: #111827;
+    }
+
+    .payment-card p {
+      color: #6b7280;
+      margin-bottom: 18px;
+      line-height: 1.6;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #111827;
+      margin: 22px 0 12px;
+    }
+
+    .info-card {
+      background: #f9fafb;
+      border: 1px solid #d1d5db;
+      border-radius: 14px;
+      padding: 18px;
+    }
+
+    .summary-box {
+      margin-top: 18px;
+      padding: 18px;
+      border-radius: 14px;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+    }
+
+    .summary-box h3 {
+      margin: 0 0 12px 0;
+      color: #1d4ed8;
+      font-size: 17px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 8px;
+      color: #374151;
+      font-size: 15px;
+    }
+
+    .summary-row.total {
+      font-weight: 700;
+      color: #111827;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid #bfdbfe;
+    }
+
+    .steps-box {
+      margin-top: 16px;
+      padding: 18px;
+      border-radius: 14px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+    }
+
+    .steps-box ol {
+      margin: 0;
+      padding-left: 18px;
+      color: #374151;
+    }
+
+    .steps-box li {
+      margin-bottom: 8px;
+      line-height: 1.5;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 10px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .form-group label {
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 8px;
+    }
+
+    .form-group input {
+      padding: 12px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .form-group input:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .payment-actions {
+      margin-top: 24px;
+    }
+
+    .payment-actions button {
+      width: 100%;
+    }
+
+    .message-box {
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 10px;
+      display: none;
+      font-size: 14px;
+    }
+
+    .message-success {
+      background: #dcfce7;
+      color: #166534;
+      display: block;
+    }
+
+    .message-error {
+      background: #fee2e2;
+      color: #991b1b;
+      display: block;
+    }
+
+    .back-link {
+      margin-top: 18px;
+      text-align: center;
+    }
+
+    .back-link a {
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    @media (max-width: 640px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .payment-card {
+        padding: 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="payment-page">
+    <div class="payment-card">
+      <h1>Post a Job</h1>
+      <p>Create your job draft first, then continue to payment for review and publishing.</p>
+
+      <div class="summary-box">
+        <h3>Job Posting Summary</h3>
+        <div class="summary-row">
+          <span>Plan:</span>
+          <span>Basic Job Post</span>
+        </div>
+        <div class="summary-row">
+          <span>Duration:</span>
+          <span>30 days</span>
+        </div>
+        <div class="summary-row">
+          <span>Status:</span>
+          <span>Draft before payment</span>
+        </div>
+        <div class="summary-row total">
+          <span>Next Step:</span>
+          <span>Pay after draft creation</span>
+        </div>
+      </div>
+
+      <div class="section-title">Payment Instructions</div>
+      <div class="info-card">
+        <div class="summary-row">
+          <span>Business Number:</span>
+          <span>522522</span>
+        </div>
+        <div class="summary-row">
+          <span>Account / Reference:</span>
+          <span id="paymentReference">JOB-POST</span>
+        </div>
+      </div>
+
+      <div class="steps-box">
+        <ol>
+          <li>Complete the form below to create your job draft.</li>
+          <li>After saving, you will be redirected to the payment page with a real job reference.</li>
+          <li>Then complete payment submission for admin review.</li>
+        </ol>
+      </div>
+
+      <form id="postJobForm">
+        <div class="section-title">Job Details</div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="title">Job Title</label>
+            <input type="text" id="title" required />
+          </div>
+
+          <div class="form-group">
+            <label for="company">Company</label>
+            <input type="text" id="company" required />
+          </div>
+
+          <div class="form-group">
+            <label for="location">Location</label>
+            <input type="text" id="location" required />
+          </div>
+
+          <div class="form-group">
+            <label for="jobType">Job Type</label>
+            <input type="text" id="jobType" placeholder="Full-time" required />
+          </div>
+
+          <div class="form-group">
+            <label for="category">Category</label>
+            <input type="text" id="category" placeholder="Sales & Marketing" />
+          </div>
+
+          <div class="form-group">
+            <label for="postedBy">Employer Email</label>
+            <input type="email" id="postedBy" required />
+          </div>
+
+          <div class="form-group full-width">
+            <label for="applyUrl">Application Link</label>
+            <input type="url" id="applyUrl" placeholder="https://wa.me/2547..." />
+          </div>
+
+          <div class="form-group full-width">
+            <label for="description">Job Description</label>
+            <input type="text" id="description" required />
+          </div>
+        </div>
+
+        <div class="payment-actions">
+          <button type="submit" class="btn btn-primary">Create Job Draft</button>
+        </div>
+
+        <div id="postJobMessage" class="message-box"></div>
+      </form>
+
+      <div class="back-link">
+        <a href="jobs.html">Back to Jobs</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = "https://job-scout-pro-production.up.railway.app/api";
+    const postJobForm = document.getElementById("postJobForm");
+    const postJobMessage = document.getElementById("postJobMessage");
+
+    const titleInput = document.getElementById("title");
+    const companyInput = document.getElementById("company");
+    const locationInput = document.getElementById("location");
+    const jobTypeInput = document.getElementById("jobType");
+    const categoryInput = document.getElementById("category");
+    const postedByInput = document.getElementById("postedBy");
+    const applyUrlInput = document.getElementById("applyUrl");
+    const descriptionInput = document.getElementById("description");
+
+    postJobForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const payload = {
+        title: titleInput.value.trim(),
+        company: companyInput.value.trim(),
+        location: locationInput.value.trim(),
+        job_type: jobTypeInput.value.trim(),
+        description: descriptionInput.value.trim(),
+        category: categoryInput.value.trim(),
+        apply_url: applyUrlInput.value.trim(),
+        posted_by: postedByInput.value.trim()
+      };
+
+      postJobMessage.className = "message-box";
+      postJobMessage.textContent = "";
+
+      try {
+        const response = await fetch(API_BASE + "/jobs", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (data.success && data.jobId) {
+          window.location.href = "payment.html?jobId=" + data.jobId;
+        } else {
+          postJobMessage.className = "message-box message-error";
+          postJobMessage.textContent = data.message || "Failed to create job draft.";
+        }
+      } catch (error) {
+        postJobMessage.className = "message-box message-error";
+        postJobMessage.textContent = "Unable to connect to the server.";
+      }
+    });
+  </script>
+</body>
+</html>
