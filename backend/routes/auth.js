@@ -30,15 +30,27 @@ router.post("/signup", async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
+    const verificationCode = String(Math.floor(100000 + Math.random() * 900000));
+    const verificationExpiresAt = new Date(Date.now() + 15 * 60 * 1000);
 
     await pool.query(
-      "INSERT INTO users (full_name, email, phone, password, role) VALUES (?, ?, ?, ?, 'user')",
-      [full_name, email, phone, hashedPassword]
+      "INSERT INTO users (full_name, email, phone, password, role, email_verified, email_verification_code, email_verification_expires_at) VALUES (?, ?, ?, ?, 'user', 0, ?, ?)",
+      [full_name, email, phone, hashedPassword, verificationCode, verificationExpiresAt]
     );
+
+    if (process.env.RESEND_API_KEY) {
+      await resend.emails.send({
+        from: "Job Scout Pro <onboarding@resend.dev>",
+        to: email,
+        subject: "Verify your Job Scout Pro email",
+        html: `<p>Your Job Scout Pro verification code is <strong>${verificationCode}</strong>.</p><p>This code expires in 15 minutes.</p>`
+      });
+    }
 
     res.json({
       success: true,
-      message: "Account created successfully"
+      message: "Account created successfully. Please verify your email.",
+      email_verification_required: true
     });
   } catch (error) {
     res.status(500).json({
@@ -73,13 +85,20 @@ router.post("/login", async (req, res) => {
     }
 
     const user = users[0];
-    const passwordMatch =
-      await bcrypt.compare(password, user.password).catch(() => false)
+    const passwordMatch = await bcrypt.compare(password, user.password).catch(() => false);
 
     if (!passwordMatch) {
       return res.status(401).json({
         success: false,
         message: "Invalid email or password"
+      });
+    }
+
+    if (Number(user.email_verified || 0) !== 1) {
+      return res.status(403).json({
+        success: false,
+        message: "Please verify your email before logging in",
+        email_verification_required: true
       });
     }
 
@@ -102,8 +121,6 @@ router.post("/login", async (req, res) => {
     });
   }
 });
-
-const otpStore = global.otpStore || (global.otpStore = new Map());
 
 router.post("/forgot-password", async (req, res) => {
   try {
