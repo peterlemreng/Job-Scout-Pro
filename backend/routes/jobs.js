@@ -3,6 +3,42 @@ const router = express.Router();
 const pool = require("../db");
 const fraudCheck = require("../middleware/fraudCheck");
 
+async function trackUniqueJobAction(jobId, visitorId, actionType, counterField) {
+  if (!visitorId) {
+    return null;
+  }
+
+  const [existing] = await pool.query(
+    "SELECT id FROM job_actions WHERE job_id = ? AND visitor_id = ? AND action_type = ? LIMIT 1",
+    [jobId, visitorId, actionType]
+  );
+
+  if (existing.length > 0) {
+    const [rows] = await pool.query(
+      `SELECT ${counterField} FROM jobs WHERE id = ? LIMIT 1`,
+      [jobId]
+    );
+    return { alreadyTracked: true, count: rows[0]?.[counterField] || 0 };
+  }
+
+  await pool.query(
+    "INSERT INTO job_actions (job_id, visitor_id, action_type) VALUES (?, ?, ?)",
+    [jobId, visitorId, actionType]
+  );
+
+  await pool.query(
+    `UPDATE jobs SET ${counterField} = ${counterField} + 1 WHERE id = ?`,
+    [jobId]
+  );
+
+  const [rows] = await pool.query(
+    `SELECT ${counterField} FROM jobs WHERE id = ? LIMIT 1`,
+    [jobId]
+  );
+
+  return { alreadyTracked: false, count: rows[0]?.[counterField] || 0 };
+}
+
 router.get("/", async (req, res) => {
   try {
     const [rows] = await pool.query(`
@@ -104,21 +140,14 @@ router.get("/:id", async (req, res) => {
 router.post("/:id/view", async (req, res) => {
   try {
     const { id } = req.params;
+    const { visitorId } = req.body || {};
 
-    await pool.query(
-      "UPDATE jobs SET views_count = views_count + 1 WHERE id = ?",
-      [id]
-    );
-
-    const [rows] = await pool.query(
-      "SELECT views_count FROM jobs WHERE id = ? LIMIT 1",
-      [id]
-    );
+    const result = await trackUniqueJobAction(id, visitorId, "view", "views_count");
 
     res.json({
       success: true,
-      message: "View tracked successfully",
-      views_count: rows[0]?.views_count || 0
+      message: result?.alreadyTracked ? "View already tracked" : "View tracked successfully",
+      views_count: result?.count || 0
     });
   } catch (error) {
     res.status(500).json({
@@ -132,21 +161,14 @@ router.post("/:id/view", async (req, res) => {
 router.post("/:id/like", async (req, res) => {
   try {
     const { id } = req.params;
+    const { visitorId } = req.body || {};
 
-    await pool.query(
-      "UPDATE jobs SET likes_count = likes_count + 1 WHERE id = ?",
-      [id]
-    );
-
-    const [rows] = await pool.query(
-      "SELECT likes_count FROM jobs WHERE id = ? LIMIT 1",
-      [id]
-    );
+    const result = await trackUniqueJobAction(id, visitorId, "like", "likes_count");
 
     res.json({
       success: true,
-      message: "Job liked successfully",
-      likes_count: rows[0]?.likes_count || 0
+      message: result?.alreadyTracked ? "Job already liked" : "Job liked successfully",
+      likes_count: result?.count || 0
     });
   } catch (error) {
     res.status(500).json({
@@ -160,21 +182,14 @@ router.post("/:id/like", async (req, res) => {
 router.post("/:id/click", async (req, res) => {
   try {
     const { id } = req.params;
+    const { visitorId } = req.body || {};
 
-    await pool.query(
-      "UPDATE jobs SET clicks_count = clicks_count + 1 WHERE id = ?",
-      [id]
-    );
-
-    const [rows] = await pool.query(
-      "SELECT clicks_count FROM jobs WHERE id = ? LIMIT 1",
-      [id]
-    );
+    const result = await trackUniqueJobAction(id, visitorId, "click", "clicks_count");
 
     res.json({
       success: true,
-      message: "Job click tracked successfully",
-      clicks_count: rows[0]?.clicks_count || 0
+      message: result?.alreadyTracked ? "Job click already tracked" : "Job click tracked successfully",
+      clicks_count: result?.count || 0
     });
   } catch (error) {
     res.status(500).json({

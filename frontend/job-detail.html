@@ -114,6 +114,15 @@ Loading job details...
 
 <script>
 const API_BASE = "https://job-scout-pro-production.up.railway.app/api";
+
+function getVisitorId() {
+  let visitorId = localStorage.getItem("visitorId");
+  if (!visitorId) {
+    visitorId = (crypto.randomUUID ? crypto.randomUUID() : "visitor-" + Date.now() + "-" + Math.random().toString(16).slice(2));
+    localStorage.setItem("visitorId", visitorId);
+  }
+  return visitorId;
+}
 const jobDetail = document.getElementById("jobDetail");
 
 function getJobId() {
@@ -196,14 +205,26 @@ jobDetail.innerHTML = `<p>Failed to load job details.</p>`;
 
 async function trackView(jobId) {
   try {
-    await fetch(API_BASE + "/jobs/" + jobId + "/view", { method: "POST" });
+    await fetch(API_BASE + "/jobs/" + jobId + "/view", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ visitorId: getVisitorId() })
+    });
   } catch (error) {
   }
 }
 
 async function likeJob(jobId) {
   try {
-    const response = await fetch(API_BASE + "/jobs/" + jobId + "/like", { method: "POST" });
+    const response = await fetch(API_BASE + "/jobs/" + jobId + "/like", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ visitorId: getVisitorId() })
+    });
     const data = await response.json();
     alert(data.message || "Job liked successfully.");
     loadJobDetail();
@@ -214,7 +235,13 @@ async function likeJob(jobId) {
 
 async function trackClick(jobId) {
   try {
-    const response = await fetch(API_BASE + "/jobs/" + jobId + "/click", { method: "POST" });
+    const response = await fetch(API_BASE + "/jobs/" + jobId + "/click", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ visitorId: getVisitorId() })
+    });
     const data = await response.json();
     alert(data.message || "Job click tracked successfully.");
     loadJobDetail();
