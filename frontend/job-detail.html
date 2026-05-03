@@ -188,9 +188,17 @@ jobDetail.innerHTML = `
 Each user can view and like a job once, while total views, likes, and clicks are tracked.
 </div>
 `;
+trackView(jobId);
 } catch (error) {
 jobDetail.innerHTML = `<p>Failed to load job details.</p>`;
 }
+}
+
+async function trackView(jobId) {
+  try {
+    await fetch(API_BASE + "/jobs/" + jobId + "/view", { method: "POST" });
+  } catch (error) {
+  }
 }
 
 async function likeJob(jobId) {
