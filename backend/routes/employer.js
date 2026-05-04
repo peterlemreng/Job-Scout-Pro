@@ -1,15 +1,16 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../db");
+const requireAuth = require("../middleware/requireAuth");
 
-router.get("/posts", async (req, res) => {
+router.get("/posts", requireAuth, async (req, res) => {
   try {
-    const email = String(req.query.email || "").trim().toLowerCase();
+    const email = String(req.user?.email || "").trim().toLowerCase();
 
     if (!email) {
-      return res.status(400).json({
+      return res.status(401).json({
         success: false,
-        message: "email is required"
+        message: "Authentication required"
       });
     }
 
@@ -37,6 +38,7 @@ router.get("/posts", async (req, res) => {
          j.job_type,
          j.post_status,
          j.payment_status,
+         j.rejection_reason,
          j.paid_at,
          j.expires_at
        FROM payments p

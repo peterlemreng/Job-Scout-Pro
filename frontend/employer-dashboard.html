@@ -368,7 +368,12 @@
       postsTable.innerHTML = '<tr><td colspan="9" class="empty-row">Loading employer posts...</td></tr>';
 
       try {
-        const response = await fetch(API_BASE + "/employer/posts?email=" + encodeURIComponent(email));
+        const token = localStorage.getItem("token") || "";
+        const response = await fetch(API_BASE + "/employer/posts", {
+          headers: {
+            "Authorization": "Bearer " + token
+          }
+        });
         const data = await response.json();
 
         const realPosts = (Array.isArray(data.posts) ? data.posts : []).filter(post => post.job_id && post.title);
@@ -398,7 +403,7 @@
             <td>${formatDate(post.expires_at)}</td>
             <td>${getRemainingDays(post.expires_at)}</td>
             <td>${post.transaction_code || "-"}</td>
-            <td>${post.failure_reason || "-"}</td>
+            <td>${post.failure_reason || post.rejection_reason || "-"}</td>
           </tr>
         `).join("");
       } catch (error) {
