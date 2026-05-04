@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const pool = require("../db");
 const fraudCheck = require("../middleware/fraudCheck");
+const requireAuth = require("../middleware/requireAuth");
 const writeAuditLog = require("../utils/auditLog");
 
 async function trackUniqueJobAction(jobId, visitorId, actionType, counterField) {
@@ -201,7 +202,7 @@ router.post("/:id/click", async (req, res) => {
   }
 });
 
-router.post("/", fraudCheck, async (req, res) => {
+router.post("/", requireAuth, fraudCheck, async (req, res) => {
   try {
     const {
       title,
@@ -210,9 +211,10 @@ router.post("/", fraudCheck, async (req, res) => {
       job_type,
       description,
       category,
-      apply_url,
-      posted_by
+      apply_url
     } = req.body;
+
+    const posted_by = Number(req.user?.id || 0);
 
     if (!title || !company || !location || !job_type || !description) {
       return res.status(400).json({
