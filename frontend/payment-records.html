@@ -283,7 +283,12 @@
 
     async function loadPayments() {
       try {
-        const response = await fetch(API_BASE + "/payments");
+        const token = localStorage.getItem("token") || "";
+        const response = await fetch(API_BASE + "/payments", {
+          headers: {
+            "Authorization": "Bearer " + token
+          }
+        });
         const payments = await response.json();
 
         if (!Array.isArray(payments) || payments.length === 0) {
