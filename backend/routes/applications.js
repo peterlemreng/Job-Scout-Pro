@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const pool = require("../db");
 const requireAdmin = require("../middleware/requireAdmin");
+const requireAuth = require("../middleware/requireAuth");
 const writeAuditLog = require("../utils/auditLog");
 
 router.post("/", async (req, res) => {
@@ -50,12 +51,16 @@ router.get("/", requireAdmin, async (req, res) => {
   }
 });
 
-router.get("/:id", requireAdmin, async (req, res) => {
+router.get("/:id", requireAuth, async (req, res) => {
   try {
     const { id } = req.params;
 
     const [rows] = await pool.query(
-      "SELECT * FROM applications WHERE id = ? LIMIT 1",
+      `SELECT a.*, j.posted_by
+       FROM applications a
+       LEFT JOIN jobs j ON a.job_id = j.id
+       WHERE a.id = ?
+       LIMIT 1`,
       [id]
     );
 
@@ -66,9 +71,29 @@ router.get("/:id", requireAdmin, async (req, res) => {
       });
     }
 
+    const application = rows[0];
+    const currentUserId = Number(req.user?.id || 0);
+    const currentUserRole = String(req.user?.role || "").toLowerCase();
+    const applicantUserId = Number(application.user_id || 0);
+    const employerUserId = Number(application.posted_by || 0);
+
+    const canView =
+      currentUserRole === "admin" ||
+      applicantUserId === currentUserId ||
+      employerUserId === currentUserId;
+
+    if (!canView) {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied"
+      });
+    }
+
+    delete application.posted_by;
+
     res.json({
       success: true,
-      application: rows[0]
+      application
     });
   } catch (error) {
     res.status(500).json({
