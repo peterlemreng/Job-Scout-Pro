@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const pool = require("../db");
 const requireAdmin = require("../middleware/requireAdmin");
+const writeAuditLog = require("../utils/auditLog");
 
 router.post("/", async (req, res) => {
   try {
@@ -101,6 +102,18 @@ router.put("/:id/status", requireAdmin, async (req, res) => {
         message: "Application not found"
       });
     }
+
+    await writeAuditLog({
+      adminId: req.adminUser?.id || null,
+      adminEmail: req.adminUser?.email || null,
+      actionType: "application_status_updated",
+      targetType: "application",
+      targetId: Number(id),
+      details: JSON.stringify({
+        application_id: Number(id),
+        new_status: status
+      })
+    });
 
     res.json({
       success: true,
