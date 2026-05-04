@@ -385,4 +385,142 @@ router.put("/:id/unpublish", require("../middleware/requireAdmin"), async (req, 
     });
   }
 });
+router.put("/:id/approve", require("../middleware/requireAdmin"), async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const [jobs] = await pool.query(
+      "SELECT * FROM jobs WHERE id = ? LIMIT 1",
+      [id]
+    );
+
+    if (jobs.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Job not found"
+      });
+    }
+
+    const job = jobs[0];
+    const postStatus = String(job.post_status || "").toLowerCase();
+    const paymentStatus = String(job.payment_status || "").toLowerCase();
+
+    if (postStatus !== "pending_review" || paymentStatus !== "paid") {
+      return res.status(400).json({
+        success: false,
+        message: "Only paid jobs pending review can be approved"
+      });
+    }
+
+    await pool.query(
+      `UPDATE jobs
+       SET status = 'active',
+           post_status = 'published',
+           rejection_reason = NULL,
+           approved_at = NOW(),
+           approved_by = ?,
+           expires_at = CASE
+             WHEN expires_at IS NULL THEN DATE_ADD(NOW(), INTERVAL plan_duration_days DAY)
+             ELSE expires_at
+           END,
+           updated_at = NOW()
+       WHERE id = ?`,
+      [req.adminUser?.id || null, id]
+    );
+
+    await writeAuditLog({
+      adminId: req.adminUser?.id || null,
+      adminEmail: req.adminUser?.email || null,
+      actionType: "job_approved",
+      targetType: "job",
+      targetId: Number(id),
+      details: JSON.stringify({
+        job_id: Number(id),
+        title: job.title || null,
+        company: job.company || null,
+        previous_post_status: job.post_status || null,
+        previous_payment_status: job.payment_status || null
+      })
+    });
+
+    res.json({
+      success: true,
+      message: "Job approved successfully"
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to approve job",
+      error: error.message
+    });
+  }
+});
+
+router.put("/:id/reject", require("../middleware/requireAdmin"), async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { rejection_reason } = req.body;
+
+    const [jobs] = await pool.query(
+      "SELECT * FROM jobs WHERE id = ? LIMIT 1",
+      [id]
+    );
+
+    if (jobs.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Job not found"
+      });
+    }
+
+    const job = jobs[0];
+    const postStatus = String(job.post_status || "").toLowerCase();
+    const paymentStatus = String(job.payment_status || "").toLowerCase();
+
+    if (postStatus !== "pending_review" || paymentStatus !== "paid") {
+      return res.status(400).json({
+        success: false,
+        message: "Only paid jobs pending review can be rejected"
+      });
+    }
+
+    await pool.query(
+      `UPDATE jobs
+       SET status = 'inactive',
+           post_status = 'rejected',
+           rejection_reason = ?,
+           updated_at = NOW()
+       WHERE id = ?`,
+      [rejection_reason || "Rejected by admin", id]
+    );
+
+    await writeAuditLog({
+      adminId: req.adminUser?.id || null,
+      adminEmail: req.adminUser?.email || null,
+      actionType: "job_rejected",
+      targetType: "job",
+      targetId: Number(id),
+      details: JSON.stringify({
+        job_id: Number(id),
+        title: job.title || null,
+        company: job.company || null,
+        previous_post_status: job.post_status || null,
+        previous_payment_status: job.payment_status || null,
+        rejection_reason: rejection_reason || "Rejected by admin"
+      })
+    });
+
+    res.json({
+      success: true,
+      message: "Job rejected successfully"
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to reject job",
+      error: error.message
+    });
+  }
+});
+
 module.exports = router;

@@ -569,7 +569,7 @@
           <td>${formatDate(job.paid_at)}</td>
           <td>${formatDate(job.expires_at)}</td>
           <td>${getRemainingDays(job.expires_at)}</td>
-          <td>${(["draft", "pending_review"].includes(String(job.post_status || "").toLowerCase()) || ["pending", "failed", "rejected"].includes(String(job.payment_status || "").toLowerCase())) ? `<button class="action-btn action-delete" onclick="deleteJob('${job.id || ""}')">Delete</button>` : (String(job.post_status || "").toLowerCase() === "published" && String(job.payment_status || "").toLowerCase() === "paid") ? `<button class="action-btn action-unpublish" onclick="unpublishJob('${job.id || ""}')">Unpublish</button>` : ""}</td>
+          <td>${(String(job.post_status || "").toLowerCase() === "pending_review" && String(job.payment_status || "").toLowerCase() === "paid") ? `<button class="action-btn action-complete" onclick="approveJob('${job.id || ""}')">Approve</button> <button class="action-btn action-fail" onclick="rejectJob('${job.id || ""}')">Reject</button>` : (["draft", "rejected"].includes(String(job.post_status || "").toLowerCase()) || ["pending", "failed", "rejected"].includes(String(job.payment_status || "").toLowerCase())) ? `<button class="action-btn action-delete" onclick="deleteJob('${job.id || ""}')">Delete</button>` : (String(job.post_status || "").toLowerCase() === "published" && String(job.payment_status || "").toLowerCase() === "paid") ? `<button class="action-btn action-unpublish" onclick="unpublishJob('${job.id || ""}')">Unpublish</button>` : ""}</td>
         </tr>
       `).join("");
     } catch (error) {
@@ -654,6 +654,52 @@
     }
   }
 
+
+  async function approveJob(id) {
+    try {
+      const confirmed = confirm("Approve this job and publish it?");
+      if (!confirmed) return;
+
+      const response = await fetch(API_BASE + "/jobs/" + id + "/approve", {
+        method: "PUT",
+        headers: {
+          "Authorization": "Bearer " + authToken
+        }
+      });
+
+      const data = await response.json();
+      alert(data.message || "Job approved.");
+      loadRecentJobs();
+      loadStats();
+    } catch (error) {
+      alert("Failed to approve job.");
+    }
+  }
+
+  async function rejectJob(id) {
+    try {
+      const rejectionReason = prompt("Reason for rejecting this job?", "Policy issue or incomplete job details");
+      if (rejectionReason === null) return;
+
+      const response = await fetch(API_BASE + "/jobs/" + id + "/reject", {
+        method: "PUT",
+        headers: {
+          "Authorization": "Bearer " + authToken,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          rejection_reason: rejectionReason.trim() || "Rejected by admin"
+        })
+      });
+
+      const data = await response.json();
+      alert(data.message || "Job rejected.");
+      loadRecentJobs();
+      loadStats();
+    } catch (error) {
+      alert("Failed to reject job.");
+    }
+  }
 
   async function unpublishJob(id) {
     try {
