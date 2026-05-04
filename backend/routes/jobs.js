@@ -302,7 +302,8 @@ router.delete("/:id", require("../middleware/requireAdmin"), async (req, res) =>
         title: job.title || null,
         company: job.company || null,
         previous_post_status: job.post_status || null,
-        previous_payment_status: job.payment_status || null
+        previous_payment_status: job.payment_status || null,
+        rejection_reason: rejection_reason || null
       })
     });
 
@@ -322,6 +323,7 @@ router.delete("/:id", require("../middleware/requireAdmin"), async (req, res) =>
 router.put("/:id/unpublish", require("../middleware/requireAdmin"), async (req, res) => {
   try {
     const { id } = req.params;
+    const { rejection_reason } = req.body;
 
     const [jobs] = await pool.query(
       "SELECT * FROM jobs WHERE id = ? LIMIT 1",
@@ -350,9 +352,10 @@ router.put("/:id/unpublish", require("../middleware/requireAdmin"), async (req, 
       `UPDATE jobs
        SET status = 'inactive',
            post_status = 'archived',
+           rejection_reason = ?,
            updated_at = NOW()
        WHERE id = ?`,
-      [id]
+      [rejection_reason || null, id]
     );
 
     await writeAuditLog({
