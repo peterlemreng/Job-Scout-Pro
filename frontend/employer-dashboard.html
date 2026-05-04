@@ -305,6 +305,11 @@
 
   <script>
     const API_BASE = "https://job-scout-pro-production.up.railway.app/api";
+    const currentUser = JSON.parse(localStorage.getItem("user") || "null");
+
+    if (!currentUser) {
+      window.location.href = "login.html";
+    }
 
     const employerEmail = document.getElementById("employerEmail");
     const loadPostsBtn = document.getElementById("loadPostsBtn");

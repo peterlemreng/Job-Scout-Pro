@@ -273,6 +273,13 @@
 
   <script>
     const API_BASE = "https://job-scout-pro-production.up.railway.app/api";
+    const currentUser = JSON.parse(localStorage.getItem("user") || "null");
+
+    if (!currentUser) {
+      window.location.href = "login.html";
+    } else if (currentUser.role !== "admin") {
+      window.location.href = "jobs.html";
+    }
 
     const totalApplications = document.getElementById("totalApplications");
     const submittedCount = document.getElementById("submittedCount");
