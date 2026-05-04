@@ -246,14 +246,14 @@
         if (data.success) {
           signupMessage.className = "message-box message-success";
           signupMessage.textContent = data.message || "Account created successfully.";
-
+          localStorage.setItem("signupEmail", payload.email);
           signupForm.reset();
           passwordInput.type = "password";
           toggleIcon.classList.remove("fa-eye-slash");
           toggleIcon.classList.add("fa-eye");
 
           setTimeout(() => {
-            window.location.href = "login.html";
+            window.location.href = "verify-email.html";
           }, 1200);
         } else {
           signupMessage.className = "message-box message-error";

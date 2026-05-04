@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Verify Email - Job Scout Pro</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .auth-page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #eff6ff, #ffffff);
+      padding: 20px;
+    }
+
+    .auth-card {
+      width: 100%;
+      max-width: 430px;
+      background: #ffffff;
+      padding: 32px;
+      border-radius: 18px;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.10);
+    }
+
+    .auth-card h1 {
+      margin-bottom: 10px;
+      color: #111827;
+    }
+
+    .auth-card p {
+      color: #6b7280;
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #374151;
+    }
+
+    .form-group input[type="email"],
+    .form-group input[type="text"] {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      font-size: 16px;
+      outline: none;
+      box-sizing: border-box;
+    }
+
+    .form-group input[type="text"] {
+      letter-spacing: 4px;
+      text-align: center;
+      font-size: 18px;
+    }
+
+    .form-group input:focus {
+      border-color: #2563eb;
+    }
+
+    .auth-actions {
+      margin-top: 22px;
+    }
+
+    .auth-footer {
+      margin-top: 18px;
+      text-align: center;
+      color: #6b7280;
+    }
+
+    .auth-footer a {
+      color: #2563eb;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .message-box {
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 10px;
+      display: none;
+      font-size: 14px;
+    }
+
+    .message-success {
+      background: #dcfce7;
+      color: #166534;
+      display: block;
+    }
+
+    .message-error {
+      background: #fee2e2;
+      color: #991b1b;
+      display: block;
+    }
+
+    .note-text {
+      font-size: 13px;
+      color: #6b7280;
+      margin-top: 10px;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-page">
+    <div class="auth-card">
+      <h1>Verify Email</h1>
+      <p>
+        Enter the 6-digit verification code sent to your email address to activate your Job Scout Pro account.
+      </p>
+
+      <form id="verifyEmailForm">
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" required />
+        </div>
+
+        <div class="form-group">
+          <label for="code">Verification Code</label>
+          <input type="text" id="code" maxlength="6" placeholder="000000" required />
+          <p class="note-text">
+            Use the code sent to your email after signup.
+          </p>
+        </div>
+
+        <div class="auth-actions">
+          <button type="submit" class="btn btn-primary" style="width: 100%;">Verify Email</button>
+        </div>
+
+        <div id="verifyMessage" class="message-box"></div>
+      </form>
+
+      <div class="auth-footer">
+        <a href="login.html">Back to Login</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = "https://job-scout-pro-production.up.railway.app/api";
+    const verifyEmailForm = document.getElementById("verifyEmailForm");
+    const verifyMessage = document.getElementById("verifyMessage");
+    const emailInput = document.getElementById("email");
+    const codeInput = document.getElementById("code");
+
+    const savedSignupEmail = localStorage.getItem("signupEmail") || "";
+    if (savedSignupEmail) {
+      emailInput.value = savedSignupEmail;
+    }
+
+    verifyEmailForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const payload = {
+        email: emailInput.value.trim(),
+        code: codeInput.value.trim()
+      };
+
+      try {
+        const response = await fetch(`${API_BASE}/auth/verify-email`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          verifyMessage.className = "message-box message-success";
+          verifyMessage.textContent = data.message || "Email verified successfully.";
+          localStorage.removeItem("signupEmail");
+
+          setTimeout(() => {
+            window.location.href = "login.html";
+          }, 1200);
+        } else {
+          verifyMessage.className = "message-box message-error";
+          verifyMessage.textContent = data.message || "Email verification failed.";
+        }
+      } catch (error) {
+        verifyMessage.className = "message-box message-error";
+        verifyMessage.textContent = "Unable to connect to the server.";
+      }
+    });
+  </script>
+</body>
+</html>

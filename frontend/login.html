@@ -258,6 +258,15 @@
         } else {
           loginMessage.className = "message-box message-error";
           loginMessage.textContent = data.message || "Invalid login details.";
+
+          if (data.email_verification_required) {
+            localStorage.setItem("signupEmail", payload.email);
+            setTimeout(() => {
+              window.location.href = "verify-email.html";
+            }, 1200);
+          }
+          loginMessage.className = "message-box message-error";
+          loginMessage.textContent = data.message || "Invalid login details.";
         }
       } catch (error) {
         loginMessage.className = "message-box message-error";
