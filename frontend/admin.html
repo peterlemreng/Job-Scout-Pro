@@ -500,7 +500,11 @@
 
   async function loadRecentPayments() {
     try {
-      const response = await fetch(API_BASE + "/payments");
+      const response = await fetch(API_BASE + "/payments", {
+        headers: {
+          "Authorization": "Bearer " + authToken
+        }
+      });
       const payments = await response.json();
 
       if (!Array.isArray(payments) || payments.length === 0) {
@@ -526,7 +530,11 @@
 
   async function loadRecentApplications() {
     try {
-      const response = await fetch(API_BASE + "/applications");
+      const response = await fetch(API_BASE + "/applications", {
+        headers: {
+          "Authorization": "Bearer " + authToken
+        }
+      });
       const applications = await response.json();
 
       if (!Array.isArray(applications) || applications.length === 0) {
