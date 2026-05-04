@@ -246,6 +246,20 @@ router.delete("/:id", requireAdmin, async (req, res) => {
       );
     }
 
+    await writeAuditLog({
+      adminId: req.adminUser?.id || null,
+      adminEmail: req.adminUser?.email || null,
+      actionType: "payment_deleted",
+      targetType: "payment",
+      targetId: Number(id),
+      details: JSON.stringify({
+        payment_id: Number(id),
+        job_db_id: payment.job_db_id || null,
+        previous_status: payment.status || null,
+        transaction_code: payment.transaction_code || null
+      })
+    });
+
     res.json({
       success: true,
       message: "Payment deleted successfully"
