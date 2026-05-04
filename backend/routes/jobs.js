@@ -350,6 +350,21 @@ router.put("/:id/unpublish", require("../middleware/requireAdmin"), async (req, 
       [id]
     );
 
+    await writeAuditLog({
+      adminId: req.adminUser?.id || null,
+      adminEmail: req.adminUser?.email || null,
+      actionType: "job_unpublished",
+      targetType: "job",
+      targetId: Number(id),
+      details: JSON.stringify({
+        job_id: Number(id),
+        title: job.title || null,
+        company: job.company || null,
+        previous_post_status: job.post_status || null,
+        previous_payment_status: job.payment_status || null
+      })
+    });
+
     res.json({
       success: true,
       message: "Job unpublished successfully"
