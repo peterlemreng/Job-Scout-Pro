@@ -252,6 +252,7 @@
           loginMessage.className = "message-box message-success";
           loginMessage.textContent = data.message || "Login successful.";
           localStorage.setItem("user", JSON.stringify(data.user || {}));
+          localStorage.setItem("token", data.token || "");
           setTimeout(() => {
             window.location.href = "jobs.html";
           }, 1000);

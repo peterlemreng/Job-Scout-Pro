@@ -433,6 +433,7 @@
   <script>
   const API_BASE = "https://job-scout-pro-production.up.railway.app/api";
   const currentUser = JSON.parse(localStorage.getItem("user") || "null");
+  const authToken = localStorage.getItem("token") || "";
 
   if (!currentUser) {
     window.location.href = "login.html";
@@ -479,7 +480,9 @@
   async function loadStats() {
     try {
       const response = await fetch(API_BASE + "/admin/stats", {
-        headers: { "x-admin-email": currentUser.email }
+        headers: {
+          "Authorization": "Bearer " + authToken
+        }
       });
       const data = await response.json();
 
@@ -586,7 +589,7 @@
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          "x-admin-email": currentUser.email
+          "Authorization": "Bearer " + authToken
         },
         body: JSON.stringify({
           status: status,
@@ -614,7 +617,7 @@
       const response = await fetch(API_BASE + "/payments/" + id, {
         method: "DELETE",
         headers: {
-          "x-admin-email": currentUser.email
+          "Authorization": "Bearer " + authToken
         }
       });
 
@@ -637,7 +640,7 @@
       const response = await fetch(API_BASE + "/jobs/" + id, {
         method: "DELETE",
         headers: {
-          "x-admin-email": currentUser.email
+          "Authorization": "Bearer " + authToken
         }
       });
 
@@ -659,7 +662,7 @@
       const response = await fetch(API_BASE + "/jobs/" + id + "/unpublish", {
         method: "PUT",
         headers: {
-          "x-admin-email": currentUser.email
+          "Authorization": "Bearer " + authToken
         }
       });
 
@@ -678,7 +681,7 @@
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          "x-admin-email": currentUser.email
+          "Authorization": "Bearer " + authToken
         },
         body: JSON.stringify({ status: status })
       });
