@@ -70,7 +70,10 @@ router.get("/", async (req, res) => {
         created_at,
         updated_at
       FROM jobs
-      WHERE status = 'active'          AND (expires_at IS NULL OR expires_at >= NOW())
+      WHERE status = 'active'
+        AND post_status = 'published'
+        AND payment_status = 'paid'
+        AND (expires_at IS NULL OR expires_at >= NOW())
       ORDER BY created_at DESC
     `);
 
