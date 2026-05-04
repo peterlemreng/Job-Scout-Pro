@@ -98,7 +98,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.get("/", async (req, res) => {
+router.get("/", requireAdmin, async (req, res) => {
   try {
     const [rows] = await pool.query("SELECT * FROM payments ORDER BY created_at DESC");
     res.json(rows);

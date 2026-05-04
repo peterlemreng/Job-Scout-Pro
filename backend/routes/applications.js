@@ -34,7 +34,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.get("/", async (req, res) => {
+router.get("/", requireAdmin, async (req, res) => {
   try {
     const [rows] = await pool.query(
       "SELECT * FROM applications ORDER BY created_at DESC"
