@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const pool = require("../db");
 const requireAdmin = require("../middleware/requireAdmin");
+const writeAuditLog = require("../utils/auditLog");
 
 router.post("/", async (req, res) => {
   try {
@@ -168,6 +169,20 @@ router.put("/:id/status", requireAdmin, async (req, res) => {
         );
       }
     }
+
+    await writeAuditLog({
+      adminId: req.adminUser?.id || admin_id || null,
+      adminEmail: req.adminUser?.email || null,
+      actionType: "payment_status_updated",
+      targetType: "payment",
+      targetId: Number(id),
+      details: JSON.stringify({
+        payment_id: Number(id),
+        job_db_id: payment.job_db_id || null,
+        new_status: status,
+        failure_reason: failure_reason || null
+      })
+    });
 
     res.json({
       success: true,
