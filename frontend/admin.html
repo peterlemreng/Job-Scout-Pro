@@ -551,7 +551,11 @@
 
   async function loadRecentJobs() {
     try {
-      const response = await fetch(API_BASE + "/jobs");
+      const response = await fetch(API_BASE + "/admin/jobs", {
+        headers: {
+          "Authorization": "Bearer " + authToken
+        }
+      });
       const jobs = await response.json();
 
       if (!Array.isArray(jobs) || jobs.length === 0) {

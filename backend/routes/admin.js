@@ -30,4 +30,38 @@ router.get("/stats", requireAdmin, async (req, res) => {
   }
 });
 
+router.get("/jobs", requireAdmin, async (req, res) => {
+  try {
+    const [rows] = await pool.query(
+      `SELECT
+        id,
+        job_id,
+        title,
+        company,
+        location,
+        category,
+        job_type,
+        status,
+        post_status,
+        payment_status,
+        is_featured,
+        paid_at,
+        expires_at,
+        rejection_reason,
+        created_at,
+        updated_at
+       FROM jobs
+       ORDER BY created_at DESC`
+    );
+
+    res.json(rows);
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to load admin jobs",
+      error: error.message
+    });
+  }
+});
+
 module.exports = router;
