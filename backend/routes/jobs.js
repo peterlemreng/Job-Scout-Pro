@@ -45,36 +45,51 @@ router.get("/", async (req, res) => {
   try {
     const [rows] = await pool.query(`
       SELECT
-        id,
-        job_id,
-        title,
-        company,
-        location,
-        category,
-        job_type,
-        description,
-        apply_url,
-        status,
-        post_status,
-        payment_status,
-        plan_type,
-        plan_price,
-        plan_duration_days,
-        paid_at,
-        expires_at,
-        views_count,
-        clicks_count,
-        likes_count,
-        is_featured,
-        featured_expires_at,
-        created_at,
-        updated_at
-      FROM jobs
-      WHERE status = 'active'
-        AND post_status = 'published'
-        AND payment_status = 'paid'
-        AND (expires_at IS NULL OR expires_at >= NOW())
-      ORDER BY created_at DESC
+        j.id,
+        j.job_id,
+        j.title,
+        j.company,
+        j.location,
+        j.category,
+        j.job_type,
+        j.description,
+        j.apply_url,
+        j.status,
+        j.post_status,
+        j.payment_status,
+        j.plan_type,
+        j.plan_price,
+        j.plan_duration_days,
+        j.paid_at,
+        j.expires_at,
+        j.views_count,
+        j.clicks_count,
+        j.likes_count,
+        j.is_featured,
+        j.featured_expires_at,
+        j.created_at,
+        j.updated_at,
+        CASE
+          WHEN ev.verification_status = 'verified' THEN 1
+          ELSE 0
+        END AS is_employer_verified
+      FROM jobs j
+      LEFT JOIN (
+        SELECT ev1.user_id, ev1.verification_status
+        FROM employer_verifications ev1
+        INNER JOIN (
+          SELECT user_id, MAX(id) AS max_id
+          FROM employer_verifications
+          GROUP BY user_id
+        ) latest
+          ON ev1.user_id = latest.user_id
+         AND ev1.id = latest.max_id
+      ) ev ON ev.user_id = j.posted_by
+      WHERE j.status = 'active'
+        AND j.post_status = 'published'
+        AND j.payment_status = 'paid'
+        AND (j.expires_at IS NULL OR j.expires_at >= NOW())
+      ORDER BY j.created_at DESC
     `);
 
     res.json(rows);
@@ -93,32 +108,47 @@ router.get("/:id", async (req, res) => {
 
     const [rows] = await pool.query(
       `SELECT
-        id,
-        job_id,
-        title,
-        company,
-        location,
-        category,
-        job_type,
-        description,
-        apply_url,
-        status,
-        post_status,
-        payment_status,
-        plan_type,
-        plan_price,
-        plan_duration_days,
-        paid_at,
-        expires_at,
-        views_count,
-        clicks_count,
-        likes_count,
-        is_featured,
-        featured_expires_at,
-        created_at,
-        updated_at
-      FROM jobs
-      WHERE id = ? LIMIT 1`,
+        j.id,
+        j.job_id,
+        j.title,
+        j.company,
+        j.location,
+        j.category,
+        j.job_type,
+        j.description,
+        j.apply_url,
+        j.status,
+        j.post_status,
+        j.payment_status,
+        j.plan_type,
+        j.plan_price,
+        j.plan_duration_days,
+        j.paid_at,
+        j.expires_at,
+        j.views_count,
+        j.clicks_count,
+        j.likes_count,
+        j.is_featured,
+        j.featured_expires_at,
+        j.created_at,
+        j.updated_at,
+        CASE
+          WHEN ev.verification_status = 'verified' THEN 1
+          ELSE 0
+        END AS is_employer_verified
+      FROM jobs j
+      LEFT JOIN (
+        SELECT ev1.user_id, ev1.verification_status
+        FROM employer_verifications ev1
+        INNER JOIN (
+          SELECT user_id, MAX(id) AS max_id
+          FROM employer_verifications
+          GROUP BY user_id
+        ) latest
+          ON ev1.user_id = latest.user_id
+         AND ev1.id = latest.max_id
+      ) ev ON ev.user_id = j.posted_by
+      WHERE j.id = ? LIMIT 1`,
       [id]
     );
 

@@ -31,6 +31,17 @@ margin-bottom: 10px;
 font-size: 15px;
 }
 
+.badge-verified {
+display: inline-block;
+margin: 8px 0 14px;
+background: #dcfce7;
+color: #166534;
+padding: 6px 10px;
+border-radius: 999px;
+font-size: 12px;
+font-weight: 700;
+}
+
 .detail-section {
 margin-top: 24px;
 }
@@ -151,6 +162,7 @@ return;
 
 jobDetail.innerHTML = `
 <h1>${job.title || "Untitled Job"}</h1>
+${Number(job.is_employer_verified) === 1 ? `<div class="badge-verified">Verified Employer</div>` : ""}
 <div class="detail-meta"><strong>Company:</strong> ${job.company || "N/A"}</div>
 <div class="detail-meta"><strong>Location:</strong> ${job.location || "N/A"}</div>
 <div class="detail-meta"><strong>Category:</strong> ${job.category || "General"}</div>
