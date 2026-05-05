@@ -325,7 +325,7 @@
         <table class="admin-table">
           <thead>
             <tr>
-              <th>ID</th>
+              <th>Payment ID</th><th>Job ID</th><th>Job Title</th>
               <th>Name</th>
               <th>Email</th>
               <th>Amount</th>
@@ -336,7 +336,7 @@
           </thead>
           <tbody id="recentPaymentsTable">
             <tr>
-              <td colspan="7" class="empty-row">Loading payments...</td>
+              <td colspan="9" class="empty-row">Loading payments...</td>
             </tr>
           </tbody>
         </table>
@@ -508,13 +508,13 @@
       const payments = await response.json();
 
       if (!Array.isArray(payments) || payments.length === 0) {
-        recentPaymentsTable.innerHTML = '<tr><td colspan="7" class="empty-row">No payments found.</td></tr>';
+        recentPaymentsTable.innerHTML = '<tr><td colspan="9" class="empty-row">No payments found.</td></tr>';
         return;
       }
 
       recentPaymentsTable.innerHTML = payments.slice(0, 8).map(payment => `
         <tr>
-          <td>${payment.id || ""}</td>
+          <td>${payment.id || ""}</td><td>${payment.job_db_id || ""}</td><td>${payment.job_title || "N/A"}</td>
           <td>${payment.full_name || "N/A"}</td>
           <td>${payment.email || "N/A"}</td>
           <td>${payment.amount || "0"}</td>

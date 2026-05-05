@@ -100,7 +100,12 @@ router.post("/", async (req, res) => {
 
 router.get("/", requireAdmin, async (req, res) => {
   try {
-    const [rows] = await pool.query("SELECT * FROM payments ORDER BY created_at DESC");
+    const [rows] = await pool.query(
+      `SELECT p.*, j.title AS job_title
+       FROM payments p
+       LEFT JOIN jobs j ON p.job_db_id = j.id
+       ORDER BY p.created_at DESC`
+    );
     res.json(rows);
   } catch (error) {
     res.status(500).json({
