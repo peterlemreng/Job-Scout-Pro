@@ -304,6 +304,10 @@
         <h3 id="pendingPosts">0</h3>
         <p>Pending / Review</p>
       </div>
+      <div class="summary-box">
+        <h3 id="rejectedPosts">0</h3>
+        <p>Rejected Posts</p>
+      </div>
     </div>
 
     <section class="records-card">
@@ -347,6 +351,7 @@
     const totalPosts = document.getElementById("totalPosts");
     const publishedPosts = document.getElementById("publishedPosts");
     const pendingPosts = document.getElementById("pendingPosts");
+    const rejectedPosts = document.getElementById("rejectedPosts");
     const postsTable = document.getElementById("postsTable");
     const verificationStatusBadge = document.getElementById("verificationStatusBadge");
 
@@ -436,6 +441,7 @@
           totalPosts.textContent = "0";
           publishedPosts.textContent = "0";
           pendingPosts.textContent = "0";
+          rejectedPosts.textContent = "0";
           postsTable.innerHTML = '<tr><td colspan="9" class="empty-row">No posts found for this email.</td></tr>';
           return;
         }
@@ -445,6 +451,11 @@
         pendingPosts.textContent = realPosts.filter(post => {
           const status = String(post.post_status || "").toLowerCase();
           return status === "pending_review" || status === "draft";
+        }).length;
+
+        rejectedPosts.textContent = realPosts.filter(post => {
+          const status = String(post.post_status || "").toLowerCase();
+          return status === "rejected";
         }).length;
 
         postsTable.innerHTML = realPosts.map(post => `
