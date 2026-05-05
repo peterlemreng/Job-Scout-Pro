@@ -64,4 +64,31 @@ router.get("/jobs", requireAdmin, async (req, res) => {
   }
 });
 
+router.get("/audit-logs", requireAdmin, async (req, res) => {
+  try {
+    const [rows] = await pool.query(
+      `SELECT
+        id,
+        admin_id,
+        admin_email,
+        action_type,
+        target_type,
+        target_id,
+        details,
+        created_at
+       FROM audit_logs
+       ORDER BY created_at DESC
+       LIMIT 100`
+    );
+
+    res.json(rows);
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to load audit logs",
+      error: error.message
+    });
+  }
+});
+
 module.exports = router;
