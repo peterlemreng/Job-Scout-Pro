@@ -217,6 +217,23 @@
       color: #991b1b;
       display: block;
     }
+
+    .verification-strip {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+      padding: 14px 16px;
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.04);
+    }
+
+    .verification-label {
+      font-weight: 700;
+      color: #374151;
+    }
     @media (max-width: 900px) {
       .summary-grid {
         grid-template-columns: 1fr;
@@ -257,6 +274,11 @@
       <h2>Employer Dashboard</h2>
       <p>View your submitted job posts, payment progress, approval status, and expiry details using your employer email address.</p>
     </div>
+
+    <section class="verification-strip">
+      <span class="verification-label">Verification Status:</span>
+      <span id="verificationStatusBadge" class="status-badge">Unverified</span>
+    </section>
 
     <section class="search-card">
       <div class="search-row">
@@ -326,6 +348,7 @@
     const publishedPosts = document.getElementById("publishedPosts");
     const pendingPosts = document.getElementById("pendingPosts");
     const postsTable = document.getElementById("postsTable");
+    const verificationStatusBadge = document.getElementById("verificationStatusBadge");
 
     function formatDate(value) {
       if (!value) return "—";
@@ -360,6 +383,29 @@
       if (v === "published") return "status-published";
       if (v === "failed" || v === "rejected") return "status-failed";
       return "";
+    }
+
+    async function loadEmployerVerificationStatus() {
+      try {
+        const token = localStorage.getItem("token") || "";
+        const response = await fetch(API_BASE + "/employer/verification", {
+          headers: {
+            "Authorization": "Bearer " + token
+          }
+        });
+        const data = await response.json();
+        const status = String(data?.verification?.verification_status || "unverified").toLowerCase();
+
+        verificationStatusBadge.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+        verificationStatusBadge.className = "status-badge";
+
+        if (status === "pending") verificationStatusBadge.classList.add("status-pending");
+        if (status === "verified") verificationStatusBadge.classList.add("status-paid");
+        if (status === "rejected") verificationStatusBadge.classList.add("status-failed");
+      } catch (error) {
+        verificationStatusBadge.textContent = "Unverified";
+        verificationStatusBadge.className = "status-badge";
+      }
     }
 
     async function loadEmployerPosts() {
@@ -421,6 +467,7 @@
 
     if (currentUser && currentUser.email) {
       employerEmail.value = currentUser.email;
+      loadEmployerVerificationStatus();
       loadEmployerPosts();
     }
 
