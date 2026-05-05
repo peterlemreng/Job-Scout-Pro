@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Employer Verification - Job Scout Pro</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f7fb;
+      color: #111827;
+    }
+    .topbar {
+      background: #ffffff;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 16px 20px;
+    }
+    .topbar-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo {
+      width: 52px;
+      height: 52px;
+      object-fit: cover;
+      border-radius: 12px;
+    }
+    .logo-area h1 {
+      margin: 0;
+      font-size: 20px;
+      color: #111827;
+    }
+    .logo-area p {
+      margin: 4px 0 0;
+      color: #6b7280;
+      font-size: 13px;
+    }
+    .nav-links {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: #374151;
+      font-weight: 600;
+      padding: 10px 14px;
+      border-radius: 10px;
+      transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .nav-links a:hover {
+      background: #eff6ff;
+      color: #2563eb;
+    }
+    .nav-links a.active {
+      background: #dbeafe;
+      color: #1d4ed8;
+      box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.12);
+    }
+    .page-wrap {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 32px 20px 60px;
+    }
+    .page-header {
+      margin-bottom: 24px;
+    }
+    .page-header h2 {
+      margin: 0 0 10px;
+      font-size: 32px;
+      color: #111827;
+    }
+    .page-header p {
+      margin: 0;
+      color: #6b7280;
+      line-height: 1.6;
+    }
+    .status-card,
+    .form-card {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+      border: 1px solid #e5e7eb;
+      margin-bottom: 20px;
+    }
+    .status-card h3,
+    .form-card h3 {
+      margin: 0 0 16px;
+      font-size: 22px;
+      color: #111827;
+    }
+    .status-row {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 10px 16px;
+      margin-bottom: 10px;
+    }
+    .status-label {
+      color: #6b7280;
+      font-weight: 600;
+    }
+    .status-value {
+      color: #111827;
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      background: #e5e7eb;
+      color: #374151;
+      text-transform: capitalize;
+    }
+    .status-pending {
+      background: #fef3c7;
+      color: #92400e;
+    }
+    .status-verified {
+      background: #dcfce7;
+      color: #166534;
+    }
+    .status-rejected {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+    .form-group label {
+      font-weight: 600;
+      color: #374151;
+    }
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      font-size: 14px;
+      outline: none;
+      background: #ffffff;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+    .form-group textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+    .btn {
+      border: none;
+      border-radius: 10px;
+      background: #2563eb;
+      color: #ffffff;
+      padding: 12px 16px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 10px 20px rgba(37, 99, 235, 0.18);
+    }
+    .btn:hover {
+      background: #1d4ed8;
+    }
+    .message-box {
+      margin-top: 16px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      display: none;
+      font-size: 14px;
+    }
+    .message-success {
+      display: block;
+      background: #dcfce7;
+      color: #166534;
+    }
+    .message-error {
+      display: block;
+      background: #fee2e2;
+      color: #991b1b;
+    }
+    @media (max-width: 800px) {
+      .form-grid,
+      .status-row {
+        grid-template-columns: 1fr;
+      }
+      .page-header h2 {
+        font-size: 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="logo-area">
+        <img src="assets/logo.Jobscoutphoto.jpg" alt="Job Scout Pro Logo" class="logo" />
+        <div>
+          <h1>Job Scout Pro</h1>
+          <p>Employer Verification</p>
+        </div>
+      </div>
+
+      <nav class="nav-links">
+        <a href="employer-dashboard.html">Dashboard</a>
+        <a href="employer-dashboard.html">My Jobs</a>
+        <a href="payment.html">Payments</a>
+        <a href="post-job.html">Post Job</a>
+        <a href="employer-verification.html" class="active">Verification</a>
+        <a href="logout.html">Logout</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page-wrap">
+    <div class="page-header">
+      <h2>Employer Verification</h2>
+      <p>Submit your business details for review so your employer account can be trusted on the platform.</p>
+    </div>
+
+    <section class="status-card">
+      <h3>Current Verification Status</h3>
+      <div class="status-row">
+        <div class="status-label">Status</div>
+        <div class="status-value"><span id="verificationStatus" class="status-badge">Unverified</span></div>
+      </div>
+      <div class="status-row">
+        <div class="status-label">Company Name</div>
+        <div class="status-value" id="statusCompanyName">—</div>
+      </div>
+      <div class="status-row">
+        <div class="status-label">Company Email</div>
+        <div class="status-value" id="statusCompanyEmail">—</div>
+      </div>
+      <div class="status-row">
+        <div class="status-label">Review Notes</div>
+        <div class="status-value" id="statusReviewNotes">—</div>
+      </div>
+      <div class="status-row">
+        <div class="status-label">Reviewed At</div>
+        <div class="status-value" id="statusReviewedAt">—</div>
+      </div>
+    </section>
+
+    <section class="form-card">
+      <h3>Submit Verification Request</h3>
+      <form id="verificationForm">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="companyName">Company Name</label>
+            <input type="text" id="companyName" required />
+          </div>
+          <div class="form-group">
+            <label for="companyEmail">Company Email</label>
+            <input type="email" id="companyEmail" required />
+          </div>
+          <div class="form-group">
+            <label for="companyPhone">Company Phone</label>
+            <input type="text" id="companyPhone" />
+          </div>
+          <div class="form-group">
+            <label for="businessRegistrationNumber">Business Registration Number</label>
+            <input type="text" id="businessRegistrationNumber" />
+          </div>
+        </div>
+
+        <div style="margin-top: 16px;">
+          <button type="submit" class="btn">Submit Verification</button>
+        </div>
+
+        <div id="verificationMessage" class="message-box"></div>
+      </form>
+    </section>
+  </main>
+
+  <script>
+    const API_BASE = "https://job-scout-pro-production.up.railway.app/api";
+    const currentUser = JSON.parse(localStorage.getItem("user") || "null");
+    const authToken = localStorage.getItem("token") || "";
+
+    if (!currentUser) {
+      window.location.href = "login.html";
+    }
+
+    const verificationForm = document.getElementById("verificationForm");
+    const verificationMessage = document.getElementById("verificationMessage");
+
+    const verificationStatus = document.getElementById("verificationStatus");
+    const statusCompanyName = document.getElementById("statusCompanyName");
+    const statusCompanyEmail = document.getElementById("statusCompanyEmail");
+    const statusReviewNotes = document.getElementById("statusReviewNotes");
+    const statusReviewedAt = document.getElementById("statusReviewedAt");
+
+    const companyNameInput = document.getElementById("companyName");
+    const companyEmailInput = document.getElementById("companyEmail");
+    const companyPhoneInput = document.getElementById("companyPhone");
+    const businessRegistrationNumberInput = document.getElementById("businessRegistrationNumber");
+
+    function formatDateTime(value) {
+      if (!value) return "—";
+      const d = new Date(value);
+      if (isNaN(d.getTime())) return "—";
+      return d.toLocaleString("en-GB");
+    }
+
+    function renderStatus(record) {
+      const status = String(record?.verification_status || "unverified").toLowerCase();
+      verificationStatus.textContent = status;
+      verificationStatus.className = "status-badge";
+
+      if (status === "pending") verificationStatus.classList.add("status-pending");
+      if (status === "verified") verificationStatus.classList.add("status-verified");
+      if (status === "rejected") verificationStatus.classList.add("status-rejected");
+
+      statusCompanyName.textContent = record?.company_name || "—";
+      statusCompanyEmail.textContent = record?.company_email || "—";
+      statusReviewNotes.textContent = record?.review_notes || "—";
+      statusReviewedAt.textContent = formatDateTime(record?.reviewed_at);
+
+      companyNameInput.value = record?.company_name || "";
+      companyEmailInput.value = record?.company_email || currentUser?.email || "";
+      companyPhoneInput.value = record?.company_phone || "";
+      businessRegistrationNumberInput.value = record?.business_registration_number || "";
+
+      if (!record?.company_email && currentUser?.email) {
+        companyEmailInput.value = currentUser.email;
+      }
+    }
+
+    async function loadVerification() {
+      try {
+        const response = await fetch(API_BASE + "/employer/verification", {
+          headers: {
+            "Authorization": "Bearer " + authToken
+          }
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          renderStatus(data.verification || null);
+        }
+      } catch (error) {}
+    }
+
+    verificationForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      verificationMessage.className = "message-box";
+      verificationMessage.textContent = "";
+
+      const payload = {
+        company_name: companyNameInput.value.trim(),
+        company_email: companyEmailInput.value.trim(),
+        company_phone: companyPhoneInput.value.trim(),
+        business_registration_number: businessRegistrationNumberInput.value.trim()
+      };
+
+      try {
+        const response = await fetch(API_BASE + "/employer/verification", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + authToken
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          verificationMessage.className = "message-box message-success";
+          verificationMessage.textContent = data.message || "Verification submitted successfully.";
+          loadVerification();
+        } else {
+          verificationMessage.className = "message-box message-error";
+          verificationMessage.textContent = data.message || "Failed to submit verification.";
+        }
+      } catch (error) {
+        verificationMessage.className = "message-box message-error";
+        verificationMessage.textContent = "Unable to connect to the server.";
+      }
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadVerification();
+    });
+  </script>
+</body>
+</html>
