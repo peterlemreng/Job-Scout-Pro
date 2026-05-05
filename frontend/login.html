@@ -197,7 +197,7 @@
           <div class="password-wrap">
             <input type="password" id="password" name="password" required />
             <button type="button" class="toggle-btn" id="togglePassword">
-              <i class="fa-solid fa-eye" id="toggleIcon"></i>
+              <span id="toggleIcon">Show</span>
             </button>
           </div>
         </div>
@@ -229,8 +229,7 @@
     togglePassword.addEventListener("click", function () {
       const isPassword = passwordInput.type === "password";
       passwordInput.type = isPassword ? "text" : "password";
-      toggleIcon.classList.toggle("fa-eye");
-      toggleIcon.classList.toggle("fa-eye-slash");
+      toggleIcon.textContent = isPassword ? "Hide" : "Show";
     });
 
     loginForm.addEventListener("submit", async (e) => {
