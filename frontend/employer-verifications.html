@@ -347,10 +347,12 @@
               <textarea class="notes-box" id="notes-${row.id}" placeholder="Add review notes...">${row.review_notes || ""}</textarea>
             </td>
             <td>${formatDateTime(row.reviewed_at)}</td>
-            <td>
-              <button class="action-btn action-approve" onclick="reviewEmployerVerification('${row.id}', 'verified')">Approve</button>
-              <button class="action-btn action-reject" onclick="reviewEmployerVerification('${row.id}', 'rejected')">Reject</button>
-            </td>
+            <td>${String(row.verification_status || "").toLowerCase() === "pending"
+              ? `<button class="action-btn action-approve" onclick="reviewEmployerVerification('${row.id}', 'verified')">Approve</button>
+                 <button class="action-btn action-reject" onclick="reviewEmployerVerification('${row.id}', 'rejected')">Reject</button>`
+              : String(row.verification_status || "").toLowerCase() === "verified"
+              ? `<button class="action-btn action-reject" onclick="reviewEmployerVerification('${row.id}', 'rejected')">Reject</button>`
+              : `<button class="action-btn action-approve" onclick="reviewEmployerVerification('${row.id}', 'verified')">Approve</button>`}</td>
           </tr>
         `).join("");
       } catch (error) {
