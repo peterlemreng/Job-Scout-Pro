@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Complete Payment - Job Scout Pro</title>
+  <link rel="stylesheet" href="../style.css" />
+  <style>
+    .payment-page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #eff6ff, #ffffff);
+      padding: 20px;
+    }
+
+    .payment-card {
+      width: 100%;
+      max-width: 760px;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 18px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    .payment-card h1 {
+      margin-bottom: 10px;
+      color: #111827;
+    }
+
+    .payment-card p {
+      color: #6b7280;
+      margin-bottom: 18px;
+      line-height: 1.6;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #111827;
+      margin: 22px 0 12px;
+    }
+
+    .info-card {
+      background: #f9fafb;
+      border: 1px solid #d1d5db;
+      border-radius: 14px;
+      padding: 18px;
+    }
+
+    .summary-box {
+      margin-top: 18px;
+      padding: 18px;
+      border-radius: 14px;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+    }
+
+    .summary-box h3 {
+      margin: 0 0 12px 0;
+      color: #1d4ed8;
+      font-size: 17px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 8px;
+      color: #374151;
+      font-size: 15px;
+    }
+
+    .summary-row.total {
+      font-weight: 700;
+      color: #111827;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid #bfdbfe;
+    }
+
+    .steps-box {
+      margin-top: 16px;
+      padding: 18px;
+      border-radius: 14px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+    }
+
+    .steps-box ol {
+      margin: 0;
+      padding-left: 18px;
+      color: #374151;
+    }
+
+    .steps-box li {
+      margin-bottom: 8px;
+      line-height: 1.5;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 10px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .form-group label {
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 8px;
+    }
+
+    .form-group input {
+      padding: 12px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .form-group input:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .payment-actions {
+      margin-top: 24px;
+    }
+
+    .payment-actions button {
+      width: 100%;
+    }
+
+    .message-box {
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 10px;
+      display: none;
+      font-size: 14px;
+    }
+
+    .message-success {
+      background: #dcfce7;
+      color: #166534;
+      display: block;
+    }
+
+    .message-error {
+      background: #fee2e2;
+      color: #991b1b;
+      display: block;
+    }
+
+    .back-link {
+      margin-top: 18px;
+      text-align: center;
+    }
+
+    .back-link a {
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    @media (max-width: 640px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .payment-card {
+        padding: 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="payment-page">
+    <div class="payment-card">
+      <h1>Complete Payment</h1>
+      <p>Finish payment for your Basic Job Post and submit your M-Pesa Paybill transaction details for admin review.</p>
+
+      <div class="summary-box">
+        <h3>Posting Summary</h3>
+        <div class="summary-row">
+          <span>Plan:</span>
+          <span>Basic Job Post</span>
+        </div>
+        <div class="summary-row">
+          <span>Duration:</span>
+          <span>30 days</span>
+        </div>
+        <div class="summary-row">
+          <span>Payment Method:</span>
+          <span>M-Pesa Paybill</span>
+        </div>
+        <div class="summary-row total">
+          <span>Total:</span>
+          <span>KES 799</span>
+        </div>
+      </div>
+
+      <div class="section-title">Payment Instructions</div>
+      <div class="info-card">
+        <div class="summary-row">
+          <span>Business Number:</span>
+          <span>522522</span>
+        </div>
+        <div class="summary-row">
+          <span>Account / Reference:</span>
+          <span id="paymentReference">JOB-POST</span>
+        </div>
+      </div>
+
+      <div class="steps-box">
+        <ol>
+          <li>Pay <strong>KES 799</strong> using M-Pesa Paybill.</li>
+          <li>Use the job reference shown above when paying.</li>
+          <li>Enter the transaction code below to submit for review.</li>
+        </ol>
+      </div>
+
+      <form id="paymentForm">
+        <div class="section-title">Submit Payment Details</div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="fullName">Payer Full Name</label>
+            <input type="text" id="fullName" required />
+          </div>
+
+          <div class="form-group">
+            <label for="email">Employer Email</label>
+            <input type="email" id="email" required />
+          </div>
+
+          <div class="form-group">
+            <label for="phone">Phone Number Used to Pay</label>
+            <input type="tel" id="phone" required />
+          </div>
+
+          <div class="form-group">
+            <label for="transactionCode">M-Pesa Transaction Code</label>
+            <input type="text" id="transactionCode" required />
+          </div>
+
+          <div class="form-group full-width">
+            <label for="amountPaid">Amount Paid</label>
+            <input type="number" id="amountPaid" value="799" min="799" required />
+          </div>
+        </div>
+
+        <div class="payment-actions">
+          <button type="submit" class="btn btn-primary">Submit Payment</button>
+        </div>
+
+        <div id="paymentMessage" class="message-box"></div>
+      </form>
+
+      <div class="back-link">
+        <a href="../jobs.html">Back to Jobs</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = "https://job-scout-pro-production.up.railway.app/api";
+    const paymentForm = document.getElementById("paymentForm");
+    const paymentMessage = document.getElementById("paymentMessage");
+    const paymentReference = document.getElementById("paymentReference");
+
+    const fullNameInput = document.getElementById("fullName");
+    const emailInput = document.getElementById("email");
+    const phoneInput = document.getElementById("phone");
+    const transactionCodeInput = document.getElementById("transactionCode");
+    const amountPaidInput = document.getElementById("amountPaid");
+
+    const params = new URLSearchParams(window.location.search);
+    const jobId = params.get("jobId");
+
+    if (jobId) {
+      paymentReference.textContent = "JOB-" + jobId;
+    }
+
+    async function checkJobPaymentStatus() {
+      if (!jobId) return;
+
+      try {
+        const response = await fetch(API_BASE + "/jobs/" + jobId);
+        const data = await response.json();
+        const job = data.job || null;
+
+        if (!job) {
+          paymentMessage.className = "message-box message-error";
+          paymentMessage.textContent = "Job not found.";
+          return;
+        }
+
+        if (
+          String(job.payment_status || "").toLowerCase() === "paid" ||
+          String(job.post_status || "").toLowerCase() === "published"
+        ) {
+          paymentMessage.className = "message-box message-success";
+          paymentMessage.textContent = "";
+          document.querySelector(".payment-card h1").textContent = "Payment Status";
+          document.querySelector(".payment-card > p").textContent = "This job has already been paid for. No further payment is required.";
+          document.querySelector(".payment-actions").style.display = "none";
+          document.querySelectorAll("#paymentForm input, #paymentForm button, #paymentForm textarea, #paymentForm select").forEach(el => el.disabled = true);
+          document.querySelectorAll("#paymentForm .form-group, #paymentForm .payment-actions").forEach(el => el.style.display = "none");
+          document.querySelector("#paymentForm .section-title").style.display = "none";
+        }
+      } catch (error) {
+        paymentMessage.className = "message-box message-error";
+        paymentMessage.textContent = "Unable to verify job payment status.";
+      }
+    }
+
+    paymentForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      if (!jobId) {
+        paymentMessage.className = "message-box message-error";
+        paymentMessage.textContent = "Missing job reference. Please create the job post first.";
+        return;
+      }
+
+      const payload = {
+        job_db_id: jobId,
+        full_name: fullNameInput.value.trim(),
+        email: emailInput.value.trim(),
+        phone: phoneInput.value.trim(),
+        amount: Number(amountPaidInput.value),
+        currency: "KES",
+        payment_method: "mpesa",
+        payment_for: "Basic Job Post - 30 Days",
+        transaction_code: transactionCodeInput.value.trim()
+      };
+
+      paymentMessage.className = "message-box";
+      paymentMessage.textContent = "";
+
+      try {
+        const response = await fetch(API_BASE + "/payments", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          paymentMessage.className = "message-box message-success";
+          paymentMessage.textContent = "Payment submitted successfully. Your post is now pending admin review.";
+          paymentForm.reset();
+          amountPaidInput.value = 799;
+        } else {
+          paymentMessage.className = "message-box message-error";
+          paymentMessage.textContent = data.message || "Failed to save payment.";
+        }
+      } catch (error) {
+        paymentMessage.className = "message-box message-error";
+        paymentMessage.textContent = "Unable to connect to the server.";
+      }
+    });
+    checkJobPaymentStatus();
+  </script>
+</body>
+</html>
