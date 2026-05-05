@@ -13,13 +13,25 @@ router.get("/stats", requireAdmin, async (req, res) => {
     const [featuredResult] = await pool.query(
       "SELECT COUNT(*) AS featuredJobs FROM jobs WHERE is_featured = 1"
     );
+    const [verificationRequestsResult] = await pool.query(
+      "SELECT COUNT(*) AS verificationRequests FROM employer_verifications"
+    );
+    const [pendingVerificationsResult] = await pool.query(
+      "SELECT COUNT(*) AS pendingVerifications FROM employer_verifications WHERE verification_status = 'pending'"
+    );
+    const [verifiedEmployersResult] = await pool.query(
+      "SELECT COUNT(*) AS verifiedEmployers FROM employer_verifications WHERE verification_status = 'verified'"
+    );
 
     res.json({
       success: true,
       totalJobs: jobsResult[0].totalJobs || 0,
       totalUsers: usersResult[0].totalUsers || 0,
       pendingPayments: paymentsResult[0].pendingPayments || 0,
-      featuredJobs: featuredResult[0].featuredJobs || 0
+      featuredJobs: featuredResult[0].featuredJobs || 0,
+      verificationRequests: verificationRequestsResult[0].verificationRequests || 0,
+      pendingVerifications: pendingVerificationsResult[0].pendingVerifications || 0,
+      verifiedEmployers: verifiedEmployersResult[0].verifiedEmployers || 0
     });
   } catch (error) {
     res.status(500).json({

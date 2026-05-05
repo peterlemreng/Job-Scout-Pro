@@ -315,6 +315,21 @@
         <h3 id="pendingPayments">0</h3>
         <p>Pending Payments</p>
       </div>
+
+      <div class="stat-box">
+        <h3 id="verificationRequests">0</h3>
+        <p>Verification Requests</p>
+      </div>
+
+      <div class="stat-box">
+        <h3 id="pendingVerifications">0</h3>
+        <p>Pending Verifications</p>
+      </div>
+
+      <div class="stat-box">
+        <h3 id="verifiedEmployers">0</h3>
+        <p>Verified Employers</p>
+      </div>
     </div>
 
     <section class="admin-section">
@@ -455,6 +470,9 @@
   const totalUsers = document.getElementById("totalUsers");
   const featuredJobs = document.getElementById("featuredJobs");
   const pendingPayments = document.getElementById("pendingPayments");
+  const verificationRequests = document.getElementById("verificationRequests");
+  const pendingVerifications = document.getElementById("pendingVerifications");
+  const verifiedEmployers = document.getElementById("verifiedEmployers");
 
   const recentPaymentsTable = document.getElementById("recentPaymentsTable");
   const recentApplicationsTable = document.getElementById("recentApplicationsTable");
@@ -501,6 +519,9 @@
         totalUsers.textContent = data.totalUsers ?? 0;
         featuredJobs.textContent = data.featuredJobs ?? 0;
         pendingPayments.textContent = data.pendingPayments ?? 0;
+        verificationRequests.textContent = data.verificationRequests ?? 0;
+        pendingVerifications.textContent = data.pendingVerifications ?? 0;
+        verifiedEmployers.textContent = data.verifiedEmployers ?? 0;
       }
     } catch (error) {
       console.error("Failed to load admin stats:", error);
