@@ -372,11 +372,11 @@
         <table class="admin-table">
           <thead>
             <tr>
-              <th>Title</th>
+              <th>Job ID</th><th>Title</th>
               <th>Company</th>
               <th>Location</th>
               <th>Category</th>
-              <th>Featured</th>
+              <th>Payment Status</th><th>Post Status</th><th>Featured</th>
               <th>Paid At</th>
               <th>Expires At</th>
               <th>Remaining Days</th><th>Action</th>
@@ -384,7 +384,7 @@
           </thead>
           <tbody id="recentJobsTable">
             <tr>
-              <td colspan="8" class="empty-row">Loading jobs...</td>
+              <td colspan="11" class="empty-row">Loading jobs...</td>
             </tr>
           </tbody>
         </table>
@@ -567,17 +567,17 @@
       const jobs = await response.json();
 
       if (!Array.isArray(jobs) || jobs.length === 0) {
-        recentJobsTable.innerHTML = '<tr><td colspan="9" class="empty-row">No jobs found.</td></tr>';
+        recentJobsTable.innerHTML = '<tr><td colspan="11" class="empty-row">No jobs found.</td></tr>';
         return;
       }
 
       recentJobsTable.innerHTML = jobs.slice(0, 8).map(job => `
         <tr>
-          <td>${job.title || "Untitled"}</td>
+          <td>${job.id || ""}</td><td>${job.title || "Untitled"}</td>
           <td>${job.company || "N/A"}</td>
           <td>${job.location || "N/A"}</td>
           <td>${job.category || "General"}</td>
-          <td>${Number(job.is_featured) === 1 ? "Yes" : "No"}</td>
+          <td>${job.payment_status || "pending"}</td><td>${job.post_status || "draft"}</td><td>${Number(job.is_featured) === 1 ? "Yes" : "No"}</td>
           <td>${formatDate(job.paid_at)}</td>
           <td>${formatDate(job.expires_at)}</td>
           <td>${getRemainingDays(job.expires_at)}</td>
