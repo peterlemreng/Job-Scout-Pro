@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard - Job Scout Pro</title>
+  <link rel="stylesheet" href="../style.css" />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f7fb;
+      color: #111827;
+    }
+
+    .topbar {
+      background: #ffffff;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 16px 20px;
+    }
+
+    .topbar-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo {
+      width: 52px;
+      height: 52px;
+      object-fit: cover;
+      border-radius: 12px;
+    }
+
+    .logo-area h1 {
+      margin: 0;
+      font-size: 20px;
+      color: #111827;
+    }
+
+    .logo-area p {
+      margin: 4px 0 0;
+      color: #6b7280;
+      font-size: 13px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: #374151;
+      font-weight: 600;
+      padding: 10px 14px;
+      border-radius: 10px;
+      transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      background: #eff6ff;
+      color: #2563eb;
+    }
+
+    .nav-links a.active {
+      background: #dbeafe;
+      color: #1d4ed8;
+      box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.12);
+    }
+
+    .admin-page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px 20px 60px;
+    }
+
+    .page-header {
+      margin-bottom: 24px;
+    }
+
+    .page-header h2 {
+      margin: 0 0 10px;
+      font-size: 32px;
+      color: #111827;
+    }
+
+    .page-header p {
+      margin: 0;
+      color: #6b7280;
+      line-height: 1.6;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    .stat-box {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+      border: 1px solid #e5e7eb;
+    }
+
+    .stat-box h3 {
+      margin: 0 0 8px;
+      font-size: 32px;
+      color: #2563eb;
+    }
+
+    .stat-box p {
+      margin: 0;
+      color: #6b7280;
+      font-size: 14px;
+    }
+
+    .admin-section {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+      border: 1px solid #e5e7eb;
+      margin-bottom: 24px;
+    }
+
+    .admin-section h2 {
+      margin: 0 0 16px;
+      font-size: 22px;
+      color: #111827;
+    }
+
+    .quick-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-block;
+      text-decoration: none;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 18px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .btn-primary {
+      background: #2563eb;
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background: #1d4ed8;
+    }
+
+    .btn-secondary {
+      background: #111827;
+      color: #ffffff;
+    }
+
+    .btn-outline {
+      background: #ffffff;
+      color: #2563eb;
+      border: 1px solid #2563eb;
+    }
+
+    .btn-outline:hover {
+      background: #eff6ff;
+    }
+
+    .action-btn {
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-right: 6px;
+      margin-bottom: 4px;
+    }
+
+    .action-complete {
+      background: #dcfce7;
+      color: #166534;
+      border: 1px solid #86efac;
+    }
+
+    .action-fail {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fca5a5;
+    }
+
+    .action-delete {
+      background: #ffffff;
+      color: #b91c1c;
+      border: 1px solid #ef4444;
+    }
+
+    .action-unpublish {
+      background: #ffffff;
+      color: #374151;
+      border: 1px solid #9ca3af;
+    }
+
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 700px;
+    }
+
+    .admin-table th,
+    .admin-table td {
+      text-align: left;
+      padding: 14px 12px;
+      border-bottom: 1px solid #e5e7eb;
+      font-size: 14px;
+      vertical-align: top;
+    }
+
+    .admin-table th {
+      background: #f9fafb;
+      color: #374151;
+      font-weight: 700;
+    }
+
+    .empty-row {
+      text-align: center;
+      color: #6b7280;
+      padding: 20px 12px;
+    }
+
+    @media (max-width: 900px) {
+      .stats-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .page-header h2 {
+        font-size: 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="logo-area">
+        <img src="../assets/logo.Jobscoutphoto.jpg" alt="Job Scout Pro Logo" class="logo" />
+        <div>
+          <h1>Job Scout Pro</h1>
+          <p>Admin Control Panel</p>
+        </div>
+      </div>
+
+      <nav class="nav-links">
+        <a href="dashboard.html" class="active">Dashboard</a>
+        <a href="jobs.html">Jobs</a>
+        <a href="payments.html">Payments</a>
+        <a href="applications.html">Applications</a>
+        <a href="audit-logs.html">Audit Logs</a>
+        <a href="employer-verifications.html">Employer Verification</a>
+        <a href="../logout.html">Logout</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="admin-page">
+    <div class="page-header">
+      <h2>Admin Dashboard</h2>
+      <p>Monitor jobs, users, featured listings, payment activity, and applications.</p>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-box">
+        <h3 id="totalJobs">0</h3>
+        <p>Total Jobs</p>
+      </div>
+
+      <div class="stat-box">
+        <h3 id="totalUsers">0</h3>
+        <p>Total Users</p>
+      </div>
+
+      <div class="stat-box">
+        <h3 id="featuredJobs">0</h3>
+        <p>Featured Jobs</p>
+      </div>
+
+      <div class="stat-box">
+        <h3 id="pendingPayments">0</h3>
+        <p>Pending Payments</p>
+      </div>
+    </div>
+
+    <section class="admin-section">
+      <h2>Quick Actions</h2>
+      <div class="quick-actions">
+        <a href="jobs.html" class="btn btn-primary">View Jobs</a>
+        <a href="../payment.html" class="btn btn-secondary">Check Payments</a>
+        <a href="payments.html" class="btn btn-outline">Payment Records</a>
+        <a href="../signup.html" class="btn btn-outline">Create User</a>
+        <a href="applications.html" class="btn btn-outline">Application Records</a>
+      </div>
+    </section>
+
+    <section class="admin-section">
+      <h2>Recent Payments</h2>
+      <div style="overflow-x:auto;">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Payment ID</th><th>Job ID</th><th>Job Title</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Amount</th>
+              <th>Method</th>
+                                      <th>Action</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="recentPaymentsTable">
+            <tr>
+              <td colspan="9" class="empty-row">Loading payments...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="admin-section">
+      <h2>Recent Applications</h2>
+      <div style="overflow-x:auto;">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Job ID</th>
+                                      <th>Action</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="recentApplicationsTable">
+            <tr>
+              <td colspan="5" class="empty-row">Loading applications...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="admin-section">
+      <h2>Recent Jobs</h2>
+      <div style="overflow-x:auto;">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Job ID</th><th>Title</th>
+              <th>Company</th>
+              <th>Location</th>
+              <th>Category</th>
+              <th>Payment Status</th><th>Post Status</th><th>Featured</th>
+              <th>Paid At</th>
+              <th>Expires At</th>
+              <th>Remaining Days</th><th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="recentJobsTable">
+            <tr>
+              <td colspan="11" class="empty-row">Loading jobs...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  
+    <section class="admin-section">
+      <h2>Create Paid Job Draft</h2>
+      <div class="form-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+        <div class="form-group">
+          <label for="draftTitle">Job Title</label>
+          <input type="text" id="draftTitle" />
+        </div>
+        <div class="form-group">
+          <label for="draftCompany">Company</label>
+          <input type="text" id="draftCompany" />
+        </div>
+        <div class="form-group">
+          <label for="draftLocation">Location</label>
+          <input type="text" id="draftLocation" />
+        </div>
+        <div class="form-group">
+          <label for="draftJobType">Job Type</label>
+          <input type="text" id="draftJobType" placeholder="Full-time" />
+        </div>
+        <div class="form-group">
+          <label for="draftCategory">Category</label>
+          <input type="text" id="draftCategory" placeholder="General" />
+        </div>
+        <div class="form-group">
+          <label for="draftApplyUrl">Apply URL</label>
+          <input type="text" id="draftApplyUrl" placeholder="https://your-job-link.com" />
+        </div>
+        <div class="form-group" style="grid-column: 1 / -1;">
+          <label for="draftDescription">Description</label>
+          <textarea id="draftDescription" style="padding:12px 14px; border:1px solid #d1d5db; border-radius:10px; min-height:110px;"></textarea>
+        </div>
+      </div>
+      <div style="margin-top:16px;">
+        <button type="button" class="btn btn-primary" onclick="createPaidJobDraft()">Create Draft and Continue to Payment</button>
+      </div>
+      <div id="draftJobMessage" class="message-box" style="margin-top:14px;"></div>
+    </section>
+
+</main>
+
+  <script>
+  const API_BASE = "https://job-scout-pro-production.up.railway.app/api";
+  const currentUser = JSON.parse(localStorage.getItem("user") || "null");
+  const authToken = localStorage.getItem("token") || "";
+
+  if (!currentUser) {
+    window.location.href = "login.html";
+  } else if (currentUser.role !== "admin") {
+    window.location.href = "jobs.html";
+  }
+
+  const totalJobs = document.getElementById("totalJobs");
+  const totalUsers = document.getElementById("totalUsers");
+  const featuredJobs = document.getElementById("featuredJobs");
+  const pendingPayments = document.getElementById("pendingPayments");
+
+  const recentPaymentsTable = document.getElementById("recentPaymentsTable");
+  const recentApplicationsTable = document.getElementById("recentApplicationsTable");
+  const recentJobsTable = document.getElementById("recentJobsTable");
+
+  function formatDate(value) {
+    if (!value) return "—";
+    const d = new Date(value);
+    if (isNaN(d.getTime())) return "—";
+    return d.toLocaleDateString("en-GB");
+  }
+
+  function getRemainingDays(expiresAt) {
+    if (!expiresAt) return "—";
+
+    const now = new Date();
+    const expiry = new Date(expiresAt);
+
+    if (isNaN(expiry.getTime())) return "—";
+
+    const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const endDate = new Date(expiry.getFullYear(), expiry.getMonth(), expiry.getDate());
+
+    const diffMs = endDate.getTime() - startOfToday.getTime();
+    const days = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+
+    if (days < 0) return "Expired";
+    if (days === 0) return "0 days";
+    if (days === 1) return "1 day";
+    return days + " days";
+  }
+
+  async function loadStats() {
+    try {
+      const response = await fetch(API_BASE + "/admin/stats", {
+        headers: {
+          "Authorization": "Bearer " + authToken
+        }
+      });
+      const data = await response.json();
+
+      if (data.success) {
+        totalJobs.textContent = data.totalJobs ?? 0;
+        totalUsers.textContent = data.totalUsers ?? 0;
+        featuredJobs.textContent = data.featuredJobs ?? 0;
+        pendingPayments.textContent = data.pendingPayments ?? 0;
+      }
+    } catch (error) {
+      console.error("Failed to load admin stats:", error);
+    }
+  }
+
+  async function loadRecentPayments() {
+    try {
+      const response = await fetch(API_BASE + "/payments", {
+        headers: {
+          "Authorization": "Bearer " + authToken
+        }
+      });
+      const payments = await response.json();
+
+      if (!Array.isArray(payments) || payments.length === 0) {
+        recentPaymentsTable.innerHTML = '<tr><td colspan="9" class="empty-row">No payments found.</td></tr>';
+        return;
+      }
+
+      recentPaymentsTable.innerHTML = payments.slice(0, 8).map(payment => `
+        <tr>
+          <td>${payment.id || ""}</td><td>${payment.job_db_id || ""}</td><td>${payment.job_title || "N/A"}</td>
+          <td>${payment.full_name || "N/A"}</td>
+          <td>${payment.email || "N/A"}</td>
+          <td>${payment.amount || "0"}</td>
+          <td>${payment.payment_method || "N/A"}</td>
+          <td><button class="action-btn action-complete" onclick="updatePaymentStatus('${payment.id || ""}', 'completed')">Complete</button> <button class="action-btn action-fail" onclick="updatePaymentStatus('${payment.id || ""}', 'failed')">Fail</button> ${["pending", "failed", "rejected"].includes(String(payment.status || "").toLowerCase()) ? `<button class="action-btn action-delete" onclick="deletePayment('${payment.id || ""}')">Delete</button>` : ""}</td>
+          <td>${payment.status || "pending"}</td>
+        </tr>
+      `).join("");
+    } catch (error) {
+      recentPaymentsTable.innerHTML = '<tr><td colspan="7" class="empty-row">Failed to load payments.</td></tr>';
+    }
+  }
+
+  async function loadRecentApplications() {
+    try {
+      const response = await fetch(API_BASE + "/applications", {
+        headers: {
+          "Authorization": "Bearer " + authToken
+        }
+      });
+      const applications = await response.json();
+
+      if (!Array.isArray(applications) || applications.length === 0) {
+        recentApplicationsTable.innerHTML = '<tr><td colspan="6" class="empty-row">No applications found.</td></tr>';
+        return;
+      }
+
+      recentApplicationsTable.innerHTML = applications.slice(0, 8).map(application => `
+        <tr>
+          <td>${application.id || ""}</td>
+          <td>${application.full_name || "N/A"}</td>
+          <td>${application.email || "N/A"}</td>
+          <td>${application.job_id || "N/A"}</td>
+          <td><button onclick="updateApplicationStatus('${application.id || ""}', 'reviewed')">Review</button> <button onclick="updateApplicationStatus('${application.id || ""}', 'rejected')">Reject</button></td>
+          <td>${application.status || "submitted"}</td>
+        </tr>
+      `).join("");
+    } catch (error) {
+      recentApplicationsTable.innerHTML = '<tr><td colspan="6" class="empty-row">Failed to load applications.</td></tr>';
+    }
+  }
+
+  async function loadRecentJobs() {
+    try {
+      const response = await fetch(API_BASE + "/admin/jobs", {
+        headers: {
+          "Authorization": "Bearer " + authToken
+        }
+      });
+      const jobs = await response.json();
+
+      if (!Array.isArray(jobs) || jobs.length === 0) {
+        recentJobsTable.innerHTML = '<tr><td colspan="11" class="empty-row">No jobs found.</td></tr>';
+        return;
+      }
+
+      recentJobsTable.innerHTML = jobs.slice(0, 8).map(job => `
+        <tr>
+          <td>${job.id || ""}</td><td>${job.title || "Untitled"}</td>
+          <td>${job.company || "N/A"}</td>
+          <td>${job.location || "N/A"}</td>
+          <td>${job.category || "General"}</td>
+          <td>${job.payment_status || "pending"}</td><td>${job.post_status || "draft"}</td><td>${Number(job.is_featured) === 1 ? "Yes" : "No"}</td>
+          <td>${formatDate(job.paid_at)}</td>
+          <td>${formatDate(job.expires_at)}</td>
+          <td>${getRemainingDays(job.expires_at)}</td>
+          <td>${(String(job.post_status || "").toLowerCase() === "pending_review" && String(job.payment_status || "").toLowerCase() === "paid") ? `<button class="action-btn action-complete" onclick="approveJob('${job.id || ""}')">Approve</button> <button class="action-btn action-fail" onclick="rejectJob('${job.id || ""}')">Reject</button>` : (["draft", "rejected"].includes(String(job.post_status || "").toLowerCase()) || ["pending", "failed", "rejected"].includes(String(job.payment_status || "").toLowerCase())) ? `<button class="action-btn action-delete" onclick="deleteJob('${job.id || ""}')">Delete</button>` : (String(job.post_status || "").toLowerCase() === "published" && String(job.payment_status || "").toLowerCase() === "paid") ? `<button class="action-btn action-unpublish" onclick="unpublishJob('${job.id || ""}')">Unpublish</button>` : ""}</td>
+        </tr>
+      `).join("");
+    } catch (error) {
+      recentJobsTable.innerHTML = '<tr><td colspan="9" class="empty-row">Failed to load jobs.</td></tr>';
+    }
+  }
+
+  async function updatePaymentStatus(id, status) {
+    try {
+      let failureReason = null;
+
+      if (status === "failed") {
+        failureReason = prompt("Why are you failing this payment?", "Wrong transaction code");
+        if (failureReason === null) return;
+      }
+
+      const response = await fetch(API_BASE + "/payments/" + id + "/status", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + authToken
+        },
+        body: JSON.stringify({
+          status: status,
+          admin_id: currentUser.id,
+          failure_reason: failureReason
+        })
+      });
+
+      const data = await response.json();
+      alert(data.message || "Payment status updated.");
+      loadRecentPayments();
+      loadRecentJobs();
+      loadStats();
+    } catch (error) {
+      alert("Failed to update payment status.");
+    }
+  }
+
+
+  async function deletePayment(id) {
+    try {
+      const confirmed = confirm("Delete this payment record?");
+      if (!confirmed) return;
+
+      const response = await fetch(API_BASE + "/payments/" + id, {
+        method: "DELETE",
+        headers: {
+          "Authorization": "Bearer " + authToken
+        }
+      });
+
+      const data = await response.json();
+      alert(data.message || "Payment deleted.");
+      loadRecentPayments();
+      loadRecentJobs();
+      loadStats();
+    } catch (error) {
+      alert("Failed to delete payment.");
+    }
+  }
+
+
+  async function deleteJob(id) {
+    try {
+      const confirmed = confirm("Delete this job?");
+      if (!confirmed) return;
+
+      const response = await fetch(API_BASE + "/jobs/" + id, {
+        method: "DELETE",
+        headers: {
+          "Authorization": "Bearer " + authToken
+        }
+      });
+
+      const data = await response.json();
+      alert(data.message || "Job deleted.");
+      loadRecentJobs();
+      loadStats();
+    } catch (error) {
+      alert("Failed to delete job.");
+    }
+  }
+
+
+  async function approveJob(id) {
+    try {
+      const confirmed = confirm("Approve this job and publish it?");
+      if (!confirmed) return;
+
+      const response = await fetch(API_BASE + "/jobs/" + id + "/approve", {
+        method: "PUT",
+        headers: {
+          "Authorization": "Bearer " + authToken
+        }
+      });
+
+      const data = await response.json();
+      alert(data.message || "Job approved.");
+      loadRecentJobs();
+      loadStats();
+    } catch (error) {
+      alert("Failed to approve job.");
+    }
+  }
+
+  async function rejectJob(id) {
+    try {
+      const rejectionReason = prompt("Reason for rejecting this job?", "Policy issue or incomplete job details");
+      if (rejectionReason === null) return;
+
+      const response = await fetch(API_BASE + "/jobs/" + id + "/reject", {
+        method: "PUT",
+        headers: {
+          "Authorization": "Bearer " + authToken,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          rejection_reason: rejectionReason.trim() || "Rejected by admin"
+        })
+      });
+
+      const data = await response.json();
+      alert(data.message || "Job rejected.");
+      loadRecentJobs();
+      loadStats();
+    } catch (error) {
+      alert("Failed to reject job.");
+    }
+  }
+
+  async function unpublishJob(id) {
+    try {
+      const confirmed = confirm("Unpublish this job from the public jobs page?");
+      if (!confirmed) return;
+
+      const rejectionReason = prompt("Reason for unpublishing this job?", "Policy issue or admin review decision");
+      if (rejectionReason === null) return;
+
+      const response = await fetch(API_BASE + "/jobs/" + id + "/unpublish", {
+        method: "PUT",
+        headers: {
+          "Authorization": "Bearer " + authToken,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          rejection_reason: rejectionReason.trim() || null
+        })
+      });
+
+      const data = await response.json();
+      alert(data.message || "Job unpublished.");
+      loadRecentJobs();
+      loadStats();
+    } catch (error) {
+      alert("Failed to unpublish job.");
+    }
+  }
+
+  async function updateApplicationStatus(id, status) {
+    try {
+      const response = await fetch(API_BASE + "/applications/" + id + "/status", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + authToken
+        },
+        body: JSON.stringify({ status: status })
+      });
+
+      const data = await response.json();
+      alert(data.message || "Application status updated.");
+      loadStats();
+      loadRecentApplications();
+    } catch (error) {
+      alert("Failed to update application status.");
+    }
+  }
+
+  async function createPaidJobDraft() {
+    const draftJobMessage = document.getElementById("draftJobMessage");
+
+    const payload = {
+      title: document.getElementById("draftTitle").value.trim(),
+      company: document.getElementById("draftCompany").value.trim(),
+      location: document.getElementById("draftLocation").value.trim(),
+      job_type: document.getElementById("draftJobType").value.trim(),
+      category: document.getElementById("draftCategory").value.trim(),
+      apply_url: document.getElementById("draftApplyUrl").value.trim(),
+      description: document.getElementById("draftDescription").value.trim(),
+      posted_by: currentUser.id
+    };
+
+    if (!payload.title || !payload.company || !payload.location || !payload.job_type || !payload.description) {
+      draftJobMessage.className = "message-box message-error";
+      draftJobMessage.textContent = "Please fill all required job fields.";
+      return;
+    }
+
+    draftJobMessage.className = "message-box";
+    draftJobMessage.textContent = "";
+
+    try {
+      const response = await fetch(API_BASE + "/jobs", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + authToken
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await response.json();
+
+      if (data.success && data.jobId) {
+        draftJobMessage.className = "message-box message-success";
+        draftJobMessage.textContent = "Draft job created. Redirecting to payment...";
+        setTimeout(() => {
+          window.location.href = "payment.html?jobId=" + data.jobId;
+        }, 800);
+      } else {
+        draftJobMessage.className = "message-box message-error";
+        draftJobMessage.textContent = data.message || "Failed to create job draft.";
+      }
+    } catch (error) {
+      draftJobMessage.className = "message-box message-error";
+      draftJobMessage.textContent = "Unable to connect to the server.";
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    loadStats();
+    loadRecentPayments();
+    loadRecentApplications();
+    loadRecentJobs();
+  });
+</script>
+</body>
+</html>
