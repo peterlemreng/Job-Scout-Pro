@@ -79,7 +79,7 @@ router.post("/", async (req, res) => {
     await pool.query(
       `UPDATE jobs
        SET payment_reference = ?, payer_name = ?, payer_phone = ?, amount_paid = ?,
-           payment_status = 'pending', post_status = 'pending_review', updated_at = NOW()
+           payment_status = 'pending', post_status = 'draft', updated_at = NOW()
        WHERE id = ?`,
       [transaction_code, full_name, phone, amount, job_db_id]
     );
