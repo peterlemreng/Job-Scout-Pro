@@ -2,233 +2,452 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Jobs - Job Scout Pro</title>
-<link rel="stylesheet" href="../style.css" />
-<style>
-.page-header {
-background: linear-gradient(135deg, #eff6ff, #ffffff);
-padding: 56px 20px 34px;
-text-align: center;
-}
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Jobs - Job Scout Pro</title>
+  <link rel="stylesheet" href="../style.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f7fb;
+      color: #111827;
+    }
 
-.page-header h1 {
-font-size: 40px;
-color: #111827;
-margin-bottom: 10px;
-}
+    .admin-page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px 20px 60px;
+    }
 
-.page-header p {
-color: #6b7280;
-max-width: 700px;
-margin: 0 auto;
-}
+    .page-header {
+      margin-bottom: 24px;
+    }
 
-.jobs-page {
-padding: 40px 20px 60px;
-max-width: 1200px;
-margin: 0 auto;
-}
+    .page-header h2 {
+      margin: 0 0 10px;
+      font-size: 32px;
+      color: #111827;
+    }
 
-.search-bar {
-display: grid;
-grid-template-columns: 1fr 1fr 1fr auto;
-gap: 14px;
-margin-bottom: 30px;
-}
+    .page-header p {
+      margin: 0;
+      color: #6b7280;
+      line-height: 1.6;
+    }
 
-.search-bar input,
-.search-bar select {
-padding: 12px 14px;
-border: 1px solid #d1d5db;
-border-radius: 10px;
-font-size: 15px;
-outline: none;
-}
+    .search-bar {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr auto;
+      gap: 14px;
+      margin-bottom: 24px;
+      background: #ffffff;
+      padding: 16px;
+      border-radius: 16px;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+      border: 1px solid #e5e7eb;
+    }
 
-.search-bar {
-background: #ffffff;
-padding: 16px;
-border-radius: 16px;
-box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
-border: 1px solid #e5e7eb;
-}
+    .search-bar input,
+    .search-bar select {
+      padding: 12px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      font-size: 15px;
+      outline: none;
+      background: #ffffff;
+    }
 
-.search-bar button {
-border: none;
-cursor: pointer;
-}
+    .search-bar input:focus,
+    .search-bar select:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
 
-.jobs-grid-page {
-display: grid;
-grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-gap: 20px;
-}
+    .records-card {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+      border: 1px solid #e5e7eb;
+    }
 
-.job-card-page {
-background: #ffffff;
-border-radius: 16px;
-padding: 22px;
-box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
-border: 1px solid #e5e7eb;
-transition: 0.2s ease;
-}
+    .records-card h3 {
+      margin: 0 0 16px;
+      font-size: 22px;
+      color: #111827;
+    }
 
-.job-card-page:hover {
-transform: translateY(-3px);
-box-shadow: 0 14px 30px rgba(0, 0, 0, 0.08);
-}
+    .table-wrap {
+      overflow-x: auto;
+    }
 
-.job-card-page h3 {
-margin-bottom: 10px;
-color: #111827;
-}
+    .records-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 1200px;
+    }
 
-.job-meta {
-color: #6b7280;
-font-size: 14px;
-margin-bottom: 8px;
-}
+    .records-table th,
+    .records-table td {
+      text-align: left;
+      padding: 14px 12px;
+      border-bottom: 1px solid #e5e7eb;
+      font-size: 14px;
+      vertical-align: top;
+    }
 
-.job-description {
-color: #4b5563;
-margin: 12px 0 18px;
-font-size: 15px;
-}
+    .records-table th {
+      background: #f9fafb;
+      color: #374151;
+      font-weight: 700;
+    }
 
-.badge-featured {
-display: inline-block;
-margin-bottom: 12px;
-background: #dbeafe;
-color: #1d4ed8;
-padding: 6px 10px;
-border-radius: 999px;
-font-size: 12px;
-font-weight: 700;
-}
+    .status-badge {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: capitalize;
+      background: #e5e7eb;
+      color: #374151;
+    }
 
-.empty-box {
-text-align: center;
-padding: 30px;
-background: #fff;
-border-radius: 16px;
-box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
-border: 1px solid #e5e7eb;
-transition: 0.2s ease;
-color: #6b7280;
-}
+    .status-paid,
+    .status-published,
+    .status-active,
+    .status-approved {
+      background: #dcfce7;
+      color: #166534;
+    }
 
-@media (max-width: 900px) {
-.search-bar {
-grid-template-columns: 1fr;
-}
-}
-</style>
+    .status-pending,
+    .status-pending_review,
+    .status-draft {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .status-failed,
+    .status-rejected,
+    .status-inactive {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .action-btn {
+      border: none;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      margin: 0 6px 6px 0;
+    }
+
+    .action-approve {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .action-reject {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .action-unpublish {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .action-delete {
+      background: #111827;
+      color: #ffffff;
+    }
+
+    .empty-row {
+      text-align: center;
+      color: #6b7280;
+      padding: 20px 12px;
+    }
+
+    @media (max-width: 900px) {
+      .search-bar {
+        grid-template-columns: 1fr;
+      }
+
+      .page-header h2 {
+        font-size: 28px;
+      }
+    }
+  </style>
 </head>
 <body>
-<header class="topbar">
-<div class="logo-area">
-<img src="../assets/logo.Jobscoutphoto.jpg" alt="Job Scout Pro Logo" class="logo" />
-<div>
-<h1>Job Scout Pro</h1>
-<p class="tagline">
-Find jobs. Grow faster. Hire smarter.
-</p>
-</div>
-</div>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="logo-area">
+        <img src="../assets/logo.Jobscoutphoto.jpg" alt="Job Scout Pro Logo" class="logo" />
+        <div>
+          <h1>Job Scout Pro</h1>
+          <p>Admin Jobs</p>
+        </div>
+      </div>
 
-<nav class="nav-links">
-<a href="dashboard.html">Dashboard</a>
-<a href="jobs.html">Jobs</a>
-<a href="about.html">About</a>
-<a href="audit-logs.html">Audit Logs</a>      <a href="employer-verifications.html">Employer Verification</a>
-<a href="../login.html" class="btn btn-outline">Login</a>
-</nav>
-</header>
+      <nav class="nav-links">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="jobs.html" class="active">Jobs</a>
+        <a href="payments.html">Payments</a>
+        <a href="applications.html">Applications</a>
+        <a href="audit-logs.html">Audit Logs</a>
+        <a href="employer-verifications.html">Employer Verification</a>
+        <a href="../logout.html">Logout</a>
+      </nav>
+    </div>
+  </header>
 
-<section class="page-header">
-<h1>Available Jobs</h1>
-<p>
-Search and explore real opportunities that match your skills, goals, and career path.
-</p>
-</section>
+  <main class="admin-page">
+    <div class="page-header">
+      <h2>Admin Jobs</h2>
+      <p>Review all jobs, trace payment and post status, and take moderation actions from one place.</p>
+    </div>
 
-<main class="jobs-page">
-<div class="search-bar">
-<input type="text" id="searchKeyword" placeholder="Search by title or company" />
-<input type="text" id="searchLocation" placeholder="Location" />
-<select id="searchCategory">
-<option value="">All Categories</option>
-<option value="Technology">Technology</option>
-<option value="Marketing">Marketing</option>
-<option value="Design">Design</option>
-<option value="Administration">Administration</option>
-<option value="Finance">Finance</option>
-<option value="Customer Support">Customer Support</option>
-</select>
-<button class="btn btn-primary" id="searchBtn">Search</button>
-</div>
+    <div class="search-bar">
+      <input type="text" id="searchKeyword" placeholder="Search by title or company" />
+      <input type="text" id="searchLocation" placeholder="Location" />
+      <select id="searchStatus">
+        <option value="">All Post Statuses</option>
+        <option value="draft">Draft</option>
+        <option value="pending_review">Pending Review</option>
+        <option value="published">Published</option>
+        <option value="rejected">Rejected</option>
+      </select>
+      <button class="btn btn-primary" id="searchBtn">Search</button>
+    </div>
 
-<div id="jobsList" class="jobs-grid-page">
-<div class="empty-box">
-Loading jobs...
-</div>
-</div>
-</main>
+    <section class="records-card">
+      <h3>All Jobs</h3>
+      <div class="table-wrap">
+        <table class="records-table">
+          <thead>
+            <tr>
+              <th>Job ID</th>
+              <th>Title</th>
+              <th>Company</th>
+              <th>Location</th>
+              <th>Category</th>
+              <th>Payment Status</th>
+              <th>Post Status</th>
+              <th>Paid At</th>
+              <th>Expires At</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="jobsTable">
+            <tr>
+              <td colspan="10" class="empty-row">Loading jobs...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
 
-<script>
-const API_BASE = "https://job-scout-pro-production.up.railway.app/api";
-const jobsList = document.getElementById("jobsList");
-const searchBtn = document.getElementById("searchBtn");
+  <script>
+    const API_BASE = "https://job-scout-pro-production.up.railway.app/api";
+    const currentUser = JSON.parse(localStorage.getItem("user") || "null");
+    const authToken = localStorage.getItem("token") || "";
 
-async function loadJobs() {
-const keyword = document.getElementById("searchKeyword").value.toLowerCase().trim();
-const location = document.getElementById("searchLocation").value.toLowerCase().trim();
-const category = document.getElementById("searchCategory").value.toLowerCase().trim();
+    if (!currentUser) {
+      window.location.href = "../login.html";
+    } else if (currentUser.role !== "admin") {
+      window.location.href = "../jobs.html";
+    }
 
-try {
-const response = await fetch(`${API_BASE}/jobs`);
-const jobs = await response.json();
+    const jobsTable = document.getElementById("jobsTable");
+    const searchBtn = document.getElementById("searchBtn");
 
-let filteredJobs = Array.isArray(jobs) ? jobs: [];
+    function formatDate(value) {
+      if (!value) return "—";
+      const d = new Date(value);
+      if (isNaN(d.getTime())) return "—";
+      return d.toLocaleDateString("en-GB");
+    }
 
-filteredJobs = filteredJobs.filter(job => {
-const title = (job.title || "").toLowerCase();
-const company = (job.company || "").toLowerCase();
-const jobLocation = (job.location || "").toLowerCase();
-const jobCategory = (job.category || "").toLowerCase();
+    function statusClass(value) {
+      const v = String(value || "").toLowerCase();
+      if (v === "paid" || v === "published" || v === "active" || v === "approved") return "status-badge status-paid";
+      if (v === "pending" || v === "pending_review" || v === "draft") return "status-badge status-pending";
+      if (v === "failed" || v === "rejected" || v === "inactive") return "status-badge status-failed";
+      return "status-badge";
+    }
 
-return (
-(!keyword || title.includes(keyword) || company.includes(keyword)) &&
-(!location || jobLocation.includes(location)) &&
-(!category || jobCategory === category)
-);
-});
+    function getActionButtons(job) {
+      const postStatus = String(job.post_status || "").toLowerCase();
+      const paymentStatus = String(job.payment_status || "").toLowerCase();
 
-if (filteredJobs.length === 0) {
-jobsList.innerHTML = `<div class="empty-box">No jobs found.</div>`;
-return;
-}
+      if (postStatus === "pending_review" && paymentStatus === "paid") {
+        return `
+          <button class="action-btn action-approve" onclick="approveJob('${job.id || ""}')">Approve</button>
+          <button class="action-btn action-reject" onclick="rejectJob('${job.id || ""}')">Reject</button>
+        `;
+      }
 
-jobsList.innerHTML = filteredJobs.map(job => `
-<div class="job-card-page">
-${Number(job.is_featured) === 1 ? `<div class="badge-featured">Featured</div>`: ""}
-<h3>${job.title || "Untitled Job"}</h3>
-<div class="job-meta"><strong>Company:</strong> ${job.company || "N/A"}</div>
-<div class="job-meta"><strong>Location:</strong> ${job.location || "N/A"}</div>
-<div class="job-meta"><strong>Category:</strong> ${job.category || "General"}</div>
-<div class="job-meta"><strong>Type:</strong> ${job.job_type || "N/A"}</div>
-<p class="job-description">${job.description ? job.description.slice(0, 140) + "...": "No description available."}</p>
-<a class="btn btn-primary" href="job-detail.html?id=${job.id || ""}">View Details</a>
-</div>
-`).join("");
-} catch (error) {
-jobsList.innerHTML = `<div class="empty-box">Failed to load jobs.</div>`;
-}
-}
+      if (postStatus === "published" && paymentStatus === "paid") {
+        return `<button class="action-btn action-unpublish" onclick="unpublishJob('${job.id || ""}')">Unpublish</button>`;
+      }
 
-searchBtn.addEventListener("click", loadJobs);
-document.addEventListener("DOMContentLoaded", loadJobs);
-</script>
+      if (["draft", "rejected"].includes(postStatus) || ["pending", "failed", "rejected"].includes(paymentStatus)) {
+        return `<button class="action-btn action-delete" onclick="deleteJob('${job.id || ""}')">Delete</button>`;
+      }
+
+      return "";
+    }
+
+    async function loadJobs() {
+      const keyword = document.getElementById("searchKeyword").value.toLowerCase().trim();
+      const location = document.getElementById("searchLocation").value.toLowerCase().trim();
+      const status = document.getElementById("searchStatus").value.toLowerCase().trim();
+
+      try {
+        const response = await fetch(API_BASE + "/admin/jobs", {
+          headers: {
+            "Authorization": "Bearer " + authToken
+          }
+        });
+        const jobs = await response.json();
+
+        let filteredJobs = Array.isArray(jobs) ? jobs : [];
+
+        filteredJobs = filteredJobs.filter(job => {
+          const title = String(job.title || "").toLowerCase();
+          const company = String(job.company || "").toLowerCase();
+          const jobLocation = String(job.location || "").toLowerCase();
+          const postStatus = String(job.post_status || "").toLowerCase();
+
+          return (
+            (!keyword || title.includes(keyword) || company.includes(keyword)) &&
+            (!location || jobLocation.includes(location)) &&
+            (!status || postStatus === status)
+          );
+        });
+
+        if (filteredJobs.length === 0) {
+          jobsTable.innerHTML = '<tr><td colspan="10" class="empty-row">No jobs found.</td></tr>';
+          return;
+        }
+
+        jobsTable.innerHTML = filteredJobs.map(job => `
+          <tr>
+            <td>${job.id || ""}</td>
+            <td>${job.title || "Untitled"}</td>
+            <td>${job.company || "N/A"}</td>
+            <td>${job.location || "N/A"}</td>
+            <td>${job.category || "General"}</td>
+            <td><span class="${statusClass(job.payment_status)}">${job.payment_status || "pending"}</span></td>
+            <td><span class="${statusClass(job.post_status)}">${job.post_status || "draft"}</span></td>
+            <td>${formatDate(job.paid_at)}</td>
+            <td>${formatDate(job.expires_at)}</td>
+            <td>${getActionButtons(job)}</td>
+          </tr>
+        `).join("");
+      } catch (error) {
+        jobsTable.innerHTML = '<tr><td colspan="10" class="empty-row">Failed to load jobs.</td></tr>';
+      }
+    }
+
+    async function deleteJob(id) {
+      try {
+        const confirmed = confirm("Delete this job?");
+        if (!confirmed) return;
+
+        const response = await fetch(API_BASE + "/jobs/" + id, {
+          method: "DELETE",
+          headers: {
+            "Authorization": "Bearer " + authToken
+          }
+        });
+
+        const data = await response.json();
+        alert(data.message || "Job deleted.");
+        loadJobs();
+      } catch (error) {
+        alert("Failed to delete job.");
+      }
+    }
+
+    async function approveJob(id) {
+      try {
+        const confirmed = confirm("Approve this job and publish it?");
+        if (!confirmed) return;
+
+        const response = await fetch(API_BASE + "/jobs/" + id + "/approve", {
+          method: "PUT",
+          headers: {
+            "Authorization": "Bearer " + authToken
+          }
+        });
+
+        const data = await response.json();
+        alert(data.message || "Job approved.");
+        loadJobs();
+      } catch (error) {
+        alert("Failed to approve job.");
+      }
+    }
+
+    async function rejectJob(id) {
+      try {
+        const rejectionReason = prompt("Reason for rejecting this job?", "Policy issue or incomplete job details");
+        if (rejectionReason === null) return;
+
+        const response = await fetch(API_BASE + "/jobs/" + id + "/reject", {
+          method: "PUT",
+          headers: {
+            "Authorization": "Bearer " + authToken,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            rejection_reason: rejectionReason.trim() || "Rejected by admin"
+          })
+        });
+
+        const data = await response.json();
+        alert(data.message || "Job rejected.");
+        loadJobs();
+      } catch (error) {
+        alert("Failed to reject job.");
+      }
+    }
+
+    async function unpublishJob(id) {
+      try {
+        const confirmed = confirm("Unpublish this job from the public jobs page?");
+        if (!confirmed) return;
+
+        const rejectionReason = prompt("Reason for unpublishing this job?", "Policy issue or admin review decision");
+        if (rejectionReason === null) return;
+
+        const response = await fetch(API_BASE + "/jobs/" + id + "/unpublish", {
+          method: "PUT",
+          headers: {
+            "Authorization": "Bearer " + authToken,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            rejection_reason: rejectionReason.trim() || null
+          })
+        });
+
+        const data = await response.json();
+        alert(data.message || "Job unpublished.");
+        loadJobs();
+      } catch (error) {
+        alert("Failed to unpublish job.");
+      }
+    }
+
+    searchBtn.addEventListener("click", loadJobs);
+    document.addEventListener("DOMContentLoaded", loadJobs);
+  </script>
 </body>
 </html>
