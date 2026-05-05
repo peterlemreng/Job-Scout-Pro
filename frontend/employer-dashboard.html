@@ -59,10 +59,16 @@
       font-weight: 600;
       padding: 10px 14px;
       border-radius: 10px;
+      transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
     }
     .nav-links a:hover {
       background: #eff6ff;
       color: #2563eb;
+    }
+    .nav-links a.active {
+      background: #dbeafe;
+      color: #1d4ed8;
+      box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.12);
     }
     .page-wrap {
       max-width: 1200px;
@@ -236,7 +242,7 @@
       </div>
 
       <nav class="nav-links">
-        <a href="employer-dashboard.html">Dashboard</a>
+        <a href="employer-dashboard.html" class="active">Dashboard</a>
         <a href="employer-dashboard.html">My Jobs</a>
         <a href="payment.html">Payments</a>
         <a href="post-job.html">Post Job</a>
