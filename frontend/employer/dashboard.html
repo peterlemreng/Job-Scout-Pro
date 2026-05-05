@@ -419,6 +419,11 @@
       }
     }
 
+    if (currentUser && currentUser.email) {
+      employerEmail.value = currentUser.email;
+      loadEmployerPosts();
+    }
+
     loadPostsBtn.addEventListener("click", loadEmployerPosts);
   </script>
 </body>
