@@ -445,6 +445,12 @@
           <input type="text" id="draftCategory" placeholder="General" />
         </div>
         <div class="form-group">
+          <label for="draftApplicationMethod">Application Method</label>
+          <select id="draftApplicationMethod" style="padding:12px 14px; border:1px solid #d1d5db; border-radius:10px; background:#fff;">
+            <option value="internal">Internal</option>
+            <option value="external">External</option>
+          </select>
+
           <label for="draftApplyUrl">Apply URL</label>
           <input type="text" id="draftApplyUrl" placeholder="https://your-job-link.com" />
         </div>
@@ -806,6 +812,7 @@
       location: document.getElementById("draftLocation").value.trim(),
       job_type: document.getElementById("draftJobType").value.trim(),
       category: document.getElementById("draftCategory").value.trim(),
+      application_method: document.getElementById("draftApplicationMethod").value,
       apply_url: document.getElementById("draftApplyUrl").value.trim(),
       description: document.getElementById("draftDescription").value.trim(),
       posted_by: currentUser.id

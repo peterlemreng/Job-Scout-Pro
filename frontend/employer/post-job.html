@@ -121,15 +121,18 @@
       margin-bottom: 8px;
     }
 
-    .form-group input {
+    .form-group input,
+    .form-group select {
       padding: 12px 14px;
       border: 1px solid #d1d5db;
       border-radius: 10px;
       font-size: 14px;
       outline: none;
+      background: #fff;
     }
 
-    .form-group input:focus {
+    .form-group input:focus,
+    .form-group select:focus {
       border-color: #2563eb;
       box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
     }
@@ -264,6 +267,14 @@
             <input type="email" id="postedBy" required />
           </div>
 
+          <div class="form-group">
+            <label for="applicationMethod">Application Method</label>
+            <select id="applicationMethod">
+              <option value="internal">Internal</option>
+              <option value="external">External</option>
+            </select>
+          </div>
+
           <div class="form-group full-width">
             <label for="applyUrl">Application Link</label>
             <input type="url" id="applyUrl" placeholder="https://wa.me/2547..." />
@@ -299,6 +310,7 @@
     const jobTypeInput = document.getElementById("jobType");
     const categoryInput = document.getElementById("category");
     const postedByInput = document.getElementById("postedBy");
+    const applicationMethodInput = document.getElementById("applicationMethod");
     const applyUrlInput = document.getElementById("applyUrl");
     const descriptionInput = document.getElementById("description");
 
@@ -312,6 +324,7 @@
         job_type: jobTypeInput.value.trim(),
         description: descriptionInput.value.trim(),
         category: categoryInput.value.trim(),
+        application_method: applicationMethodInput.value,
         apply_url: applyUrlInput.value.trim(),
       };
 

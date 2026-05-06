@@ -200,7 +200,7 @@ ${Number(job.is_employer_verified) === 1 ? `<div class="badge-verified">Verified
 </div>
 
 <div class="action-row">
-<a href="apply.html?id=${job.id || ""}" class="btn btn-primary">Apply Now</a>
+${(() => { const method = String(job.application_method || "").toLowerCase(); const hasExternalUrl = String(job.apply_url || "").trim() !== ""; const useExternal = method === "external" || (!method && hasExternalUrl); return useExternal ? `<a href="${job.apply_url || "#"}" target="_blank" class="btn btn-primary">Apply Externally</a>` : `<a href="apply.html?id=${job.id || ""}" class="btn btn-primary">Apply Now</a>`; })()}
 <button class="btn btn-secondary" onclick="likeJob('${job.id || ""}')">Like Job</button>
 <button class="btn btn-outline" onclick="trackClick('${job.id || ""}')">Track Click</button>
 </div>

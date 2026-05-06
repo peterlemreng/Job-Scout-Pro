@@ -54,6 +54,7 @@ router.get("/", async (req, res) => {
         j.job_type,
         j.description,
         j.apply_url,
+        j.application_method,
         j.status,
         j.post_status,
         j.payment_status,
@@ -117,6 +118,7 @@ router.get("/:id", async (req, res) => {
         j.job_type,
         j.description,
         j.apply_url,
+        j.application_method,
         j.status,
         j.post_status,
         j.payment_status,
@@ -244,10 +246,12 @@ router.post("/", requireAuth, fraudCheck, async (req, res) => {
       job_type,
       description,
       category,
-      apply_url
+      apply_url,
+      application_method
     } = req.body;
 
     const posted_by = Number(req.user?.id || 0);
+    const normalizedApplicationMethod = String(application_method || "").toLowerCase() === "external" ? "external" : "internal";
 
     if (!title || !company || !location || !job_type || !description) {
       return res.status(400).json({
@@ -256,12 +260,19 @@ router.post("/", requireAuth, fraudCheck, async (req, res) => {
       });
     }
 
+    if (normalizedApplicationMethod === "external" && !String(apply_url || "").trim()) {
+      return res.status(400).json({
+        success: false,
+        message: "Apply URL is required for external applications"
+      });
+    }
+
     const [result] = await pool.query(
       `INSERT INTO jobs (
-        title, company, location, job_type, description, category, apply_url, posted_by,
+        title, company, location, job_type, description, category, apply_url, application_method, posted_by,
         status, plan_type, plan_price, plan_duration_days, payment_status, post_status,
         created_at, updated_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'inactive', 'basic', 799.00, 30, 'pending', 'draft', NOW(), NOW())`,
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'inactive', 'basic', 799.00, 30, 'pending', 'draft', NOW(), NOW())`,
       [
         title,
         company,
@@ -269,7 +280,8 @@ router.post("/", requireAuth, fraudCheck, async (req, res) => {
         job_type,
         description,
         category || null,
-        apply_url || null,
+        normalizedApplicationMethod === "external" ? (apply_url || null) : null,
+        normalizedApplicationMethod,
         posted_by || null
       ]
     );
