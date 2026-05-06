@@ -555,7 +555,7 @@
           <td>${payment.email || "N/A"}</td>
           <td>${payment.amount || "0"}</td>
           <td>${payment.payment_method || "N/A"}</td>
-          <td><div class="action-group"><button class="action-btn action-complete" onclick="updatePaymentStatus('${payment.id || ""}', 'completed')">Complete</button><button class="action-btn action-fail" onclick="updatePaymentStatus('${payment.id || ""}', 'failed')">Fail</button>${["pending", "failed", "rejected"].includes(String(payment.status || "").toLowerCase()) ? `<button class="action-btn action-delete" onclick="deletePayment('${payment.id || ""}')">Delete</button>` : ""}</div></td>
+          <td>${String(payment.status || "").toLowerCase() === "completed" ? "—" : `<div class="action-group"><button class="action-btn action-complete" onclick="updatePaymentStatus('${payment.id || ""}', 'completed')">Complete</button><button class="action-btn action-fail" onclick="updatePaymentStatus('${payment.id || ""}', 'failed')">Fail</button>${["pending", "failed", "rejected"].includes(String(payment.status || "").toLowerCase()) ? `<button class="action-btn action-delete" onclick="deletePayment('${payment.id || ""}')">Delete</button>` : ""}</div>`}</td>
           <td>${payment.status || "pending"}</td>
         </tr>
       `).join("");
