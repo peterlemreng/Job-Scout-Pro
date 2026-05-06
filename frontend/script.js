@@ -18,7 +18,7 @@ const statFeatured = document.getElementById("statFeatured");async function load
         <p><strong>Category:</strong> ${job.category || "General"}</p>
         <p><strong>Type:</strong> ${job.job_type || "N/A"}</p>
         <p>${job.description ? job.description.slice(0, 120) + "..." : "No description available."}</p>
-        <a href="${job.apply_url || "#"}" target="_blank" class="btn btn-primary">Apply on WhatsApp</a>
+        <a href="job-detail.html?id=${job.id || ""}" class="btn btn-primary">View Details</a>
       </div>
     ).join("");
   } catch (error) {
