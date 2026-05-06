@@ -167,8 +167,13 @@ router.put("/:id/status", requireAdmin, async (req, res) => {
         await pool.query(
           `UPDATE jobs
            SET payment_status = 'rejected',
-               post_status = 'pending_review',
+               post_status = 'draft',
                status = 'inactive',
+               paid_at = NULL,
+               approved_at = NULL,
+               approved_by = NULL,
+               expires_at = NULL,
+               rejection_reason = NULL,
                updated_at = NOW()
            WHERE id = ?`,
           [payment.job_db_id]
