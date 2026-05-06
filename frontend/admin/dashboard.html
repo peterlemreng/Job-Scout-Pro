@@ -830,7 +830,7 @@
         draftJobMessage.className = "message-box message-success";
         draftJobMessage.textContent = "Draft job created. Redirecting to payment...";
         setTimeout(() => {
-          window.location.href = "payment.html?jobId=" + data.jobId;
+          window.location.href = "../payment.html?jobId=" + data.jobId;
         }, 800);
       } else {
         draftJobMessage.className = "message-box message-error";
