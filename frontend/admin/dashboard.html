@@ -189,13 +189,19 @@
       background: #eff6ff;
     }
 
+    .action-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
     .action-btn {
       padding: 8px 10px;
       border-radius: 8px;
       font-size: 12px;
       font-weight: 700;
-      margin-right: 6px;
-      margin-bottom: 4px;
+      margin-right: 0;
+      margin-bottom: 0;
     }
 
     .action-complete {
@@ -549,7 +555,7 @@
           <td>${payment.email || "N/A"}</td>
           <td>${payment.amount || "0"}</td>
           <td>${payment.payment_method || "N/A"}</td>
-          <td><button class="action-btn action-complete" onclick="updatePaymentStatus('${payment.id || ""}', 'completed')">Complete</button> <button class="action-btn action-fail" onclick="updatePaymentStatus('${payment.id || ""}', 'failed')">Fail</button> ${["pending", "failed", "rejected"].includes(String(payment.status || "").toLowerCase()) ? `<button class="action-btn action-delete" onclick="deletePayment('${payment.id || ""}')">Delete</button>` : ""}</td>
+          <td><div class="action-group"><button class="action-btn action-complete" onclick="updatePaymentStatus('${payment.id || ""}', 'completed')">Complete</button><button class="action-btn action-fail" onclick="updatePaymentStatus('${payment.id || ""}', 'failed')">Fail</button>${["pending", "failed", "rejected"].includes(String(payment.status || "").toLowerCase()) ? `<button class="action-btn action-delete" onclick="deletePayment('${payment.id || ""}')">Delete</button>` : ""}</div></td>
           <td>${payment.status || "pending"}</td>
         </tr>
       `).join("");
