@@ -120,28 +120,44 @@
   </div>  <script>
     const API_BASE = "https://job-scout-pro-production.up.railway.app/api";
     const applyForm = document.getElementById("applyForm");
-    const applyMessage = document.getElementById("applyMessage");    function getJobId() {
+    const applyMessage = document.getElementById("applyMessage");
+
+    function getJobId() {
       const params = new URLSearchParams(window.location.search);
       return params.get("id");
-    }    applyForm.addEventListener("submit", async (e) => {
+    }
+
+    applyForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const jobId = getJobId();
+      if (!jobId) {
         applyMessage.className = "message-box message-error";
         applyMessage.textContent = "Missing job ID.";
         return;
-      }      const payload = {
+      }
+
+      const payload = {
         job_id: Number(jobId),
         full_name: document.getElementById("full_name").value.trim(),
         email: document.getElementById("email").value.trim(),
         phone: document.getElementById("phone").value.trim(),
         cv_url: document.getElementById("cv_url").value.trim(),
         cover_letter: document.getElementById("cover_letter").value.trim()
-      };      try {
+      };
+
+      try {
         const response = await fetch(API_BASE + "/applications", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
           },
           body: JSON.stringify(payload)
-        });        const data = await response.json();        if (data.success) {
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
           applyMessage.className = "message-box message-success";
           applyMessage.textContent = data.message || "Application submitted successfully.";
           applyForm.reset();
