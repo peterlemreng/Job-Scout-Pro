@@ -435,7 +435,7 @@
     window.location.href = "login.html";
   } else if (currentUser.role !== "admin") {
     window.location.href = "jobs.html";
-  }
+ 
 
   const totalJobs = document.getElementById("totalJobs");
   const totalUsers = document.getElementById("totalUsers");
@@ -454,7 +454,7 @@
     const d = new Date(value);
     if (isNaN(d.getTime())) return "—";
     return d.toLocaleDateString("en-GB");
-  }
+ 
 
   function getRemainingDays(expiresAt) {
     if (!expiresAt) return "—";
@@ -474,7 +474,7 @@
     if (days === 0) return "0 days";
     if (days === 1) return "1 day";
     return days + " days";
-  }
+ 
 
   async function loadStats() {
     try {
@@ -497,7 +497,7 @@
     } catch (error) {
       console.error("Failed to load admin stats:", error);
     }
-  }
+ 
 
   async function loadRecentPayments() {
     try {
@@ -527,7 +527,7 @@
     } catch (error) {
       recentPaymentsTable.innerHTML = '<tr><td colspan="7" class="empty-row">Failed to load payments.</td></tr>';
     }
-  }
+ 
 
   async function loadRecentApplications() {
     try {
@@ -577,7 +577,7 @@
     } catch (error) {
       recentApplicationsTable.innerHTML = '<tr><td colspan="4" class="empty-row">Failed to load applications.</td></tr>';
     }
-  }
+ 
 
   async function loadRecentJobs() {
     try {
@@ -609,7 +609,7 @@
     } catch (error) {
       recentJobsTable.innerHTML = '<tr><td colspan="9" class="empty-row">Failed to load jobs.</td></tr>';
     }
-  }
+ 
 
   async function updatePaymentStatus(id, status) {
     try {
@@ -641,7 +641,7 @@
     } catch (error) {
       alert("Failed to update payment status.");
     }
-  }
+ 
 
 
   async function deletePayment(id) {
@@ -664,7 +664,7 @@
     } catch (error) {
       alert("Failed to delete payment.");
     }
-  }
+ 
 
 
   async function deleteJob(id) {
@@ -686,7 +686,7 @@
     } catch (error) {
       alert("Failed to delete job.");
     }
-  }
+ 
 
 
   async function approveJob(id) {
@@ -708,7 +708,7 @@
     } catch (error) {
       alert("Failed to approve job.");
     }
-  }
+ 
 
   async function rejectJob(id) {
     try {
@@ -733,7 +733,7 @@
     } catch (error) {
       alert("Failed to reject job.");
     }
-  }
+ 
 
   async function unpublishJob(id) {
     try {
@@ -761,7 +761,7 @@
     } catch (error) {
       alert("Failed to unpublish job.");
     }
-  }
+ 
 
   async function updateApplicationStatus(id, status) {
     try {
@@ -781,9 +781,9 @@
     } catch (error) {
       alert("Failed to update application status.");
     }
-  }
+ 
 
-  }
+ 
 
   document.addEventListener("DOMContentLoaded", () => {
     loadStats();
