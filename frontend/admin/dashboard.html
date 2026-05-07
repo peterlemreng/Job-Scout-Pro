@@ -591,7 +591,7 @@
           <td>${application.full_name || "N/A"}</td>
           <td>${application.email || "N/A"}</td>
           <td>${application.job_id || "N/A"}</td>
-          <td><button onclick="updateApplicationStatus('${application.id || ""}', 'reviewed')">Review</button> <button onclick="updateApplicationStatus('${application.id || ""}', 'rejected')">Reject</button></td>
+          <td>${String(application.status || "submitted").toLowerCase() === "submitted" ? `<button onclick="updateApplicationStatus('${application.id || ""}', 'reviewed')">Review</button> <button onclick="updateApplicationStatus('${application.id || ""}', 'rejected')">Reject</button>` : "—"}</td>
           <td>${application.status || "submitted"}</td>
         </tr>
       `).join("");
