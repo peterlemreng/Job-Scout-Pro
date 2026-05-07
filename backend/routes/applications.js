@@ -51,6 +51,32 @@ router.get("/", requireAdmin, async (req, res) => {
   }
 });
 
+router.get("/my/list", requireAuth, async (req, res) => {
+  try {
+    const currentUserId = Number(req.user?.id || 0);
+
+    const [rows] = await pool.query(
+      `SELECT a.*, j.title AS job_title, j.company
+       FROM applications a
+       LEFT JOIN jobs j ON a.job_id = j.id
+       WHERE a.user_id = ?
+       ORDER BY a.created_at DESC`,
+      [currentUserId]
+    );
+
+    res.json({
+      success: true,
+      applications: rows
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to load your applications",
+      error: error.message
+    });
+  }
+});
+
 router.get("/:id", requireAuth, async (req, res) => {
   try {
     const { id } = req.params;

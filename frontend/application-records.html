@@ -2,14 +2,268 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta http-equiv="refresh" content="0; url=admin/applications.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Redirecting...</title>
-  <script>
-    window.location.replace("admin/applications.html");
-  </script>
+  <title>My Applications - Job Scout Pro</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f8fafc;
+      color: #0f172a;
+    }
+    .topbar {
+      background: #0f172a;
+      color: #fff;
+      padding: 14px 18px;
+    }
+    .topbar h1 {
+      margin: 0;
+      font-size: 20px;
+    }
+    .topbar p {
+      margin: 4px 0 0;
+      color: #cbd5e1;
+      font-size: 13px;
+    }
+    .page-wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .page-header h2 {
+      margin: 0 0 8px;
+      font-size: 28px;
+    }
+    .page-header p {
+      margin: 0 0 20px;
+      color: #475569;
+    }
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    .summary-box {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 18px;
+    }
+    .summary-box h3 {
+      margin: 0;
+      font-size: 28px;
+    }
+    .summary-box p {
+      margin: 8px 0 0;
+      color: #64748b;
+      font-size: 14px;
+    }
+    .records-card {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 18px;
+      overflow: hidden;
+    }
+    .records-card h3 {
+      margin-top: 0;
+      margin-bottom: 14px;
+    }
+    .table-wrap {
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 760px;
+    }
+    th, td {
+      text-align: left;
+      padding: 12px 10px;
+      border-bottom: 1px solid #e2e8f0;
+      font-size: 14px;
+      vertical-align: top;
+    }
+    th {
+      background: #f8fafc;
+      color: #334155;
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      background: #dbeafe;
+      color: #1d4ed8;
+      text-transform: capitalize;
+    }
+    .status-under-review {
+      background: #fef3c7;
+      color: #92400e;
+    }
+    .status-shortlisted {
+      background: #dcfce7;
+      color: #166534;
+    }
+    .status-interview {
+      background: #e0e7ff;
+      color: #3730a3;
+    }
+    .status-rejected {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+    .empty-row {
+      text-align: center;
+      color: #64748b;
+    }
+    .nav-links {
+      margin-top: 12px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .nav-links a {
+      color: #93c5fd;
+      text-decoration: none;
+      font-size: 14px;
+    }
+    @media (max-width: 640px) {
+      .page-header h2 {
+        font-size: 22px;
+      }
+    }
+  </style>
 </head>
 <body>
-  <p>Redirecting...</p>
+  <header class="topbar">
+    <h1>Job Scout Pro</h1>
+    <p>Track your job applications clearly</p>
+    <div class="nav-links">
+      <a href="jobs.html">Jobs</a>
+      <a href="apply.html?id=24">Apply</a>
+    </div>
+  </header>
+
+  <main class="page-wrap">
+    <div class="page-header">
+      <h2>My Applications</h2>
+      <p>See the latest status of the jobs you have applied for.</p>
+    </div>
+
+    <div class="summary-grid">
+      <div class="summary-box">
+        <h3 id="totalApplications">0</h3>
+        <p>Total Applications</p>
+      </div>
+      <div class="summary-box">
+        <h3 id="activeApplications">0</h3>
+        <p>Active Applications</p>
+      </div>
+      <div class="summary-box">
+        <h3 id="finalApplications">0</h3>
+        <p>Final Decisions</p>
+      </div>
+    </div>
+
+    <section class="records-card">
+      <h3>Application Status</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Job</th>
+              <th>Company</th>
+              <th>Status</th>
+              <th>Applied At</th>
+            </tr>
+          </thead>
+          <tbody id="applicationsTable">
+            <tr>
+              <td colspan="5" class="empty-row">Loading your applications...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const API_BASE = "https://job-scout-pro-production.up.railway.app/api";
+    const currentUser = JSON.parse(localStorage.getItem("user") || "null");
+
+    if (!currentUser) {
+      window.location.href = "login.html";
+    }
+
+    const totalApplications = document.getElementById("totalApplications");
+    const activeApplications = document.getElementById("activeApplications");
+    const finalApplications = document.getElementById("finalApplications");
+    const applicationsTable = document.getElementById("applicationsTable");
+
+    async function loadMyApplications() {
+      try {
+        const token = localStorage.getItem("token") || "";
+        const response = await fetch(API_BASE + "/applications/my/list", {
+          headers: {
+            "Authorization": "Bearer " + token
+          }
+        });
+
+        const data = await response.json();
+
+        if (!data.success || !Array.isArray(data.applications) || data.applications.length === 0) {
+          totalApplications.textContent = "0";
+          activeApplications.textContent = "0";
+          finalApplications.textContent = "0";
+          applicationsTable.innerHTML = '<tr><td colspan="5" class="empty-row">No applications found yet.</td></tr>';
+          return;
+        }
+
+        const applications = data.applications;
+        totalApplications.textContent = applications.length;
+
+        const active = applications.filter(application => {
+          const status = String(application.status || "").toLowerCase();
+          return ["submitted", "under_review", "shortlisted", "interview"].includes(status);
+        });
+
+        const finalItems = applications.filter(application => {
+          const status = String(application.status || "").toLowerCase();
+          return ["rejected"].includes(status);
+        });
+
+        activeApplications.textContent = active.length;
+        finalApplications.textContent = finalItems.length;
+
+        applicationsTable.innerHTML = applications.map(application => {
+          const status = String(application.status || "submitted").toLowerCase();
+          const badgeClass =
+            status === "under_review" ? "status-under-review" :
+            status === "shortlisted" ? "status-shortlisted" :
+            status === "interview" ? "status-interview" :
+            status === "rejected" ? "status-rejected" : "";
+
+          return `
+            <tr>
+              <td>${application.id || ""}</td>
+              <td>${application.job_title || ("Job #" + (application.job_id || ""))}</td>
+              <td>${application.company || "N/A"}</td>
+              <td><span class="status-badge ${badgeClass}">${status.replaceAll("_", " ")}</span></td>
+              <td>${application.created_at || "-"}</td>
+            </tr>
+          `;
+        }).join("");
+      } catch (error) {
+        applicationsTable.innerHTML = '<tr><td colspan="5" class="empty-row">Failed to load your applications.</td></tr>';
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", loadMyApplications);
+  </script>
 </body>
 </html>
