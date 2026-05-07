@@ -137,8 +137,11 @@
         return;
       }
 
+      const currentUser = JSON.parse(localStorage.getItem("user") || "null");
+
       const payload = {
         job_id: Number(jobId),
+        user_id: currentUser && currentUser.id ? Number(currentUser.id) : null,
         full_name: document.getElementById("full_name").value.trim(),
         email: document.getElementById("email").value.trim(),
         phone: document.getElementById("phone").value.trim(),
