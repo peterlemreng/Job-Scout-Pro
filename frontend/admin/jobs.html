@@ -238,13 +238,14 @@
               <th>Payment Status</th>
               <th>Post Status</th>
               <th>Paid At</th>
+              <th>Remaining Days</th>
               <th>Expires At</th>
               <th>Action</th>
             </tr>
           </thead>
           <tbody id="jobsTable">
             <tr>
-              <td colspan="10" class="empty-row">Loading jobs...</td>
+              <td colspan="11" class="empty-row">Loading jobs...</td>
             </tr>
           </tbody>
         </table>
@@ -332,7 +333,7 @@
         });
 
         if (filteredJobs.length === 0) {
-          jobsTable.innerHTML = '<tr><td colspan="10" class="empty-row">No jobs found.</td></tr>';
+          jobsTable.innerHTML = '<tr><td colspan="11" class="empty-row">No jobs found.</td></tr>';
           return;
         }
 
@@ -346,12 +347,13 @@
             <td><span class="${statusClass(job.payment_status)}">${job.payment_status || "pending"}</span></td>
             <td><span class="${statusClass(job.post_status)}">${job.post_status || "draft"}</span></td>
             <td>${formatDate(job.paid_at)}</td>
+            <td>${getRemainingDays(job.expires_at)}</td>
             <td>${formatDate(job.expires_at)}</td>
             <td>${getActionButtons(job)}</td>
           </tr>
         `).join("");
       } catch (error) {
-        jobsTable.innerHTML = '<tr><td colspan="10" class="empty-row">Failed to load jobs.</td></tr>';
+        jobsTable.innerHTML = '<tr><td colspan="11" class="empty-row">Failed to load jobs.</td></tr>';
       }
     }
 
