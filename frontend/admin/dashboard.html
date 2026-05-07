@@ -313,8 +313,8 @@
       </div>
 
       <div class="stat-box">
-        <h3 id="featuredJobs">0</h3>
-        <p>⭐ Featured Jobs</p>
+        <h3 id="applicationsCount">0</h3>
+        <p>📨 Applications</p>
       </div>
 
       <div class="stat-box">
@@ -481,7 +481,7 @@
 
   const totalJobs = document.getElementById("totalJobs");
   const totalUsers = document.getElementById("totalUsers");
-  const featuredJobs = document.getElementById("featuredJobs");
+  const applicationsCount = document.getElementById("applicationsCount");
   const pendingPayments = document.getElementById("pendingPayments");
   const verificationRequests = document.getElementById("verificationRequests");
   const pendingVerifications = document.getElementById("pendingVerifications");
@@ -530,7 +530,7 @@
       if (data.success) {
         totalJobs.textContent = data.totalJobs ?? 0;
         totalUsers.textContent = data.totalUsers ?? 0;
-        featuredJobs.textContent = data.featuredJobs ?? 0;
+        applicationsCount.textContent = "0";
         pendingPayments.textContent = data.pendingPayments ?? 0;
         verificationRequests.textContent = data.verificationRequests ?? 0;
         pendingVerifications.textContent = data.pendingVerifications ?? 0;
@@ -581,9 +581,12 @@
       const applications = await response.json();
 
       if (!Array.isArray(applications) || applications.length === 0) {
+        applicationsCount.textContent = "0";
         recentApplicationsTable.innerHTML = '<tr><td colspan="6" class="empty-row">No applications found.</td></tr>';
         return;
       }
+
+      applicationsCount.textContent = applications.length;
 
       recentApplicationsTable.innerHTML = applications.slice(0, 8).map(application => `
         <tr>
