@@ -536,6 +536,7 @@
           "Authorization": "Bearer " + authToken
         }
       });
+
       const applications = await response.json();
 
       if (!Array.isArray(applications) || applications.length === 0) {
@@ -565,19 +566,19 @@
           : "—";
 
         return `
-        <tr>
-          <td>${applicantBlock}</td>
-          <td>${jobBlock}</td>
-          <td>${prettyStatus}</td>
-          <td>${actionButtons}</td>
-        </tr>`;
+          <tr>
+            <td>${applicantBlock}</td>
+            <td>${jobBlock}</td>
+            <td>${prettyStatus}</td>
+            <td>${actionButtons}</td>
+          </tr>
+        `;
       }).join("");
     } catch (error) {
       recentApplicationsTable.innerHTML = '<tr><td colspan="4" class="empty-row">Failed to load applications.</td></tr>';
     }
-
   }
-                                          
+
   async function loadRecentJobs() {
     try {
       const response = await fetch(API_BASE + "/admin/jobs", {
