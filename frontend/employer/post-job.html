@@ -275,7 +275,7 @@
             </select>
           </div>
 
-          <div class="form-group full-width">
+          <div class="form-group full-width" id="applyUrlGroup">
             <label for="applyUrl">Application Link</label>
             <input type="url" id="applyUrl" placeholder="https://wa.me/2547..." />
           </div>
@@ -311,8 +311,19 @@
     const categoryInput = document.getElementById("category");
     const postedByInput = document.getElementById("postedBy");
     const applicationMethodInput = document.getElementById("applicationMethod");
+    const applyUrlGroup = document.getElementById("applyUrlGroup");
     const applyUrlInput = document.getElementById("applyUrl");
     const descriptionInput = document.getElementById("description");
+
+    function toggleApplyUrlField() {
+      const isExternal = applicationMethodInput.value === "external";
+      applyUrlGroup.style.display = isExternal ? "flex" : "none";
+      applyUrlInput.required = isExternal;
+      if (!isExternal) applyUrlInput.value = "";
+    }
+
+    applicationMethodInput.addEventListener("change", toggleApplyUrlField);
+    toggleApplyUrlField();
 
     postJobForm.addEventListener("submit", async (e) => {
       e.preventDefault();

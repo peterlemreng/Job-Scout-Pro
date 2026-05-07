@@ -451,7 +451,7 @@
             <option value="external">External</option>
           </select>
         </div>
-        <div class="form-group">
+        <div class="form-group" id="draftApplyUrlGroup">
           <label for="draftApplyUrl">Apply URL</label>
           <input type="text" id="draftApplyUrl" placeholder="https://your-job-link.com" />
         </div>
@@ -803,6 +803,20 @@
       alert("Failed to update application status.");
     }
   }
+
+  const draftApplicationMethodInput = document.getElementById("draftApplicationMethod");
+  const draftApplyUrlGroup = document.getElementById("draftApplyUrlGroup");
+  const draftApplyUrlInput = document.getElementById("draftApplyUrl");
+
+  function toggleDraftApplyUrlField() {
+    const isExternal = draftApplicationMethodInput.value === "external";
+    draftApplyUrlGroup.style.display = isExternal ? "block" : "none";
+    draftApplyUrlInput.required = isExternal;
+    if (!isExternal) draftApplyUrlInput.value = "";
+  }
+
+  draftApplicationMethodInput.addEventListener("change", toggleDraftApplyUrlField);
+  toggleDraftApplyUrlField();
 
   async function createPaidJobDraft() {
     const draftJobMessage = document.getElementById("draftJobMessage");
