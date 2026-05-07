@@ -382,17 +382,15 @@
         <table class="admin-table">
           <thead>
             <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Job ID</th>
-                                      <th>Action</th>
+              <th>Applicant</th>
+              <th>Job</th>
               <th>Status</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody id="recentApplicationsTable">
             <tr>
-              <td colspan="5" class="empty-row">Loading applications...</td>
+              <td colspan="4" class="empty-row">Loading applications...</td>
             </tr>
           </tbody>
         </table>
@@ -542,27 +540,44 @@
 
       if (!Array.isArray(applications) || applications.length === 0) {
         applicationsCount.textContent = "0";
-        recentApplicationsTable.innerHTML = '<tr><td colspan="6" class="empty-row">No applications found.</td></tr>';
+        recentApplicationsTable.innerHTML = '<tr><td colspan="4" class="empty-row">No applications found.</td></tr>';
         return;
       }
 
       applicationsCount.textContent = applications.length;
 
-      recentApplicationsTable.innerHTML = applications.slice(0, 8).map(application => `
-        <tr>
-          <td>${application.id || ""}</td>
-          <td>${application.full_name || "N/A"}</td>
-          <td>${application.email || "N/A"}</td>
-          <td>${application.job_id || "N/A"}</td>
-          <td>${String(application.status || "submitted").toLowerCase() === "submitted" ? `<button onclick="updateApplicationStatus('${application.id || ""}', 'under_review')">Under Review</button> <button onclick="updateApplicationStatus('${application.id || ""}', 'shortlisted')">Shortlist</button> <button onclick="updateApplicationStatus('${application.id || ""}', 'interview')">Interview</button> <button onclick="updateApplicationStatus('${application.id || ""}', 'rejected')">Reject</button>` : "—"}</td>
-          <td>${application.status || "submitted"}</td>
-        </tr>
-      `).join("");
-    } catch (error) {
-      recentApplicationsTable.innerHTML = '<tr><td colspan="6" class="empty-row">Failed to load applications.</td></tr>';
-    }
-  }
+      recentApplicationsTable.innerHTML = applications.slice(0, 5).map(application => {
+        const status = String(application.status || "submitted").toLowerCase();
+        const prettyStatus = status.replaceAll("_", " ").replace(/\b\w/g, c => c.toUpperCase());
 
+        const applicantBlock = `
+          <div style="font-weight:600;">${application.full_name || "N/A"}</div>
+          <div style="font-size:12px; color:#64748b;">${application.email || "N/A"}</div>
+        `;
+
+        const jobBlock = `
+          <div style="font-weight:600;">${application.job_title || ("Job #" + (application.job_id || "N/A"))}</div>
+          <div style="font-size:12px; color:#64748b;">${application.company || "N/A"}</div>
+        `;
+
+        const actionButtons = status === "submitted"
+          ? `<div class="action-group"><button class="action-btn action-complete" onclick="updateApplicationStatus('${application.id || ""}', 'under_review')">Under Review</button><button class="action-btn action-complete" onclick="updateApplicationStatus('${application.id || ""}', 'shortlisted')">Shortlist</button><button class="action-btn action-unpublish" onclick="updateApplicationStatus('${application.id || ""}', 'interview')">Interview</button><button class="action-btn action-fail" onclick="updateApplicationStatus('${application.id || ""}', 'rejected')">Reject</button></div>`
+          : "—";
+
+        return `
+        <tr>
+          <td>${applicantBlock}</td>
+          <td>${jobBlock}</td>
+          <td>${prettyStatus}</td>
+          <td>${actionButtons}</td>
+        </tr>`;
+      }).join("");
+    } catch (error) {
+      recentApplicationsTable.innerHTML = '<tr><td colspan="4" class="empty-row">Failed to load applications.</td></tr>';
+    }
+
+  }
+                                          
   async function loadRecentJobs() {
     try {
       const response = await fetch(API_BASE + "/admin/jobs", {
