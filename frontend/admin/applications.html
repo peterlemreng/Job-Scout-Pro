@@ -347,8 +347,8 @@
           `;
 
           const jobBlock = `
-            <div style="font-weight:600;">Job #${application.job_id || "N/A"}</div>
-            <div style="font-size:12px; color:#64748b;">${application.phone || "No phone"}</div>
+            <div style="font-weight:600;">${application.job_title || ("Job #" + (application.job_id || "N/A"))}</div>
+            <div style="font-size:12px; color:#64748b;">${application.company || "N/A"}</div>
           `;
 
           const actionButtons = status === "submitted"

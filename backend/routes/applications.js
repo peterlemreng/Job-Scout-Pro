@@ -38,7 +38,10 @@ router.post("/", async (req, res) => {
 router.get("/", requireAdmin, async (req, res) => {
   try {
     const [rows] = await pool.query(
-      "SELECT * FROM applications ORDER BY created_at DESC"
+      `SELECT a.*, j.title AS job_title, j.company
+       FROM applications a
+       LEFT JOIN jobs j ON a.job_id = j.id
+       ORDER BY a.created_at DESC`
     );
 
     res.json(rows);
