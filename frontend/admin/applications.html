@@ -261,19 +261,16 @@
         <table class="records-table">
           <thead>
             <tr>
-              <th>ID</th>
-              <th>Job ID</th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Phone</th>
-              <th>CV URL</th>
-              <th>Cover Letter</th>
+              <th>Applicant</th>
+              <th>Job</th>
+              <th>Applied Date</th>
               <th>Status</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody id="applicationsTable">
             <tr>
-              <td colspan="8" class="empty-row">Loading application records...</td>
+              <td colspan="5" class="empty-row">Loading application records...</td>
             </tr>
           </tbody>
         </table>
@@ -310,7 +307,7 @@
           totalApplications.textContent = "0";
           submittedCount.textContent = "0";
           reviewedCount.textContent = "0";
-          applicationsTable.innerHTML = '<tr><td colspan="8" class="empty-row">No application records found.</td></tr>';
+          applicationsTable.innerHTML = '<tr><td colspan="5" class="empty-row">No application records found.</td></tr>';
           return;
         }
 
@@ -322,24 +319,57 @@
         submittedCount.textContent = submitted.length;
         reviewedCount.textContent = reviewed.length;
 
-        applicationsTable.innerHTML = applications.map(application => `
-          <tr>
-            <td>${application.id || ""}</td>
-            <td>${application.job_id || "N/A"}</td>
-            <td>${application.full_name || "N/A"}</td>
-            <td>${application.email || "N/A"}</td>
-            <td>${application.phone || "N/A"}</td>
-            <td><a href="${application.cv_url || "#"}" target="_blank">${application.cv_url || "-"}</a></td>
-            <td>${application.cover_letter || "-"}</td>
-            <td>
-              <span class="status-badge ${String(application.status || "submitted").toLowerCase() === "under_review" ? "status-under-review" : String(application.status || "submitted").toLowerCase() === "shortlisted" ? "status-shortlisted" : String(application.status || "submitted").toLowerCase() === "interview" ? "status-interview" : String(application.status || "submitted").toLowerCase() === "rejected" ? "status-rejected" : ""}">
-                ${application.status || "submitted"}
-              </span>
-            </td>
-          </tr>
-        `).join("");
+        applicationsTable.innerHTML = applications.map(application => {
+          const status = String(application.status || "submitted").toLowerCase();
+          const badgeClass =
+            status === "under_review" ? "status-under-review" :
+            status === "shortlisted" ? "status-shortlisted" :
+            status === "interview" ? "status-interview" :
+            status === "rejected" ? "status-rejected" : "";
+
+          const prettyStatus = status
+            .replaceAll("_", " ")
+            .replace(/\b\w/g, letter => letter.toUpperCase());
+
+          const prettyDate = application.created_at
+            ? new Date(application.created_at).toLocaleString("en-GB", {
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit"
+              })
+            : "-";
+
+          const applicantBlock = `
+            <div style="font-weight:600;">${application.full_name || "N/A"}</div>
+            <div style="font-size:12px; color:#64748b;">${application.email || "N/A"}</div>
+          `;
+
+          const jobBlock = `
+            <div style="font-weight:600;">Job #${application.job_id || "N/A"}</div>
+            <div style="font-size:12px; color:#64748b;">${application.phone || "No phone"}</div>
+          `;
+
+          const actionButtons = status === "submitted"
+            ? `<button class="btn btn-warning" onclick="updateApplicationStatus('${application.id || ""}', 'under_review')">Under Review</button>
+               <button class="btn btn-success" onclick="updateApplicationStatus('${application.id || ""}', 'shortlisted')">Shortlist</button>
+               <button class="btn btn-primary" onclick="updateApplicationStatus('${application.id || ""}', 'interview')">Interview</button>
+               <button class="btn btn-danger" onclick="updateApplicationStatus('${application.id || ""}', 'rejected')">Reject</button>`
+            : "—";
+
+          return `
+            <tr>
+              <td>${applicantBlock}</td>
+              <td>${jobBlock}</td>
+              <td>${prettyDate}</td>
+              <td><span class="status-badge ${badgeClass}">${prettyStatus}</span></td>
+              <td>${actionButtons}</td>
+            </tr>
+          `;
+        }).join("");
       } catch (error) {
-        applicationsTable.innerHTML = '<tr><td colspan="8" class="empty-row">Failed to load application records.</td></tr>';
+        applicationsTable.innerHTML = '<tr><td colspan="5" class="empty-row">Failed to load application records.</td></tr>';
       }
     }
 
