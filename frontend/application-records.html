@@ -141,10 +141,9 @@
 <body>
   <header class="topbar">
     <h1>Job Scout Pro</h1>
-    <p>Track your job applications clearly</p>
+    <p>Track your applications</p>
     <div class="nav-links">
-      <a href="jobs.html">Jobs</a>
-      <a href="apply.html?id=24">Apply</a>
+      <a href="jobs.html">← Back to Jobs</a>
     </div>
   </header>
 
@@ -160,8 +159,12 @@
         <p>Total Applications</p>
       </div>
       <div class="summary-box">
-        <h3 id="activeApplications">0</h3>
-        <p>Active Applications</p>
+        <h3 id="submittedApplications">0</h3>
+        <p>Submitted</p>
+      </div>
+      <div class="summary-box">
+        <h3 id="underReviewApplications">0</h3>
+        <p>Under Review</p>
       </div>
       <div class="summary-box">
         <h3 id="finalApplications">0</h3>
@@ -175,16 +178,14 @@
         <table>
           <thead>
             <tr>
-              <th>ID</th>
               <th>Job</th>
-              <th>Company</th>
               <th>Status</th>
               <th>Applied At</th>
             </tr>
           </thead>
           <tbody id="applicationsTable">
             <tr>
-              <td colspan="5" class="empty-row">Loading your applications...</td>
+              <td colspan="3" class="empty-row">Loading your applications...</td>
             </tr>
           </tbody>
         </table>
@@ -201,7 +202,8 @@
     }
 
     const totalApplications = document.getElementById("totalApplications");
-    const activeApplications = document.getElementById("activeApplications");
+    const submittedApplications = document.getElementById("submittedApplications");
+    const underReviewApplications = document.getElementById("underReviewApplications");
     const finalApplications = document.getElementById("finalApplications");
     const applicationsTable = document.getElementById("applicationsTable");
 
@@ -218,26 +220,33 @@
 
         if (!data.success || !Array.isArray(data.applications) || data.applications.length === 0) {
           totalApplications.textContent = "0";
-          activeApplications.textContent = "0";
+          submittedApplications.textContent = "0";
+          underReviewApplications.textContent = "0";
           finalApplications.textContent = "0";
-          applicationsTable.innerHTML = '<tr><td colspan="5" class="empty-row">No applications found yet.</td></tr>';
+          applicationsTable.innerHTML = '<tr><td colspan="3" class="empty-row">No applications found yet.</td></tr>';
           return;
         }
 
         const applications = data.applications;
         totalApplications.textContent = applications.length;
 
-        const active = applications.filter(application => {
+        const submitted = applications.filter(application => {
           const status = String(application.status || "").toLowerCase();
-          return ["submitted", "under_review", "shortlisted", "interview"].includes(status);
+          return status === "submitted";
+        });
+
+        const underReview = applications.filter(application => {
+          const status = String(application.status || "").toLowerCase();
+          return status === "under_review";
         });
 
         const finalItems = applications.filter(application => {
           const status = String(application.status || "").toLowerCase();
-          return ["rejected"].includes(status);
+          return ["shortlisted", "interview", "rejected"].includes(status);
         });
 
-        activeApplications.textContent = active.length;
+        submittedApplications.textContent = submitted.length;
+        underReviewApplications.textContent = underReview.length;
         finalApplications.textContent = finalItems.length;
 
         applicationsTable.innerHTML = applications.map(application => {
@@ -262,18 +271,21 @@
               })
             : "-";
 
+          const jobBlock = `
+            <div style="font-weight:600;">${application.job_title || ("Job #" + (application.job_id || ""))}</div>
+            <div style="font-size:12px; color:#64748b;">${application.company || "N/A"}</div>
+          `;
+
           return `
             <tr>
-              <td>${application.id || ""}</td>
-              <td>${application.job_title || ("Job #" + (application.job_id || ""))}</td>
-              <td>${application.company || "N/A"}</td>
+              <td>${jobBlock}</td>
               <td><span class="status-badge ${badgeClass}">${prettyStatus}</span></td>
               <td>${prettyDate}</td>
             </tr>
           `;
         }).join("");
       } catch (error) {
-        applicationsTable.innerHTML = '<tr><td colspan="5" class="empty-row">Failed to load your applications.</td></tr>';
+        applicationsTable.innerHTML = '<tr><td colspan="3" class="empty-row">Failed to load your applications.</td></tr>';
       }
     }
 
