@@ -397,6 +397,7 @@ router.put("/:id/unpublish", require("../middleware/requireAdmin"), async (req, 
       `UPDATE jobs
        SET status = 'inactive',
            post_status = 'archived',
+            visibility_status = 'archived',
            rejection_reason = ?,
            updated_at = NOW()
        WHERE id = ?`,
@@ -461,6 +462,8 @@ router.put("/:id/approve", require("../middleware/requireAdmin"), async (req, re
       `UPDATE jobs
        SET status = 'active',
            post_status = 'published',
+            moderation_status = 'approved',
+            visibility_status = 'published',
            rejection_reason = NULL,
            approved_at = NOW(),
            approved_by = ?,
@@ -532,6 +535,8 @@ router.put("/:id/reject", require("../middleware/requireAdmin"), async (req, res
     await pool.query(
       `UPDATE jobs
        SET status = 'inactive',
+            moderation_status = 'rejected',
+            visibility_status = 'archived',
            post_status = 'rejected',
            rejection_reason = ?,
            updated_at = NOW()
