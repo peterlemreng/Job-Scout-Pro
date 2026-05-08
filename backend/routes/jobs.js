@@ -58,6 +58,8 @@ router.get("/", async (req, res) => {
         j.status,
         j.post_status,
         j.payment_status,
+        j.moderation_status,
+        j.visibility_status,
         j.plan_type,
         j.plan_price,
         j.plan_duration_days,
@@ -86,10 +88,11 @@ router.get("/", async (req, res) => {
           ON ev1.user_id = latest.user_id
          AND ev1.id = latest.max_id
       ) ev ON ev.user_id = j.posted_by
-      WHERE j.status = 'active'
-        AND j.post_status = 'published'
-        AND j.payment_status = 'paid'
-        AND (j.expires_at IS NULL OR j.expires_at >= NOW())
+        WHERE j.deleted_at IS NULL
+          AND j.status = 'active'
+          AND j.payment_status = 'paid'
+          AND (j.visibility_status = 'published' OR j.post_status = 'published')
+          AND (j.expires_at IS NULL OR j.expires_at >= NOW())
       ORDER BY j.created_at DESC
     `);
 

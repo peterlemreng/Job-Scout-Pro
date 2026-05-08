@@ -5,13 +5,13 @@ const requireAdmin = require("../middleware/requireAdmin");
 
 router.get("/stats", requireAdmin, async (req, res) => {
   try {
-    const [jobsResult] = await pool.query("SELECT COUNT(*) AS totalJobs FROM jobs");
+    const [jobsResult] = await pool.query("SELECT COUNT(*) AS totalJobs FROM jobs WHERE deleted_at IS NULL");
     const [usersResult] = await pool.query("SELECT COUNT(*) AS totalUsers FROM users");
     const [paymentsResult] = await pool.query(
       "SELECT COUNT(*) AS pendingPayments FROM payments WHERE status = 'pending'"
     );
     const [featuredResult] = await pool.query(
-      "SELECT COUNT(*) AS featuredJobs FROM jobs WHERE is_featured = 1"
+      "SELECT COUNT(*) AS featuredJobs FROM jobs WHERE is_featured = 1 AND deleted_at IS NULL"
     );
     const [verificationRequestsResult] = await pool.query(
       "SELECT COUNT(*) AS verificationRequests FROM employer_verifications"
@@ -56,13 +56,17 @@ router.get("/jobs", requireAdmin, async (req, res) => {
         status,
         post_status,
         payment_status,
+        moderation_status,
+        visibility_status,
         is_featured,
         paid_at,
         expires_at,
         rejection_reason,
+        deleted_at,
         created_at,
         updated_at
        FROM jobs
+       WHERE deleted_at IS NULL
        ORDER BY created_at DESC`
     );
 
