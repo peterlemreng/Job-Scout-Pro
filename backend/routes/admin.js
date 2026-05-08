@@ -3,6 +3,22 @@ const router = express.Router();
 const pool = require("../db");
 const requireAdmin = require("../middleware/requireAdmin");
 
+async function expirePublishedJobs() {
+  await pool.query(`
+    UPDATE jobs
+    SET
+      post_status = 'expired',
+      visibility_status = 'expired',
+      updated_at = NOW()
+    WHERE deleted_at IS NULL
+      AND payment_status = 'paid'
+      AND (visibility_status = 'published' OR post_status = 'published')
+      AND expires_at IS NOT NULL
+      AND expires_at < NOW()
+  `);
+}
+
+
 router.get("/stats", requireAdmin, async (req, res) => {
   try {
     const [jobsResult] = await pool.query("SELECT COUNT(*) AS totalJobs FROM jobs WHERE deleted_at IS NULL");
@@ -44,6 +60,7 @@ router.get("/stats", requireAdmin, async (req, res) => {
 
 router.get("/jobs", requireAdmin, async (req, res) => {
   try {
+    await expirePublishedJobs();
     const [rows] = await pool.query(
       `SELECT
         id,
