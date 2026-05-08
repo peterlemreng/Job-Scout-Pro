@@ -334,7 +334,7 @@ router.delete("/:id", require("../middleware/requireAdmin"), async (req, res) =>
       });
     }
 
-    await pool.query("DELETE FROM jobs WHERE id = ?", [id]);
+    await pool.query("UPDATE jobs SET deleted_at = NOW() WHERE id = ?", [id]);
 
     await writeAuditLog({
       adminId: req.adminUser?.id || null,
