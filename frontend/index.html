@@ -296,32 +296,7 @@ padding: 0 16px 50px;
 </style>
 </head>
 <body>
-<header class="site-header">
-<div class="nav-wrap">
-<a href="index.html" class="brand">
-<img src="assets/logo.Jobscoutphoto.jpg" alt="Job Scout Pro Logo" />
-<div class="brand-text">
-<h1>Job Scout Pro</h1>
-<p>
-Find jobs. Grow faster. Hire smarter.
-</p>
-</div>
-</a>
-
-<nav class="nav-links">
-<a href="index.html">Home</a>
-<a href="jobs.html">Jobs</a>
-<a href="about.html">About</a>
-<a href="contact.html">Contact</a>
-<a href="help.html">Help</a>
-<a href="employer/post-job.html">Post Job</a>
-<a href="employer/dashboard.html">Employer Dashboard</a>
-<a href="login.html">Login</a>
-<a href="signup.html">Register</a>
-</nav>
-</div>
-</header>
-
+<div id="navbar"></div>
 <section class="hero">
 <div class="hero-text">
 <h2>Find better job opportunities faster and with more confidence.</h2>
@@ -414,6 +389,13 @@ console.error("Failed to load homepage stats:", error);
 }
 
 document.addEventListener("DOMContentLoaded", loadHomeStats);
+</script>
+<script src="js/ui-config.js"></script>
+<script src="js/render-public-nav.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+renderPublicNav("#navbar");
+});
 </script>
 </body>
 </html>
