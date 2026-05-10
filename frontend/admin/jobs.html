@@ -2,475 +2,460 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Jobs - Job Scout Pro</title>
-  <link rel="stylesheet" href="../style.css" />
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f5f7fb;
-      color: #111827;
-    }
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Admin Jobs - Job Scout Pro</title>
+<link rel="stylesheet" href="../style.css" />
+<style>
+body {
+margin: 0;
+font-family: Arial, sans-serif;
+background: #f5f7fb;
+color: #111827;
+}
 
-    .admin-page {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 32px 20px 60px;
-    }
+.admin-page {
+max-width: 1200px;
+margin: 0 auto;
+padding: 32px 20px 60px;
+}
 
-    .page-header {
-      margin-bottom: 24px;
-    }
+.page-header {
+margin-bottom: 24px;
+}
 
-    .page-header h2 {
-      margin: 0 0 10px;
-      font-size: 32px;
-      color: #111827;
-    }
+.page-header h2 {
+margin: 0 0 10px;
+font-size: 32px;
+color: #111827;
+}
 
-    .page-header p {
-      margin: 0;
-      color: #6b7280;
-      line-height: 1.6;
-    }
+.page-header p {
+margin: 0;
+color: #6b7280;
+line-height: 1.6;
+}
 
-    .search-bar {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr auto;
-      gap: 14px;
-      margin-bottom: 24px;
-      background: #ffffff;
-      padding: 16px;
-      border-radius: 16px;
-      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
-      border: 1px solid #e5e7eb;
-    }
+.search-bar {
+display: grid;
+grid-template-columns: 1fr 1fr 1fr auto;
+gap: 14px;
+margin-bottom: 24px;
+background: #ffffff;
+padding: 16px;
+border-radius: 16px;
+box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+border: 1px solid #e5e7eb;
+}
 
-    .search-bar input,
-    .search-bar select {
-      padding: 12px 14px;
-      border: 1px solid #d1d5db;
-      border-radius: 10px;
-      font-size: 15px;
-      outline: none;
-      background: #ffffff;
-    }
+.search-bar input,
+.search-bar select {
+padding: 12px 14px;
+border: 1px solid #d1d5db;
+border-radius: 10px;
+font-size: 15px;
+outline: none;
+background: #ffffff;
+}
 
-    .search-bar input:focus,
-    .search-bar select:focus {
-      border-color: #2563eb;
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
-    }
+.search-bar input:focus,
+.search-bar select:focus {
+border-color: #2563eb;
+box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
 
-    .records-card {
-      background: #ffffff;
-      border-radius: 18px;
-      padding: 24px;
-      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
-      border: 1px solid #e5e7eb;
-    }
+.records-card {
+background: #ffffff;
+border-radius: 18px;
+padding: 24px;
+box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+border: 1px solid #e5e7eb;
+}
 
-    .records-card h3 {
-      margin: 0 0 16px;
-      font-size: 22px;
-      color: #111827;
-    }
+.records-card h3 {
+margin: 0 0 16px;
+font-size: 22px;
+color: #111827;
+}
 
-    .table-wrap {
-      overflow-x: auto;
-    }
+.table-wrap {
+overflow-x: auto;
+}
 
-    .records-table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 1200px;
-    }
+.records-table {
+width: 100%;
+border-collapse: collapse;
+min-width: 1200px;
+}
 
-    .records-table th,
-    .records-table td {
-      text-align: left;
-      padding: 14px 12px;
-      border-bottom: 1px solid #e5e7eb;
-      font-size: 14px;
-      vertical-align: top;
-    }
+.records-table th,
+.records-table td {
+text-align: left;
+padding: 14px 12px;
+border-bottom: 1px solid #e5e7eb;
+font-size: 14px;
+vertical-align: top;
+}
 
-    .records-table th {
-      background: #f9fafb;
-      color: #374151;
-      font-weight: 700;
-    }
+.records-table th {
+background: #f9fafb;
+color: #374151;
+font-weight: 700;
+}
 
-    .status-badge {
-      display: inline-block;
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 700;
-      text-transform: capitalize;
-      background: #e5e7eb;
-      color: #374151;
-    }
+.status-badge {
+display: inline-block;
+padding: 6px 10px;
+border-radius: 999px;
+font-size: 12px;
+font-weight: 700;
+text-transform: capitalize;
+background: #e5e7eb;
+color: #374151;
+}
 
-    .status-paid,
-    .status-published,
-    .status-active,
-    .status-approved {
-      background: #dcfce7;
-      color: #166534;
-    }
+.status-paid,
+.status-published,
+.status-active,
+.status-approved {
+background: #dcfce7;
+color: #166534;
+}
 
-    .status-pending,
-    .status-pending_review,
-    .status-draft {
-      background: #fef3c7;
-      color: #92400e;
-    }
+.status-pending,
+.status-pending_review,
+.status-draft {
+background: #fef3c7;
+color: #92400e;
+}
 
-    .status-failed,
-    .status-rejected,
-    .status-inactive {
-      background: #fee2e2;
-      color: #991b1b;
-    }
+.status-failed,
+.status-rejected,
+.status-inactive {
+background: #fee2e2;
+color: #991b1b;
+}
 
-    .action-btn {
-      border: none;
-      border-radius: 8px;
-      padding: 8px 12px;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-      margin: 0 6px 6px 0;
-    }
+.action-btn {
+border: none;
+border-radius: 8px;
+padding: 8px 12px;
+font-size: 13px;
+font-weight: 700;
+cursor: pointer;
+margin: 0 6px 6px 0;
+}
 
-    .action-approve {
-      background: #dcfce7;
-      color: #166534;
-    }
+.action-approve {
+background: #dcfce7;
+color: #166534;
+}
 
-    .action-reject {
-      background: #fee2e2;
-      color: #991b1b;
-    }
+.action-reject {
+background: #fee2e2;
+color: #991b1b;
+}
 
-    .action-unpublish {
-      background: #fef3c7;
-      color: #92400e;
-    }
+.action-unpublish {
+background: #fef3c7;
+color: #92400e;
+}
 
-    .action-delete {
-      background: #111827;
-      color: #ffffff;
-    }
+.action-delete {
+background: #111827;
+color: #ffffff;
+}
 
-    .empty-row {
-      text-align: center;
-      color: #6b7280;
-      padding: 20px 12px;
-    }
+.empty-row {
+text-align: center;
+color: #6b7280;
+padding: 20px 12px;
+}
 
-    @media (max-width: 900px) {
-      .search-bar {
-        grid-template-columns: 1fr;
-      }
+@media (max-width: 900px) {
+.search-bar {
+grid-template-columns: 1fr;
+}
 
-      .page-header h2 {
-        font-size: 28px;
-      }
-    }
-  </style>
+.page-header h2 {
+font-size: 28px;
+}
+}
+</style>
 </head>
 <body>
-  <header class="topbar">
-    <div class="topbar-inner">
-      <div class="logo-area">
-        <img src="../assets/logo.Jobscoutphoto.jpg" alt="Job Scout Pro Logo" class="logo" />
-        <div>
-          <h1>Job Scout Pro</h1>
-          <p>Admin Jobs</p>
-        </div>
-      </div>
+<div id="navbar"></div>
+Admin J
 
-      <nav class="nav-links">
-        <a href="dashboard.html">Dashboard</a>
-        <a href="jobs.html" class="active">Jobs</a>
-        <a href="payments.html">Payments</a>
-        <a href="applications.html">Applications</a>
-        <a href="audit-logs.html">Audit Logs</a>
-        <a href="employer-verifications.html">Employer Verification</a>
-        <a href="../logout.html">Logout</a>
-      </nav>
-    </div>
-  </header>
+<main class="admin-page">
+<div class="page-header">
+<h2>Admin Jobs</h2>
+<p>
+Review all jobs, trace payment and post status, and take moderation actions from one place.
+</p>
+</div>
 
-  <main class="admin-page">
-    <div class="page-header">
-      <h2>Admin Jobs</h2>
-      <p>Review all jobs, trace payment and post status, and take moderation actions from one place.</p>
-    </div>
+<div class="search-bar">
+<input type="text" id="searchKeyword" placeholder="Search by title or company" />
+<input type="text" id="searchLocation" placeholder="Location" />
+<select id="searchStatus">
+<option value="">All Post Statuses</option>
+<option value="draft">Draft</option>
+<option value="pending_review">Pending Review</option>
+<option value="published">Published</option>
+<option value="rejected">Rejected</option>
+</select>
+<button class="btn btn-primary" id="searchBtn">Search</button>
+</div>
 
-    <div class="search-bar">
-      <input type="text" id="searchKeyword" placeholder="Search by title or company" />
-      <input type="text" id="searchLocation" placeholder="Location" />
-      <select id="searchStatus">
-        <option value="">All Post Statuses</option>
-        <option value="draft">Draft</option>
-        <option value="pending_review">Pending Review</option>
-        <option value="published">Published</option>
-        <option value="rejected">Rejected</option>
-      </select>
-      <button class="btn btn-primary" id="searchBtn">Search</button>
-    </div>
+<section class="records-card">
+<h3>All Jobs</h3>
+<div class="table-wrap">
+<table class="records-table">
+<thead>
+<tr>
+<th>Job ID</th>
+<th>Title</th>
+<th>Company</th>
+<th>Location</th>
+<th>Category</th>
+<th>Payment Status</th>
+<th>Post Status</th>
+<th>Paid At</th>
+<th>Remaining Days</th>
+<th>Expires At</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody id="jobsTable">
+<tr>
+<td colspan="11" class="empty-row">Loading jobs...</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</main>
 
-    <section class="records-card">
-      <h3>All Jobs</h3>
-      <div class="table-wrap">
-        <table class="records-table">
-          <thead>
-            <tr>
-              <th>Job ID</th>
-              <th>Title</th>
-              <th>Company</th>
-              <th>Location</th>
-              <th>Category</th>
-              <th>Payment Status</th>
-              <th>Post Status</th>
-              <th>Paid At</th>
-              <th>Remaining Days</th>
-              <th>Expires At</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody id="jobsTable">
-            <tr>
-              <td colspan="11" class="empty-row">Loading jobs...</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-  </main>
+<script>
+const API_BASE = "https://job-scout-pro-production.up.railway.app/api";
+const currentUser = JSON.parse(localStorage.getItem("user") || "null");
+const authToken = localStorage.getItem("token") || "";
 
-  <script>
-    const API_BASE = "https://job-scout-pro-production.up.railway.app/api";
-    const currentUser = JSON.parse(localStorage.getItem("user") || "null");
-    const authToken = localStorage.getItem("token") || "";
+if (!currentUser) {
+window.location.href = "../login.html";
+} else if (currentUser.role !== "admin") {
+window.location.href = "../jobs.html";
+}
 
-    if (!currentUser) {
-      window.location.href = "../login.html";
-    } else if (currentUser.role !== "admin") {
-      window.location.href = "../jobs.html";
-    }
+const jobsTable = document.getElementById("jobsTable");
+const searchBtn = document.getElementById("searchBtn");
 
-    const jobsTable = document.getElementById("jobsTable");
-    const searchBtn = document.getElementById("searchBtn");
+function formatDate(value) {
+if (!value) return "—";
+const d = new Date(value);
+if (isNaN(d.getTime())) return "—";
+return d.toLocaleDateString("en-GB");
+}
 
-    function formatDate(value) {
-      if (!value) return "—";
-      const d = new Date(value);
-      if (isNaN(d.getTime())) return "—";
-      return d.toLocaleDateString("en-GB");
-    }
+function getRemainingDays(expiresAt) {
+if (!expiresAt) return "—";
+const now = new Date();
+const expiry = new Date(expiresAt);
 
-    function getRemainingDays(expiresAt) {
-      if (!expiresAt) return "—";
-      const now = new Date();
-      const expiry = new Date(expiresAt);
+if (isNaN(expiry.getTime())) return "—";
 
-      if (isNaN(expiry.getTime())) return "—";
+const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+const endDate = new Date(expiry.getFullYear(), expiry.getMonth(), expiry.getDate());
 
-      const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-      const endDate = new Date(expiry.getFullYear(), expiry.getMonth(), expiry.getDate());
+const diffMs = endDate.getTime() - startOfToday.getTime();
+const days = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
 
-      const diffMs = endDate.getTime() - startOfToday.getTime();
-      const days = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+if (days < 0) return "Expired";
+if (days === 0) return "0 days";
+if (days === 1) return "1 day";
+return days + " days";
+}
 
-      if (days < 0) return "Expired";
-      if (days === 0) return "0 days";
-      if (days === 1) return "1 day";
-      return days + " days";
-    }
+function statusClass(value) {
+const v = String(value || "").toLowerCase();
+if (v === "paid" || v === "published" || v === "active" || v === "approved") return "status-badge status-paid";
+if (v === "pending" || v === "pending_review" || v === "draft") return "status-badge status-pending";
+if (v === "failed" || v === "rejected" || v === "inactive") return "status-badge status-failed";
+return "status-badge";
+}
 
-    function statusClass(value) {
-      const v = String(value || "").toLowerCase();
-      if (v === "paid" || v === "published" || v === "active" || v === "approved") return "status-badge status-paid";
-      if (v === "pending" || v === "pending_review" || v === "draft") return "status-badge status-pending";
-      if (v === "failed" || v === "rejected" || v === "inactive") return "status-badge status-failed";
-      return "status-badge";
-    }
+function getActionButtons(job) {
+const postStatus = String(job.post_status || "").toLowerCase();
+const paymentStatus = String(job.payment_status || "").toLowerCase();
+const moderationStatus = String(job.moderation_status || "").toLowerCase();
+const visibilityStatus = String(job.visibility_status || "").toLowerCase();
 
-    function getActionButtons(job) {
-      const postStatus = String(job.post_status || "").toLowerCase();
-      const paymentStatus = String(job.payment_status || "").toLowerCase();
-      const moderationStatus = String(job.moderation_status || "").toLowerCase();
-      const visibilityStatus = String(job.visibility_status || "").toLowerCase();
+if ((moderationStatus === "pending_review" || postStatus === "pending_review") && paymentStatus === "paid") {
+return `
+<button class="action-btn action-approve" onclick="approveJob('${job.id || ""}')">Approve</button>
+<button class="action-btn action-reject" onclick="rejectJob('${job.id || ""}')">Reject</button>
+`;
+}
 
-      if ((moderationStatus === "pending_review" || postStatus === "pending_review") && paymentStatus === "paid") {
-        return `
-          <button class="action-btn action-approve" onclick="approveJob('${job.id || ""}')">Approve</button>
-          <button class="action-btn action-reject" onclick="rejectJob('${job.id || ""}')">Reject</button>
-        `;
-      }
+if ((visibilityStatus === "published" || postStatus === "published") && paymentStatus === "paid") {
+return `<button class="action-btn action-unpublish" onclick="unpublishJob('${job.id || ""}')">Unpublish</button>`;
+}
 
-      if ((visibilityStatus === "published" || postStatus === "published") && paymentStatus === "paid") {
-        return `<button class="action-btn action-unpublish" onclick="unpublishJob('${job.id || ""}')">Unpublish</button>`;
-      }
+if (["draft", "archived", "rejected", "expired"].includes(visibilityStatus) || ["draft", "rejected", "archived", "expired"].includes(postStatus) || ["pending", "failed", "rejected"].includes(paymentStatus)) {
+return `<button class="action-btn action-delete" onclick="deleteJob('${job.id || ""}')">Delete</button>`;
+}
 
-      if (["draft", "archived", "rejected", "expired"].includes(visibilityStatus) || ["draft", "rejected", "archived", "expired"].includes(postStatus) || ["pending", "failed", "rejected"].includes(paymentStatus)) {
-        return `<button class="action-btn action-delete" onclick="deleteJob('${job.id || ""}')">Delete</button>`;
-      }
+return "";
+}
 
-      return "";
-    }
+async function loadJobs() {
+const keyword = document.getElementById("searchKeyword").value.toLowerCase().trim();
+const location = document.getElementById("searchLocation").value.toLowerCase().trim();
+const status = document.getElementById("searchStatus").value.toLowerCase().trim();
 
-    async function loadJobs() {
-      const keyword = document.getElementById("searchKeyword").value.toLowerCase().trim();
-      const location = document.getElementById("searchLocation").value.toLowerCase().trim();
-      const status = document.getElementById("searchStatus").value.toLowerCase().trim();
+try {
+const response = await fetch(API_BASE + "/admin/jobs", {
+headers: {
+"Authorization": "Bearer " + authToken
+}
+});
+const jobs = await response.json();
 
-      try {
-        const response = await fetch(API_BASE + "/admin/jobs", {
-          headers: {
-            "Authorization": "Bearer " + authToken
-          }
-        });
-        const jobs = await response.json();
+let filteredJobs = Array.isArray(jobs) ? jobs: [];
 
-        let filteredJobs = Array.isArray(jobs) ? jobs : [];
+filteredJobs = filteredJobs.filter(job => {
+const title = String(job.title || "").toLowerCase();
+const company = String(job.company || "").toLowerCase();
+const jobLocation = String(job.location || "").toLowerCase();
+const postStatus = String(job.post_status || "").toLowerCase();
 
-        filteredJobs = filteredJobs.filter(job => {
-          const title = String(job.title || "").toLowerCase();
-          const company = String(job.company || "").toLowerCase();
-          const jobLocation = String(job.location || "").toLowerCase();
-          const postStatus = String(job.post_status || "").toLowerCase();
+return (
+(!keyword || title.includes(keyword) || company.includes(keyword)) &&
+(!location || jobLocation.includes(location)) &&
+(!status || postStatus === status)
+);
+});
 
-          return (
-            (!keyword || title.includes(keyword) || company.includes(keyword)) &&
-            (!location || jobLocation.includes(location)) &&
-            (!status || postStatus === status)
-          );
-        });
+if (filteredJobs.length === 0) {
+jobsTable.innerHTML = '<tr><td colspan="11" class="empty-row">No jobs found.</td></tr>';
+return;
+}
 
-        if (filteredJobs.length === 0) {
-          jobsTable.innerHTML = '<tr><td colspan="11" class="empty-row">No jobs found.</td></tr>';
-          return;
-        }
+jobsTable.innerHTML = filteredJobs.map(job => `
+<tr>
+<td>${job.id || ""}</td>
+<td>${job.title || "Untitled"}</td>
+<td>${job.company || "N/A"}</td>
+<td>${job.location || "N/A"}</td>
+<td>${job.category || "General"}</td>
+<td><span class="${statusClass(job.payment_status)}">${job.payment_status || "pending"}</span></td>
+<td><span class="${statusClass(job.post_status)}">${job.post_status || "draft"}</span></td>
+<td>${formatDate(job.paid_at)}</td>
+<td>${getRemainingDays(job.expires_at)}</td>
+<td>${formatDate(job.expires_at)}</td>
+<td>${getActionButtons(job)}</td>
+</tr>
+`).join("");
+} catch (error) {
+jobsTable.innerHTML = '<tr><td colspan="11" class="empty-row">Failed to load jobs.</td></tr>';
+}
+}
 
-        jobsTable.innerHTML = filteredJobs.map(job => `
-          <tr>
-            <td>${job.id || ""}</td>
-            <td>${job.title || "Untitled"}</td>
-            <td>${job.company || "N/A"}</td>
-            <td>${job.location || "N/A"}</td>
-            <td>${job.category || "General"}</td>
-            <td><span class="${statusClass(job.payment_status)}">${job.payment_status || "pending"}</span></td>
-            <td><span class="${statusClass(job.post_status)}">${job.post_status || "draft"}</span></td>
-            <td>${formatDate(job.paid_at)}</td>
-            <td>${getRemainingDays(job.expires_at)}</td>
-            <td>${formatDate(job.expires_at)}</td>
-            <td>${getActionButtons(job)}</td>
-          </tr>
-        `).join("");
-      } catch (error) {
-        jobsTable.innerHTML = '<tr><td colspan="11" class="empty-row">Failed to load jobs.</td></tr>';
-      }
-    }
+async function deleteJob(id) {
+try {
+const confirmed = confirm("Delete this job?");
+if (!confirmed) return;
 
-    async function deleteJob(id) {
-      try {
-        const confirmed = confirm("Delete this job?");
-        if (!confirmed) return;
+const response = await fetch(API_BASE + "/jobs/" + id, {
+method: "DELETE",
+headers: {
+"Authorization": "Bearer " + authToken
+}
+});
 
-        const response = await fetch(API_BASE + "/jobs/" + id, {
-          method: "DELETE",
-          headers: {
-            "Authorization": "Bearer " + authToken
-          }
-        });
+const data = await response.json();
+alert(data.message || "Job deleted.");
+loadJobs();
+} catch (error) {
+alert("Failed to delete job.");
+}
+}
 
-        const data = await response.json();
-        alert(data.message || "Job deleted.");
-        loadJobs();
-      } catch (error) {
-        alert("Failed to delete job.");
-      }
-    }
+async function approveJob(id) {
+try {
+const confirmed = confirm("Approve this job and publish it?");
+if (!confirmed) return;
 
-    async function approveJob(id) {
-      try {
-        const confirmed = confirm("Approve this job and publish it?");
-        if (!confirmed) return;
+const response = await fetch(API_BASE + "/jobs/" + id + "/approve", {
+method: "PUT",
+headers: {
+"Authorization": "Bearer " + authToken
+}
+});
 
-        const response = await fetch(API_BASE + "/jobs/" + id + "/approve", {
-          method: "PUT",
-          headers: {
-            "Authorization": "Bearer " + authToken
-          }
-        });
+const data = await response.json();
+alert(data.message || "Job approved.");
+loadJobs();
+} catch (error) {
+alert("Failed to approve job.");
+}
+}
 
-        const data = await response.json();
-        alert(data.message || "Job approved.");
-        loadJobs();
-      } catch (error) {
-        alert("Failed to approve job.");
-      }
-    }
+async function rejectJob(id) {
+try {
+const rejectionReason = prompt("Reason for rejecting this job?", "Policy issue or incomplete job details");
+if (rejectionReason === null) return;
 
-    async function rejectJob(id) {
-      try {
-        const rejectionReason = prompt("Reason for rejecting this job?", "Policy issue or incomplete job details");
-        if (rejectionReason === null) return;
+const response = await fetch(API_BASE + "/jobs/" + id + "/reject", {
+method: "PUT",
+headers: {
+"Authorization": "Bearer " + authToken,
+"Content-Type": "application/json"
+},
+body: JSON.stringify({
+rejection_reason: rejectionReason.trim() || "Rejected by admin"
+})
+});
 
-        const response = await fetch(API_BASE + "/jobs/" + id + "/reject", {
-          method: "PUT",
-          headers: {
-            "Authorization": "Bearer " + authToken,
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            rejection_reason: rejectionReason.trim() || "Rejected by admin"
-          })
-        });
+const data = await response.json();
+alert(data.message || "Job rejected.");
+loadJobs();
+} catch (error) {
+alert("Failed to reject job.");
+}
+}
 
-        const data = await response.json();
-        alert(data.message || "Job rejected.");
-        loadJobs();
-      } catch (error) {
-        alert("Failed to reject job.");
-      }
-    }
+async function unpublishJob(id) {
+try {
+const confirmed = confirm("Unpublish this job from the public jobs page?");
+if (!confirmed) return;
 
-    async function unpublishJob(id) {
-      try {
-        const confirmed = confirm("Unpublish this job from the public jobs page?");
-        if (!confirmed) return;
+const rejectionReason = prompt("Reason for unpublishing this job?", "Policy issue or admin review decision");
+if (rejectionReason === null) return;
 
-        const rejectionReason = prompt("Reason for unpublishing this job?", "Policy issue or admin review decision");
-        if (rejectionReason === null) return;
+const response = await fetch(API_BASE + "/jobs/" + id + "/unpublish", {
+method: "PUT",
+headers: {
+"Authorization": "Bearer " + authToken,
+"Content-Type": "application/json"
+},
+body: JSON.stringify({
+rejection_reason: rejectionReason.trim() || null
+})
+});
 
-        const response = await fetch(API_BASE + "/jobs/" + id + "/unpublish", {
-          method: "PUT",
-          headers: {
-            "Authorization": "Bearer " + authToken,
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            rejection_reason: rejectionReason.trim() || null
-          })
-        });
+const data = await response.json();
+alert(data.message || "Job unpublished.");
+loadJobs();
+} catch (error) {
+alert("Failed to unpublish job.");
+}
+}
 
-        const data = await response.json();
-        alert(data.message || "Job unpublished.");
-        loadJobs();
-      } catch (error) {
-        alert("Failed to unpublish job.");
-      }
-    }
-
-    searchBtn.addEventListener("click", loadJobs);
-    document.addEventListener("DOMContentLoaded", loadJobs);
-  </script>
+searchBtn.addEventListener("click", loadJobs);
+document.addEventListener("DOMContentLoaded", loadJobs);
+</script>
+<script src="/js/ui-config.js"></script>
+<script src="/js/render-admin-nav.js"></script>
 </body>
 </html>
