@@ -1,15 +1,20 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { Resend } = require("resend");
+const {
+  Resend
+} = require("resend");
 const router = express.Router();
 const pool = require("../db");
+const resend = process.env.RESEND_API_KEY
+? new Resend(process.env.RESEND_API_KEY): null;
 
-const resend = new Resend(process.env.RESEND_API_KEY);
 
 router.post("/signup", async (req, res) => {
   try {
-    const { full_name, email, phone, password } = req.body;
+    const {
+      full_name, email, phone, password
+    } = req.body;
 
     if (!full_name || !email || !phone || !password) {
       return res.status(400).json({
@@ -64,7 +69,10 @@ router.post("/signup", async (req, res) => {
 
 router.post("/login", async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const {
+      email,
+      password
+    } = req.body;
 
     if (!email || !password) {
       return res.status(400).json({
@@ -110,7 +118,9 @@ router.post("/login", async (req, res) => {
         role: user.role
       },
       process.env.JWT_SECRET,
-      { expiresIn: "7d" }
+      {
+        expiresIn: "7d"
+      }
     );
 
     res.json({
@@ -136,7 +146,10 @@ router.post("/login", async (req, res) => {
 
 router.post("/forgot-password", async (req, res) => {
   try {
-    const { email, otp_method } = req.body;
+    const {
+      email,
+      otp_method
+    } = req.body;
 
     if (!email) {
       return res.status(400).json({
@@ -189,7 +202,10 @@ router.post("/forgot-password", async (req, res) => {
 
 router.post("/verify-otp", async (req, res) => {
   try {
-    const { email, otp } = req.body;
+    const {
+      email,
+      otp
+    } = req.body;
     const record = otpStore.get(email);
 
     if (!record) {
@@ -229,7 +245,11 @@ router.post("/verify-otp", async (req, res) => {
 
 router.post("/reset-password", async (req, res) => {
   try {
-    const { email, otp, new_password } = req.body;
+    const {
+      email,
+      otp,
+      new_password
+    } = req.body;
     const record = otpStore.get(email);
 
     if (!record) {
