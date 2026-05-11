@@ -111,6 +111,7 @@ router.post("/login", async (req, res) => {
       });
     }
 
+
     const token = jwt.sign(
       {
         id: user.id,
@@ -180,13 +181,20 @@ router.post("/forgot-password", async (req, res) => {
 
     console.log("OTP for", email, "is", otp);
 
+
+    if (!resend) {
+      return res.status(503).json({
+        success: false,
+        message: "Email service is not configured"
+      });
+    }
+
     await resend.emails.send({
       from: "onboarding@resend.dev",
       to: email,
       subject: "Job Scout Pro Password Reset OTP",
       html: `<p>Your Job Scout Pro OTP is <b>${otp}</b>.</p><p>It expires in 2 minutes.</p>`
     });
-
     res.json({
       success: true,
       message: "OTP generated successfully."
@@ -200,107 +208,109 @@ router.post("/forgot-password", async (req, res) => {
   }
 });
 
-router.post("/verify-otp", async (req, res) => {
-  try {
-    const {
-      email,
-      otp
-    } = req.body;
-    const record = otpStore.get(email);
+router.post("/verify-otp",
+  async (req, res) => {
+    try {
+      const {
+        email,
+        otp
+      } = req.body;
+      const record = otpStore.get(email);
 
-    if (!record) {
-      return res.status(400).json({
+      if (!record) {
+        return res.status(400).json({
+          success: false,
+          message: "No OTP request found"
+        });
+      }
+
+      if (Date.now() > record.expiresAt) {
+        otpStore.delete(email);
+        return res.status(400).json({
+          success: false,
+          message: "OTP expired"
+        });
+      }
+
+      if (record.otp !== otp) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid OTP"
+        });
+      }
+
+      res.json({
+        success: true,
+        message: "OTP verified successfully"
+      });
+    } catch (error) {
+      res.status(500).json({
         success: false,
-        message: "No OTP request found"
+        message: "Failed to verify OTP",
+        error: error.message
       });
     }
+  });
 
-    if (Date.now() > record.expiresAt) {
+router.post("/reset-password",
+  async (req, res) => {
+    try {
+      const {
+        email,
+        otp,
+        new_password
+      } = req.body;
+      const record = otpStore.get(email);
+
+      if (!record) {
+        return res.status(400).json({
+          success: false,
+          message: "No OTP request found"
+        });
+      }
+
+      if (Date.now() > record.expiresAt) {
+        otpStore.delete(email);
+        return res.status(400).json({
+          success: false,
+          message: "OTP expired"
+        });
+      }
+
+      if (record.otp !== otp) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid OTP"
+        });
+      }
+
+      if (!new_password) {
+        return res.status(400).json({
+          success: false,
+          message: "New password is required"
+        });
+      }
+
+      const hashedPassword = await bcrypt.hash(new_password, 10);
+
+      await pool.query(
+        "UPDATE users SET password = ? WHERE email = ?",
+        [hashedPassword, email]
+      );
+
       otpStore.delete(email);
-      return res.status(400).json({
+
+      res.json({
+        success: true,
+        message: "Password reset successfully"
+      });
+    } catch (error) {
+      res.status(500).json({
         success: false,
-        message: "OTP expired"
+        message: "Failed to reset password",
+        error: error.message
       });
     }
-
-    if (record.otp !== otp) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid OTP"
-      });
-    }
-
-    res.json({
-      success: true,
-      message: "OTP verified successfully"
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Failed to verify OTP",
-      error: error.message
-    });
-  }
-});
-
-router.post("/reset-password", async (req, res) => {
-  try {
-    const {
-      email,
-      otp,
-      new_password
-    } = req.body;
-    const record = otpStore.get(email);
-
-    if (!record) {
-      return res.status(400).json({
-        success: false,
-        message: "No OTP request found"
-      });
-    }
-
-    if (Date.now() > record.expiresAt) {
-      otpStore.delete(email);
-      return res.status(400).json({
-        success: false,
-        message: "OTP expired"
-      });
-    }
-
-    if (record.otp !== otp) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid OTP"
-      });
-    }
-
-    if (!new_password) {
-      return res.status(400).json({
-        success: false,
-        message: "New password is required"
-      });
-    }
-
-    const hashedPassword = await bcrypt.hash(new_password, 10);
-
-    await pool.query(
-      "UPDATE users SET password = ? WHERE email = ?",
-      [hashedPassword, email]
-    );
-
-    otpStore.delete(email);
-
-    res.json({
-      success: true,
-      message: "Password reset successfully"
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Failed to reset password",
-      error: error.message
-    });
-  }
-});
+  });
 
 module.exports = router;
