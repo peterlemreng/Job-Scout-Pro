@@ -147,9 +147,8 @@ overflow-x: auto;
 .records-table {
 width: 100%;
 border-collapse: collapse;
-min-width: 900px;
+min-width: 760px;
 }
-
 .records-table th,
 .records-table td {
 text-align: left;
@@ -198,6 +197,22 @@ grid-template-columns: 1fr;
 
 .page-header h2 {
 font-size: 28px;
+}
+}
+@media (max-width: 640px) {
+.table-wrap {
+overflow-x: auto;
+-webkit-overflow-scrolling: touch;
+}
+
+.records-table {
+min-width: 760px;
+}
+
+.records-table th,
+.records-table td {
+padding: 10px 8px;
+font-size: 13px;
 }
 }
 </style>
