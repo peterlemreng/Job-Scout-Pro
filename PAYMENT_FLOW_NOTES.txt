@@ -1,0 +1,21 @@
+Job Scout Pro - Payment Flow Notes
+
+Primary payment files
+- frontend/payment.html
+- frontend/admin/payments.html
+- backend/routes/payments.js
+
+Employer payment files
+- frontend/employer/payments.html
+- frontend/employer/post-job.html
+
+Related files
+- frontend/post-job.html
+- frontend/payment-records.html
+- frontend/admin/dashboard.html
+
+Rules
+- Do not delete or merge payment files without verification
+- Do not change one payment page without checking the other
+- Prefer small verified fixes only
+- Admin payments mobile table is functional but not ideal
