@@ -1,13 +1,14 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const {
-  Resend
-} = require("resend");
+const { Resend } = require("resend");
 const router = express.Router();
 const pool = require("../db");
+const otpStore = new Map();
 const resend = process.env.RESEND_API_KEY
-? new Resend(process.env.RESEND_API_KEY): null;
+  ? new Resend(process.env.RESEND_API_KEY)
+  : null;
+
 
 
 router.post("/signup", async (req, res) => {
