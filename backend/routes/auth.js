@@ -2,6 +2,10 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { Resend } = require("resend");
+const https = require("https");
+const querystring = require("querystring");
+const atUsername = process.env.AFRICASTALKING_USERNAME || process.env.AT_USERNAME;
+const atApiKey = process.env.AFRICASTALKING_API_KEY || process.env.AT_API_KEY;
 const router = express.Router();
 const pool = require("../db");
 const otpStore = new Map();
@@ -172,16 +176,86 @@ router.post("/forgot-password", async (req, res) => {
       });
     }
 
+    const user = users[0];
     const otp = String(Math.floor(100000 + Math.random() * 900000));
+    const deliveryMethod = otp_method === "sms" ? "sms" : "email";
 
     otpStore.set(email, {
       otp,
       expiresAt: Date.now() + 2 * 60 * 1000,
-      otp_method: otp_method || "email"
+      otp_method: deliveryMethod
     });
 
     console.log("OTP for", email, "is", otp);
 
+    if (deliveryMethod === "sms") {
+      if (!user.phone) {
+        return res.status(400).json({
+          success: false,
+          message: "No registered phone number found for this account"
+        });
+      }
+
+      if (!atUsername || !atApiKey) {
+        return res.status(503).json({
+          success: false,
+          message: "SMS service is not configured"
+        });
+      }
+
+      const normalizedPhone = user.phone.startsWith("+")
+        ? user.phone
+        : user.phone.startsWith("0")
+          ? "+254" + user.phone.slice(1)
+          : user.phone.startsWith("254")
+            ? "+" + user.phone
+            : user.phone;
+
+      const postData = querystring.stringify({
+        username: atUsername,
+        to: normalizedPhone,
+        message: `Your Job Scout Pro password reset OTP is ${otp}. It expires in 2 minutes.`
+      });
+
+      await new Promise((resolve, reject) => {
+        const request = https.request(
+          "https://api.sandbox.africastalking.com/version1/messaging",
+          {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/x-www-form-urlencoded",
+              "Content-Length": Buffer.byteLength(postData),
+              apiKey: atApiKey
+            }
+          },
+          (response) => {
+            let body = "";
+
+            response.on("data", (chunk) => {
+              body += chunk;
+            });
+
+            response.on("end", () => {
+              if (response.statusCode >= 200 && response.statusCode < 300) {
+                resolve(body);
+              } else {
+                reject(new Error(body || `SMS request failed with status ${response.statusCode}`));
+              }
+            });
+          }
+        );
+
+        request.on("error", reject);
+        request.write(postData);
+        request.end();
+      });
+
+      return res.json({
+        success: true,
+        message: "OTP sent by SMS successfully."
+      });
+    }
 
     if (!resend) {
       return res.status(503).json({
@@ -196,9 +270,10 @@ router.post("/forgot-password", async (req, res) => {
       subject: "Job Scout Pro Password Reset OTP",
       html: `<p>Your Job Scout Pro OTP is <b>${otp}</b>.</p><p>It expires in 2 minutes.</p>`
     });
-    res.json({
+
+    return res.json({
       success: true,
-      message: "OTP generated successfully."
+      message: "OTP sent by email successfully."
     });
   } catch (error) {
     res.status(500).json({
@@ -208,6 +283,7 @@ router.post("/forgot-password", async (req, res) => {
     });
   }
 });
+
 
 router.post("/verify-otp",
   async (req, res) => {
