@@ -203,7 +203,7 @@ router.post("/forgot-password", async (req, res) => {
         });
       }
 
-      const normalizedPhone = user.phone.startsWith("+")
+const normalizedPhone = user.phone.startsWith("+")
         ? user.phone
         : user.phone.startsWith("0")
           ? "+254" + user.phone.slice(1)
@@ -211,6 +211,13 @@ router.post("/forgot-password", async (req, res) => {
             ? "+" + user.phone
             : user.phone;
 
+console.log("SMS debug:", {
+  deliveryMethod,
+  email,
+  phonePreview: normalizedPhone.slice(0, 7) + "***",
+  hasUsername: !!atUsername,
+  hasApiKey: !!atApiKey
+});
       const postData = querystring.stringify({
         username: atUsername,
         to: normalizedPhone,
@@ -218,37 +225,47 @@ router.post("/forgot-password", async (req, res) => {
       });
 
       await new Promise((resolve, reject) => {
-        const request = https.request(
-          "https://api.sandbox.africastalking.com/version1/messaging",
-          {
-            method: "POST",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/x-www-form-urlencoded",
-              "Content-Length": Buffer.byteLength(postData),
-              apiKey: atApiKey
-            }
-          },
-          (response) => {
-            let body = "";
+     const request = https.request(
+  "https://api.sandbox.africastalking.com/version1/messaging",
+  {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/x-www-form-urlencoded",
+      "Content-Length": Buffer.byteLength(postData),
+      apiKey: atApiKey
+    }
+  },
+  (response) => {
+    let body = "";
 
-            response.on("data", (chunk) => {
-              body += chunk;
-            });
+    response.on("data", (chunk) => {
+      body += chunk;
+    });
 
-            response.on("end", () => {
-              if (response.statusCode >= 200 && response.statusCode < 300) {
-                resolve(body);
-              } else {
-                reject(new Error(body || `SMS request failed with status ${response.statusCode}`));
-              }
-            });
-          }
-        );
+    response.on("end", () => {
+      console.log("AT response:", response.statusCode, body);
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        resolve(body);
+      } else {
+        reject(new Error(body || `SMS request failed with status ${response.statusCode}`));
+      }
+    });
+  }
+);
 
-        request.on("error", reject);
-        request.write(postData);
-        request.end();
+request.on("error", (err) => {
+  console.log("AT request error:", err.message);
+  reject(err);
+});
+
+request.write(postData);
+request.end();        
+
+
+
+
+;
       });
 
       return res.json({
