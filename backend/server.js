@@ -12,6 +12,7 @@ const applicationsRoutes = require("./routes/applications");
 const employerRoutes = require("./routes/employer");
 
 const app = express();
+app.set("trust proxy", 1);
 
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
