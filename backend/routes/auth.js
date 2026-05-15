@@ -211,13 +211,6 @@ const normalizedPhone = user.phone.startsWith("+")
             ? "+" + user.phone
             : user.phone;
 
-console.log("SMS debug:", {
-  deliveryMethod,
-  email,
-  phonePreview: normalizedPhone.slice(0, 7) + "***",
-  hasUsername: !!atUsername,
-  hasApiKey: !!atApiKey
-});
       const postData = querystring.stringify({
         username: atUsername,
         to: normalizedPhone,
@@ -244,7 +237,6 @@ console.log("SMS debug:", {
     });
 
     response.on("end", () => {
-      console.log("AT response:", response.statusCode, body);
       if (response.statusCode >= 200 && response.statusCode < 300) {
         resolve(body);
       } else {
@@ -255,7 +247,6 @@ console.log("SMS debug:", {
 );
 
 request.on("error", (err) => {
-  console.log("AT request error:", err.message);
   reject(err);
 });
 
