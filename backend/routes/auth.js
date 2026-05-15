@@ -8,7 +8,6 @@ const atUsername = process.env.AFRICASTALKING_USERNAME || process.env.AT_USERNAM
 const atApiKey = process.env.AFRICASTALKING_API_KEY || process.env.AT_API_KEY;
 const router = express.Router();
 const pool = require("../db");
-const otpStore = new Map();
 const resend = process.env.RESEND_API_KEY
   ? new Resend(process.env.RESEND_API_KEY)
   : null;
@@ -179,12 +178,12 @@ router.post("/forgot-password", async (req, res) => {
     const user = users[0];
     const otp = String(Math.floor(100000 + Math.random() * 900000));
     const deliveryMethod = otp_method === "sms" ? "sms" : "email";
+    const expiresAt = new Date(Date.now() + 2 * 60 * 1000);
 
-    otpStore.set(email, {
-      otp,
-      expiresAt: Date.now() + 2 * 60 * 1000,
-      otp_method: deliveryMethod
-    });
+    await pool.query(
+      "UPDATE users SET password_reset_otp = ?, password_reset_expires_at = ? WHERE email = ?",
+      [otp, expiresAt, email]
+    );
 
     console.log("OTP for", email, "is", otp);
 
@@ -203,7 +202,7 @@ router.post("/forgot-password", async (req, res) => {
         });
       }
 
-const normalizedPhone = user.phone.startsWith("+")
+      const normalizedPhone = user.phone.startsWith("+")
         ? user.phone
         : user.phone.startsWith("0")
           ? "+254" + user.phone.slice(1)
@@ -218,45 +217,40 @@ const normalizedPhone = user.phone.startsWith("+")
       });
 
       await new Promise((resolve, reject) => {
-     const request = https.request(
-  "https://api.sandbox.africastalking.com/version1/messaging",
-  {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/x-www-form-urlencoded",
-      "Content-Length": Buffer.byteLength(postData),
-      apiKey: atApiKey
-    }
-  },
-  (response) => {
-    let body = "";
+        const request = https.request(
+          "https://api.sandbox.africastalking.com/version1/messaging",
+          {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/x-www-form-urlencoded",
+              "Content-Length": Buffer.byteLength(postData),
+              apiKey: atApiKey
+            }
+          },
+          (response) => {
+            let body = "";
 
-    response.on("data", (chunk) => {
-      body += chunk;
-    });
+            response.on("data", (chunk) => {
+              body += chunk;
+            });
 
-    response.on("end", () => {
-      if (response.statusCode >= 200 && response.statusCode < 300) {
-        resolve(body);
-      } else {
-        reject(new Error(body || `SMS request failed with status ${response.statusCode}`));
-      }
-    });
-  }
-);
+            response.on("end", () => {
+              if (response.statusCode >= 200 && response.statusCode < 300) {
+                resolve(body);
+              } else {
+                reject(new Error(body || `SMS request failed with status ${response.statusCode}`));
+              }
+            });
+          }
+        );
 
-request.on("error", (err) => {
-  reject(err);
-});
+        request.on("error", (err) => {
+          reject(err);
+        });
 
-request.write(postData);
-request.end();        
-
-
-
-
-;
+        request.write(postData);
+        request.end();
       });
 
       return res.json({
@@ -292,7 +286,6 @@ request.end();
   }
 });
 
-
 router.post("/verify-otp",
   async (req, res) => {
     try {
@@ -300,24 +293,34 @@ router.post("/verify-otp",
         email,
         otp
       } = req.body;
-      const record = otpStore.get(email);
 
-      if (!record) {
+      const [users] = await pool.query(
+        "SELECT password_reset_otp, password_reset_expires_at FROM users WHERE email = ? LIMIT 1",
+        [email]
+      );
+
+      if (users.length === 0 || !users[0].password_reset_otp) {
         return res.status(400).json({
           success: false,
           message: "No OTP request found"
         });
       }
 
-      if (Date.now() > record.expiresAt) {
-        otpStore.delete(email);
+      const record = users[0];
+
+      if (!record.password_reset_expires_at || Date.now() > new Date(record.password_reset_expires_at).getTime()) {
+        await pool.query(
+          "UPDATE users SET password_reset_otp = NULL, password_reset_expires_at = NULL WHERE email = ?",
+          [email]
+        );
+
         return res.status(400).json({
           success: false,
           message: "OTP expired"
         });
       }
 
-      if (record.otp !== otp) {
+      if (record.password_reset_otp !== otp) {
         return res.status(400).json({
           success: false,
           message: "Invalid OTP"
@@ -345,24 +348,34 @@ router.post("/reset-password",
         otp,
         new_password
       } = req.body;
-      const record = otpStore.get(email);
 
-      if (!record) {
+      const [users] = await pool.query(
+        "SELECT password_reset_otp, password_reset_expires_at FROM users WHERE email = ? LIMIT 1",
+        [email]
+      );
+
+      if (users.length === 0 || !users[0].password_reset_otp) {
         return res.status(400).json({
           success: false,
           message: "No OTP request found"
         });
       }
 
-      if (Date.now() > record.expiresAt) {
-        otpStore.delete(email);
+      const record = users[0];
+
+      if (!record.password_reset_expires_at || Date.now() > new Date(record.password_reset_expires_at).getTime()) {
+        await pool.query(
+          "UPDATE users SET password_reset_otp = NULL, password_reset_expires_at = NULL WHERE email = ?",
+          [email]
+        );
+
         return res.status(400).json({
           success: false,
           message: "OTP expired"
         });
       }
 
-      if (record.otp !== otp) {
+      if (record.password_reset_otp !== otp) {
         return res.status(400).json({
           success: false,
           message: "Invalid OTP"
@@ -379,11 +392,9 @@ router.post("/reset-password",
       const hashedPassword = await bcrypt.hash(new_password, 10);
 
       await pool.query(
-        "UPDATE users SET password = ? WHERE email = ?",
+        "UPDATE users SET password = ?, password_reset_otp = NULL, password_reset_expires_at = NULL WHERE email = ?",
         [hashedPassword, email]
       );
-
-      otpStore.delete(email);
 
       res.json({
         success: true,
