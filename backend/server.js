@@ -30,7 +30,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, "../frontend")));
 app.use("/api", apiLimiter);
 
-app.get("/", (req, res) => {
+app.get("/health", (req, res) => {  res.json({ ok: true });});app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/login.html"));
 });
 
