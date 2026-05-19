@@ -1,7 +1,7 @@
 const mysql = require("mysql2/promise");
 
 const pool = process.env.DATABASE_URL
-  ? mysql.createPool(process.env.DATABASE_URL)
+  ? mysql.createPool({ uri: process.env.DATABASE_URL, waitForConnections: true, connectionLimit: 10, queueLimit: 0, enableKeepAlive: true, keepAliveInitialDelay: 0 })
   : mysql.createPool({
       host: process.env.DB_HOST || "127.0.0.1",
       port: process.env.DB_PORT || 3306,
