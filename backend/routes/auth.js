@@ -225,7 +225,8 @@ router.post("/forgot-password", async (req, res) => {
               Accept: "application/json",
               "Content-Type": "application/x-www-form-urlencoded",
               "Content-Length": Buffer.byteLength(postData),
-              apiKey: atApiKey
+              apiKey: atApiKey,
+              Host: "api.sandbox.africastalking.com"
             }
           },
           (response) => {
@@ -236,16 +237,24 @@ router.post("/forgot-password", async (req, res) => {
             });
 
             response.on("end", () => {
+              console.log("AT SMS status:", response.statusCode);
+              console.log("AT SMS body:", body);
+
               if (response.statusCode >= 200 && response.statusCode < 300) {
                 resolve(body);
               } else {
-                reject(new Error(body || `SMS request failed with status ${response.statusCode}`));
+                reject(new Error(`AT ${response.statusCode}: ${body}`));
               }
             });
           }
         );
 
+        request.setTimeout(15000, () => {
+          request.destroy(new Error("Africa's Talking request timed out"));
+        });
+
         request.on("error", (err) => {
+          console.error("AT SMS error:", err.message);
           reject(err);
         });
 
