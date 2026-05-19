@@ -2,7 +2,7 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { Resend } = require("resend");
-const https = require("https");
+const axios = require("axios");
 const querystring = require("querystring");
 const atUsername = process.env.AFRICASTALKING_USERNAME || process.env.AT_USERNAME;
 const atApiKey = process.env.AFRICASTALKING_API_KEY || process.env.AT_API_KEY;
@@ -216,51 +216,28 @@ router.post("/forgot-password", async (req, res) => {
         message: `Your Job Scout Pro password reset OTP is ${otp}. It expires in 2 minutes.`
       });
 
-      await new Promise((resolve, reject) => {
-        const request = https.request(
+      try {
+        const smsResponse = await axios.post(
           "https://api.sandbox.africastalking.com/version1/messaging",
+          postData,
           {
-            method: "POST",
             headers: {
               Accept: "application/json",
               "Content-Type": "application/x-www-form-urlencoded",
-              "Content-Length": Buffer.byteLength(postData),
-              apiKey: atApiKey,
-              Host: "api.sandbox.africastalking.com"
-            }
-          },
-          (response) => {
-            let body = "";
-
-            response.on("data", (chunk) => {
-              body += chunk;
-            });
-
-            response.on("end", () => {
-              console.log("AT SMS status:", response.statusCode);
-              console.log("AT SMS body:", body);
-
-              if (response.statusCode >= 200 && response.statusCode < 300) {
-                resolve(body);
-              } else {
-                reject(new Error(`AT ${response.statusCode}: ${body}`));
-              }
-            });
+              apiKey: atApiKey
+            },
+            timeout: 15000
           }
         );
 
-        request.setTimeout(15000, () => {
-          request.destroy(new Error("Africa's Talking request timed out"));
-        });
-
-        request.on("error", (err) => {
-          console.error("AT SMS error:", err.message);
-          reject(err);
-        });
-
-        request.write(postData);
-        request.end();
-      });
+        console.log("AT SMS status:", smsResponse.status);
+        console.log("AT SMS body:", JSON.stringify(smsResponse.data));
+      } catch (err) {
+        const status = err.response?.status;
+        const body = err.response?.data;
+        console.error("AT SMS error:", status || err.message, body || "");
+        throw new Error(status ? `AT ${status}: ${JSON.stringify(body)}` : err.message);
+      }
 
       return res.json({
         success: true,
