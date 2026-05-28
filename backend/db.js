@@ -1,7 +1,7 @@
 require("dotenv").config();
 const mysql = require("mysql2/promise");
 
-const rawUrl = process.env.DATABASE_URL || process.env.MYSQL_PUBLIC_URL;
+const rawUrl = process.env.MYSQL_URL || process.env.DATABASE_URL || process.env.MYSQL_PUBLIC_URL;
 const url = new URL(rawUrl);
 
 const pool = mysql.createPool({
