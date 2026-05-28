@@ -20,3 +20,7 @@ const pool = mysql.createPool({
 });
 
 module.exports = pool;
+
+pool.query("SELECT 1 AS ok")
+  .then(() => console.log("DB startup test: OK"))
+  .catch((err) => console.error("DB startup test failed:", err.message));
