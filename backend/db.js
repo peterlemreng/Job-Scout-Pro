@@ -1,26 +1,21 @@
 require("dotenv").config();
-const mysql = require("mysql2/promise");
-
-const rawUrl = process.env.MYSQL_PUBLIC_URL || process.env.MYSQL_URL || process.env.DATABASE_URL;
-const url = new URL(rawUrl);
-
-const pool = mysql.createPool({
-  host: url.hostname,
-  port: Number(url.port || 3306),
-  user: decodeURIComponent(url.username),
-  password: decodeURIComponent(url.password),
-  database: url.pathname.replace(/^\//, ""),
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
-  connectTimeout: 15000,
-  enableKeepAlive: true,
-  keepAliveInitialDelay: 0,
-  ssl: { rejectUnauthorized: false }
-});
-
-module.exports = pool;
-
-pool.query("SELECT 1 AS ok")
-  .then(() => console.log("DB startup test: OK"))
-  .catch((err) => console.error("DB startup test failed:", err.message));
+const mysql = require("mysql2/promise");const hasFieldConfig =
+  process.env.DB_HOST &&
+  process.env.DB_PORT &&
+  process.env.DB_USER &&
+  process.env.DB_PASSWORD &&
+  process.env.DB_NAME;const pool = hasFieldConfig
+  ? mysql.createPool({
+      host: process.env.DB_HOST,
+      port: Number(process.env.DB_PORT || 3306),
+      user: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
+      waitForConnections: true,
+      connectionLimit: 10,
+      queueLimit: 0,
+      connectTimeout: 15000,
+      enableKeepAlive: true,
+      keepAliveInitialDelay: 0
+    })
+  : mysql.createPool(process.env.MYSQL_PUBLIC_URL || process.env.MYSQL_URL || process.env.DATABASE_URL);module.exports = pool;
