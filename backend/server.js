@@ -15,7 +15,7 @@ const applicationsRoutes = require("./routes/applications");
 const employerRoutes = require("./routes/employer");
 
 const app = express();
-
+app.set('trust proxy', 1);
 // Trust proxy (important for Render / proxies)
 app.set("trust proxy", 1);
 
@@ -36,7 +36,7 @@ const apiLimiter = rateLimit({
 app.use(apiLimiter);
 
 // Health check (VERY IMPORTANT for debugging)
-app.get("/health", (req, res) => {
+app.get("/", (req, res) => {  res.status(200).json({ success: true, message: "Job Scout Pro API root OK" });});app.get("/health", (req, res) => {
   res.json({
     success: true,
     message: "Job Scout Pro API is running",
