@@ -1,0 +1,8 @@
+nohup: ignoring input
+
+> job-scout-pro-backend@1.0.0 start
+> node server.js
+
+Server running on port 8080
+AFRICASTALKING_USERNAME: true
+AFRICASTALKING_API_KEY: true

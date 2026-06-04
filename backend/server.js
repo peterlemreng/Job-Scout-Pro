@@ -1,10 +1,14 @@
-
 require("dotenv").config();
 
 const express = require("express");
 const path = require("path");
 const cors = require("cors");
 const rateLimit = require("express-rate-limit");
+
+const app = express();
+
+/* MUST BE FIRST */
+app.set("trust proxy", 1);
 
 // Routes
 const authRoutes = require("./routes/auth");
@@ -13,24 +17,24 @@ const paymentsRoutes = require("./routes/payments");
 const adminRoutes = require("./routes/admin");
 const applicationsRoutes = require("./routes/applications");
 const employerRoutes = require("./routes/employer");
-
-const app = express();
-app.set('trust proxy', 1);
-// Trust proxy (important for Render / proxies)
-app.set("trust proxy", 1);
-
 // Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Rate limiter (basic protection)
-const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 200,
   standardHeaders: true,
   legacyHeaders: false,
-  validate: { xForwardedForHeader: false },
+});
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 200,
+  standardHeaders: true,
+  legacyHeaders: false
+});
+ validate: { xForwardedForHeader: false },
 });
 
 app.use(apiLimiter);
