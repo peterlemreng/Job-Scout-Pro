@@ -6,9 +6,17 @@ const cors = require("cors");
 const rateLimit = require("express-rate-limit");
 
 const app = express();
-
-/* MUST BE FIRST */
 app.set("trust proxy", 1);
+
+// Rate limiter (basic protection)
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 200,
+  standardHeaders: true,
+  legacyHeaders: false
+});
+
+app.use(apiLimiter);
 
 // Routes
 const authRoutes = require("./routes/auth");
@@ -22,20 +30,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Rate limiter (basic protection)
-  windowMs: 15 * 60 * 1000,
-  max: 200,
-  standardHeaders: true,
-  legacyHeaders: false,
-});
-const apiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 200,
-  standardHeaders: true,
-  legacyHeaders: false
-});
- validate: { xForwardedForHeader: false },
-});
+
 
 app.use(apiLimiter);
 
