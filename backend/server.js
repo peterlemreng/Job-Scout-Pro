@@ -8,7 +8,7 @@ const rateLimit = require("express-rate-limit");
 const app = express();
 app.set("trust proxy", 1);
 
-// Rate limiter (basic protection)
+// Rate limiter
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 200,
@@ -25,28 +25,32 @@ const paymentsRoutes = require("./routes/payments");
 const adminRoutes = require("./routes/admin");
 const applicationsRoutes = require("./routes/applications");
 const employerRoutes = require("./routes/employer");
+
 // Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Health checks
+app.get("/", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "Job Scout Pro API root OK"
+  });
+});
 
-
-app.use(apiLimiter);
-
-// Health check (VERY IMPORTANT for debugging)
-app.get("/", (req, res) => {  res.status(200).json({ success: true, message: "Job Scout Pro API root OK" });});app.get("/health", (req, res) => {
+app.get("/health", (req, res) => {
   res.json({
     success: true,
     message: "Job Scout Pro API is running",
     env: {
       hasUsername: !!process.env.AFRICASTALKING_USERNAME,
-      hasApiKey: !!process.env.AFRICASTALKING_API_KEY,
-    },
+      hasApiKey: !!process.env.AFRICASTALKING_API_KEY
+    }
   });
 });
 
-// Routes
+// API Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/jobs", jobsRoutes);
 app.use("/api/payments", paymentsRoutes);
@@ -54,14 +58,14 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/applications", applicationsRoutes);
 app.use("/api/employer", employerRoutes);
 
-// Serve frontend (if applicable)
+// Static files
 app.use(express.static(path.join(__dirname, "public")));
 
 // 404 handler
 app.use((req, res) => {
   res.status(404).json({
     success: false,
-    message: "Route not found",
+    message: "Route not found"
   });
 });
 
@@ -70,11 +74,10 @@ app.use((err, req, res, next) => {
   console.error("SERVER ERROR:", err);
   res.status(500).json({
     success: false,
-    message: "Internal server error",
+    message: "Internal server error"
   });
 });
 
-// Start server
 const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, () => {
