@@ -1,0 +1,12 @@
+version: "1"
+
+services:
+  - type: web
+    name: Job-Scout-Pro-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
