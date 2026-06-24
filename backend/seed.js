@@ -10,12 +10,18 @@ async function seedDatabase() {
       throw new Error("Missing required database environment variables");
     }
 
-    connection = await mysql.createConnection({
       host: process.env.DB_HOST || "localhost",
-      user: process.env.DB_USER || "root",
-      password: process.env.DB_PASSWORD || "",
-      database: process.env.DB_NAME || "job_scout_pro",
-    });
+  user: process.env.DB_USER || "root",
+  password: process.env.DB_PASSWORD || "",
+  database: process.env.DB_NAME || "job_scout_pro",
+});
+connection = await mysql.createConnection({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  port: process.env.DB_PORT ? Number(process.env.DB_PORT) : 3306,
+});
 
     const adminPassword = await bcrypt.hash("Peter@2026Secure", 10);
 
