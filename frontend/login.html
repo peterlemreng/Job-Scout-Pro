@@ -189,7 +189,7 @@ margin-top: 40px;
 </style>
 </head>
 <body>
-<div id="navbar"></div>
+<div id="public-navbar"></div>
 <div class="auth-page">
 <div class="auth-card">
 <h1>Login</h1>
@@ -229,7 +229,7 @@ Don’t have an account? <a href="signup.html">Register</a>
 </div>
 
 <script>
-const API_BASE = "/api";
+const API_BASE = window.APP_CONFIG.API_BASE;
 
 const loginForm = document.getElementById("loginForm");
 const loginMessage = document.getElementById("loginMessage");

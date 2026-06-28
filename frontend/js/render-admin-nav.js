@@ -1,4 +1,5 @@
 (function () {
+console.log("ADMIN NAV SCRIPT LOADED");
   "use strict";
 
   function escapeHTML(str = "") {
@@ -12,22 +13,22 @@
   }
 
   function getCurrentPath() {
-    const pathname = window.location.pathname || "";
+    let pathname = window.location.pathname || "";
 
     if (pathname.length > 1 && pathname.endsWith("/")) {
-      return pathname.slice(0, -1);
+      pathname = pathname.slice(0, -1);
     }
 
     return pathname;
   }
 
   function getAdminNav() {
-    if (typeof UI_CONFIG === "undefined") {
-      console.error("UI_CONFIG is missing");
+    if (!window.UI_CONFIG || !Array.isArray(window.UI_CONFIG.adminNav)) {
+      console.warn("Admin nav missing or UI_CONFIG not ready");
       return [];
     }
 
-    return (UI_CONFIG.adminNav || []).filter(item => item && item.enabled);
+    return window.UI_CONFIG.adminNav.filter(item => item && item.enabled);
   }
 
   function renderNavLinks(navItems, currentPath) {
@@ -35,31 +36,24 @@
       const isActive = item.href === currentPath;
 
       return `
-        <a
-          href="${escapeHTML(item.href)}"
-          class="${isActive ? "active" : ""}"
-          ${isActive ? 'aria-current="page"' : ""}
-        >
+        <a href="${escapeHTML(item.href)}"
+           class="${isActive ? "active" : ""}"
+           ${isActive ? 'aria-current="page"' : ""}>
           ${escapeHTML(item.label)}
         </a>
       `;
     }).join("");
   }
 
-  function renderAdminNav(containerSelector = "#navbar") {
+  function renderAdminNav(containerSelector = "#admin-navbar") {
     const container = document.querySelector(containerSelector);
 
     if (!container) {
-      console.error("Navbar container not found:", containerSelector);
+      console.error("Admin navbar container not found:", containerSelector);
       return;
     }
 
-    if (typeof UI_CONFIG === "undefined") {
-      console.error("UI_CONFIG is missing");
-      return;
-    }
-
-    const branding = UI_CONFIG.branding || {};
+    const branding = (window.UI_CONFIG && window.UI_CONFIG.branding) || {};
     const navItems = getAdminNav();
     const currentPath = getCurrentPath();
 
@@ -70,7 +64,7 @@
             <a href="/admin/dashboard.html" class="logo-link">
               <img
                 src="${escapeHTML(branding.logoPath || "/assets/logo.Jobscoutphoto.jpg")}"
-                alt="${escapeHTML(branding.appName || "Job Scout Pro")} Logo"
+                alt="${escapeHTML(branding.appName || "Job Scout Pro")}"
                 class="logo"
               />
             </a>
@@ -91,7 +85,14 @@
 
   window.renderAdminNav = renderAdminNav;
 
-  document.addEventListener("DOMContentLoaded", function () {
-    renderAdminNav("#navbar");
-  });
+  function initAdminNav() {
+    renderAdminNav("#admin-navbar");
+  }
+
+  if (true) {
+    document.addEventListener("DOMContentLoaded", initAdminNav);
+  } else {
+    initAdminNav();
+  }
+
 })();

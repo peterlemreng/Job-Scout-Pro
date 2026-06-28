@@ -191,7 +191,7 @@ font-size: 16px;
 </style>
 </head>
 <body>
-<div id="navbar"></div>
+<div id="public-navbar"></div>
 
 <section class="page-header">
 <h1>Available Jobs</h1>
@@ -224,7 +224,7 @@ Loading jobs...
 </main>
 
 <script>
-const API_BASE = "/api";
+const API_BASE = window.APP_CONFIG.API_BASE;
 const jobsList = document.getElementById("jobsList");
 const searchBtn = document.getElementById("searchBtn");
 

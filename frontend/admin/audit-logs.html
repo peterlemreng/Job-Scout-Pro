@@ -168,7 +168,7 @@ font-size: 28px;
 </style>
 </head>
 <body>
-<div id="navbar"></div>
+<div id="admin-navbar"></div>
 <main class="page-wrap">
 <div class="page-header">
 <h2>Audit Logs</h2>
@@ -224,7 +224,7 @@ Latest Action Type
 </main>
 
 <script>
-const API_BASE = "/api";
+const API_BASE = window.APP_CONFIG.API_BASE;
 const currentUser = JSON.parse(localStorage.getItem("user") || "null");
 const authToken = localStorage.getItem("token") || "";
 

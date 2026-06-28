@@ -9,6 +9,7 @@ const db = require("./db");
     console.error("❌ DATABASE CONNECTION FAILED:", err.message);
   }
 })();
+
 require("dotenv").config();
 
 const express = require("express");
@@ -55,7 +56,7 @@ app.use("/api/employer", employerRoutes);
 // Static files
 app.use(express.static(path.join(__dirname, "public")));
 
-// Health check
+// Root check
 app.get("/", (req, res) => {
   res.json({
     success: true,
@@ -63,11 +64,25 @@ app.get("/", (req, res) => {
   });
 });
 
-app.get("/health", (req, res) => {
-  res.json({
-    success: true,
-    status: "healthy"
-  });
+// Health check - NOW TESTS DATABASE
+app.get("/health", async (req, res) => {
+  try {
+    const [rows] = await db.query('SELECT 1 as test, NOW() as time');
+    res.json({
+      success: true,
+      status: "healthy",
+      db: "connected",
+      server_time: rows[0].time
+    });
+  } catch (err) {
+    res.json({
+      success: false,
+      status: "unhealthy",
+      db: "disconnected",
+      error: err.code,
+      message: err.message
+    });
+  }
 });
 
 // 404 handler

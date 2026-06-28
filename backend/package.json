@@ -14,7 +14,7 @@
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.6.1",
-    "express": "^4.19.2",
+    "express": "^4.22.2",
     "express-rate-limit": "^8.4.1",
     "express-session": "^1.19.0",
     "helmet": "^8.1.0",
@@ -23,10 +23,15 @@
     "multer": "^2.1.1",
     "mysql2": "^3.22.4",
     "nodemailer": "^8.0.7",
-    "openai": "^6.44.0",
+    "openai": "^6.45.0",
     "resend": "^6.12.2"
   },
   "devDependencies": {
+    "jest": "^30.4.2",
     "nodemon": "^3.1.4"
-  }
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
 }

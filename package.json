@@ -7,5 +7,23 @@
   "scripts": {
     "start": "npm --prefix backend start",
     "postinstall": "npm --prefix backend install"
-  }
+  },
+  "version": "1.0.0",
+  "description": "Job Scout Pro is a Kenyan job platform for discovering jobs, posting paid job listings, managing applications, and handling admin review workflows.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/peterlemreng/Job-Scout-Pro.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/peterlemreng/Job-Scout-Pro/issues"
+  },
+  "homepage": "https://github.com/peterlemreng/Job-Scout-Pro#readme"
 }

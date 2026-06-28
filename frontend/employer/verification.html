@@ -300,7 +300,7 @@
   </main>
 
   <script>
-    const API_BASE = "/api";
+    const API_BASE = window.APP_CONFIG.API_BASE;
     const currentUser = JSON.parse(localStorage.getItem("user") || "null");
     const authToken = localStorage.getItem("token") || "";
 

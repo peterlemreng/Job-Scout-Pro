@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+console.log("TOKEN:", localStorage.getItem("token"));
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -276,7 +277,7 @@ font-size: 28px;
 </style>
 </head>
 <body>
-<div id="navbar"></div>
+<div id="admin-navbar"></div>
 Admin Control Panel
 </p>
 
@@ -425,7 +426,7 @@ Monitor jobs, users, featured listings, payment activity, and applications.
 </main>
 
 <script>
-const API_BASE = "/api";
+const API_BASE = window.APP_CONFIG.API_BASE;
 const currentUser = JSON.parse(localStorage.getItem("user") || "null");
 const authToken = localStorage.getItem("token") || "";
 
@@ -499,7 +500,7 @@ console.error("Failed to load admin stats:", error);
 
 async function loadRecentPayments() {
 try {
-const response = await fetch(API_BASE + "/payments", {
+const response = await fetch(API_BASE + "/api/payments", {
 headers: {
 "Authorization": "Bearer " + authToken
 }
@@ -529,7 +530,7 @@ recentPaymentsTable.innerHTML = '<tr><td colspan="7" class="empty-row">Failed to
 
 async function loadRecentApplications() {
 try {
-const response = await fetch(API_BASE + "/applications", {
+const response = await fetch(API_BASE + "/api/applications", {
 headers: {
 "Authorization": "Bearer " + authToken
 }

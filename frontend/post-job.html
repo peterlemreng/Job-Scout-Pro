@@ -193,7 +193,7 @@ margin-top: 40px;
 </style>
 </head>
 <body>
-<div id="navbar"></div>
+<div id="public-navbar"></div>
 <div class="payment-page">
 <div class="payment-card">
 <h1>Post a Job</h1>
@@ -304,7 +304,7 @@ Job Details
 </div>
 
 <script>
-const API_BASE = "/api";
+const API_BASE = window.APP_CONFIG.API_BASE;
 const postJobForm = document.getElementById("postJobForm");
 const postJobMessage = document.getElementById("postJobMessage");
 
