@@ -5,17 +5,15 @@ const mysql = require('mysql2/promise');
   try {
     console.log("Connecting...");
 
-    const url = new URL(process.env.DATABASE_URL);
-
-    const conn = await mysql.createConnection({
-      host: url.hostname,
-      port: url.port,
-      user: url.username,
-      password: url.password,
-      database: url.pathname.replace("/", ""),
-      ssl: { rejectUnauthorized: false }
-    });
-
+    
+const conn = await mysql.createConnection({
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  ssl: { rejectUnauthorized: false }
+});
     console.log("Connected successfully!");
 
     const [rows] = await conn.query("SELECT NOW() AS time");
