@@ -16,6 +16,8 @@ const express = require("express");
 const path = require("path");
 const cors = require("cors");
 const rateLimit = require("express-rate-limit");
+const categories = require("./data/categories");
+const counties = require("./data/counties");
 
 const app = express();
 
@@ -61,6 +63,19 @@ app.get("/", (req, res) => {
   res.json({
     success: true,
     message: "Job Scout Pro API running"
+  });
+});
+app.get("/api/categories", (req, res) => {
+  res.json({
+    success: true,
+    data: categories
+  });
+});
+
+app.get("/api/counties", (req, res) => {
+  res.json({
+    success: true,
+    data: counties
   });
 });
 
